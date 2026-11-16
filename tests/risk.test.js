@@ -53,3 +53,13 @@ test('alerts show warn flags and the safety reminder', () => {
   assert.match(text, /🚩/);
   assert.match(text, /Không chạy code/);
 });
+
+test('shortened links, download hosts and risky files are flagged', () => {
+  for (const text of [
+    'Brief here: https://bit.ly/3abc',
+    'Specs on https://drive.google.com/file/d/xyz',
+    'Download https://mega.nz/file/abc',
+    'Attached: task.zip, please review',
+    'Run setup.exe to see the bug',
+  ]) assert.ok(riskFlags(job(text)).some((f) => f.label.startsWith('Có link/file tải')), text);
+});

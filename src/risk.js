@@ -26,6 +26,11 @@ const RULES = [
   },
   {
     level: 'warn',
+    label: 'Có link/file tải về (link rút gọn, Drive/Dropbox/Mega, .zip/.exe...)',
+    re: /\b(bit\.ly|tinyurl\.com|t\.co|goo\.gl|is\.gd|cutt\.ly|rb\.gy)\/|drive\.google\.com|dropbox\.com|mega\.nz|wetransfer\.com|mediafire\.com|\.(zip|rar|7z|exe|msi|scr|lnk|iso|dmg|bat|cmd|ps1|vbs|jar|apk)\b/,
+  },
+  {
+    level: 'warn',
     label: 'Kéo sang Telegram/WhatsApp/Discord',
     re: /t\.me\/|wa\.me\/|discord\.gg\/|(contact|message|text|reach|dm|add|ping)( me| us)? (on|via|at) (telegram|whatsapp|discord|skype|signal|wechat)/,
   },

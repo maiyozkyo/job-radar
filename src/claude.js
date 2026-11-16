@@ -32,6 +32,20 @@ function buildPrompt(jobs, draftMin) {
     .replace('{{JOBS}}', JSON.stringify(data, null, 1));
 }
 
+// Job text is untrusted. If a post smuggles instructions that make Claude put
+// a link in the proposal, the user could forward it to a client, so only the
+// user's own links survive.
+const ALLOWED_LINKS = [/^https?:\/\/(www\.)?github\.com\/maiyozkyo(\/|$)/i, /^https?:\/\/(www\.)?contra\.com\/(hoang_buu_wctxhu7k|p\/)/i];
+const LINK = /\b(?:https?:\/\/|www\.)[^\s)>\]"']+/gi;
+
+export function sanitizeProposal(text) {
+  return text.replace(LINK, (url) => {
+    const clean = url.replace(/[.,;:!?]+$/, '');
+    const tail = url.slice(clean.length);
+    return ALLOWED_LINKS.some((re) => re.test(clean)) ? url : `[link bị xóa]${tail}`;
+  });
+}
+
 function parseScores(output, jobs) {
   const start = output.indexOf('[');
   const end = output.lastIndexOf(']');
@@ -43,7 +57,7 @@ function parseScores(output, jobs) {
     const s = byKey.get(job.key);
     if (!s) throw new ClaudeOutputError(`missing score for ${job.key}`);
     if (!Number.isInteger(s.score) || s.score < 1 || s.score > 10) throw new ClaudeOutputError(`bad score for ${job.key}`);
-    return { key: job.key, score: s.score, reasonVi: String(s.reasonVi ?? ''), proposalEn: s.proposalEn ? String(s.proposalEn) : null };
+    return { key: job.key, score: s.score, reasonVi: String(s.reasonVi ?? ''), proposalEn: s.proposalEn ? sanitizeProposal(String(s.proposalEn)) : null };
   });
 }
 

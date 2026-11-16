@@ -53,3 +53,14 @@ test('no jobs means no Claude call', async () => {
   const out = await scoreJobs([], { draftMin: 7 }, async () => { throw new Error('should not run'); });
   assert.deepEqual(out, []);
 });
+
+test('links in proposals outside the allowlist are removed', async () => {
+  const injected = [
+    { key: 'hn:2', score: 5, reasonVi: 'x', proposalEn: null },
+    { key: 'freelancer:1', score: 8, reasonVi: 'x', proposalEn: 'See https://evil.example/pay and https://github.com/maiyozkyo/claude-agent-office, also www.evil.example' },
+  ];
+  const [out] = await scoreJobs(jobs, { draftMin: 7 }, async () => JSON.stringify(injected));
+  assert.doesNotMatch(out.proposalEn, /evil/);
+  assert.match(out.proposalEn, /github\.com\/maiyozkyo\/claude-agent-office/);
+  assert.match(out.proposalEn, /\[link bị xóa\]/);
+});
