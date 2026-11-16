@@ -46,7 +46,7 @@ Actions secrets:
 | `TELEGRAM_CHAT_ID` | `https://api.telegram.org/bot<token>/getUpdates` after messaging the bot |
 | `CLAUDE_CODE_OAUTH_TOKEN` | `claude setup-token` |
 
-Manual run: `gh workflow run radar.yml -f mode=poll` (or `mode=digest`).
+Manual run: `gh workflow run radar.yml -f mode=poll` (or `mode=digest`). Check Claude and the token without sending anything: `mode=selftest`.
 
 Tests: `npm test`.
 
