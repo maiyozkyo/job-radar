@@ -1,4 +1,5 @@
 import { netUsd } from './fees.js';
+import { riskFlags } from './risk.js';
 
 const LIMIT = 4096;
 const money = (n) => `$${Number.isInteger(n) ? n : n.toFixed(2)}`;
@@ -12,11 +13,21 @@ function budgetLine(job) {
   return `💰 ${range}${unit}${net != null ? ` (≈ nhận ${money(net)}${unit})` : ''}`;
 }
 
+function riskLines(job) {
+  const flags = riskFlags(job).filter((f) => f.level === 'warn');
+  if (!flags.length) return null;
+  return [
+    ...flags.map((f) => `🚩 ${f.label}`),
+    '🛡️ Không chạy code/cài gì của khách trên máy chính, chỉ mở trong VM hoặc Codespaces.',
+  ].join('\n');
+}
+
 function jobBlock(job, scored) {
   return [
     `[${job.source}] ${job.title}`,
     budgetLine(job),
     scored ? `⭐ ${scored.score}/10 – ${scored.reasonVi}` : null,
+    riskLines(job),
     job.url,
     scored?.proposalEn ? `\n✍️ Proposal:\n${scored.proposalEn}` : null,
   ].filter(Boolean).join('\n');

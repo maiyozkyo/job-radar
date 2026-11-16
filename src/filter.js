@@ -1,4 +1,6 @@
-const escape = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+import { riskFlags } from './risk.js';
+
+const escape =(s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 // Short keywords and ones with symbols must match as whole tokens, so ".net"
 // does not hit "asp.network" and "c#" does not hit plain "c".
@@ -25,6 +27,8 @@ export function filterJob(job, config) {
 
   const blocked = firstMatch(text, config.blockKeywords);
   if (blocked) return drop(`block keyword: ${blocked}`);
+  const scam = riskFlags(job).find((f) => f.level === 'block');
+  if (scam) return drop(`risk: ${scam.label}`);
   const stack = firstMatch(text, config.stackKeywords);
   if (!stack) return drop('no stack keyword');
 

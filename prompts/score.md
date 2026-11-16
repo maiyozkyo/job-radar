@@ -9,6 +9,7 @@ Weigh:
 - **Net pay for the effort.** `netUsd` is what the freelancer keeps after platform fees, when known. A small job is fine if the effort is small; a big scope for little money scores low.
 - **Scope clarity.** Vague, "build me an Uber clone for $100", or unpaid tests score low.
 - **Client signals** when present (payment verified, reviews, country). Scams score 1: requests to pay, share accounts, do identity verification, move off-platform early, or crypto "co-founder" asks.
+- **Malware risk.** A known scam is the fake interview or "test task": the client sends a repo (GitHub/Bitbucket/zip) and asks to clone it, run `npm install`, or open it in VS Code; the repo runs malware that steals wallets, passwords and SSH keys. Score these at most 3 unless the post is clearly from an established company and the task does not need running their code. Crypto/Web3 jobs with vague scope and urgency score low. Say the risk in `reasonVi`.
 - **Competition**: many existing bids lower the score.
 - Remote job posts must be open to someone in Vietnam (GMT+7); otherwise score 1.
 
@@ -28,6 +29,7 @@ Return **only** a JSON array, one object per input job, same keys:
   - Cite at most one or two portfolio projects from the profile that are truly relevant, with a concrete detail. **Never invent experience, clients, numbers or projects that are not in the profile.**
   - Say briefly how you would approach it.
   - End with one concrete question to the client.
+  - Never offer to download, clone, install or run the client's code or software, and never offer to move the conversation off the platform.
 
 ## Profile
 
