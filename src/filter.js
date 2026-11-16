@@ -1,0 +1,49 @@
+const escape = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+// Short keywords and ones with symbols must match as whole tokens, so ".net"
+// does not hit "asp.network" and "c#" does not hit plain "c".
+const matcher = (kw) => {
+  const k = kw.toLowerCase();
+  if (k.length > 3 && !/[#.]/.test(k)) return (text) => text.includes(k);
+  const re = new RegExp(`(?<![a-z0-9])${escape(k)}(?![a-z0-9#])`);
+  return (text) => re.test(text);
+};
+const firstMatch = (text, keywords) => keywords.find((kw) => matcher(kw)(text));
+
+const BOARDS = new Set(['wwr', 'remoteok', 'himalayas']);
+const FULL_TIME = /full[\s-]?time/i;
+const FLEXIBLE = /contract|part[\s-]?time|freelance/i;
+
+/**
+ * @param {import('./job.js').Job} job
+ * @param {import('./job.js').Config} config
+ * @returns {{ keep: boolean, reason: string }}
+ */
+export function filterJob(job, config) {
+  const text = `${job.title}\n${job.description}\n${job.tags.join(' ')}`.toLowerCase();
+  const drop = (reason) => ({ keep: false, reason });
+
+  const blocked = firstMatch(text, config.blockKeywords);
+  if (blocked) return drop(`block keyword: ${blocked}`);
+  const stack = firstMatch(text, config.stackKeywords);
+  if (!stack) return drop('no stack keyword');
+
+  if (job.source === 'freelancer') {
+    if (job.budgetMaxUsd == null) return drop('unknown budget');
+    if (job.budgetType === 'hourly' && job.budgetMaxUsd < config.minHourlyUsd) return drop('hourly below floor');
+    if (job.budgetType !== 'hourly' && job.budgetMaxUsd < config.minFixedUsd) return drop('budget below floor');
+    if (job.bidCount != null && job.bidCount > config.maxBidCount) return drop('too many bids');
+  }
+
+  if (BOARDS.has(job.source)) {
+    const loc = (job.location ?? '').toLowerCase().trim();
+    if (loc && !config.allowedLocations.some((a) => loc.includes(a))) return drop(`location: ${job.location}`);
+    const fullTime = FULL_TIME.test(job.employmentType ?? '') || FULL_TIME.test(job.title);
+    if (fullTime && !FLEXIBLE.test(text)) return drop('full-time only');
+  }
+
+  return { keep: true, reason: `stack: ${stack}` };
+}
+
+/** Sources where clients decide within hours, so alerts go out at once. */
+export const isUrgent = (job) => job.source === 'freelancer' || job.source === 'hn';

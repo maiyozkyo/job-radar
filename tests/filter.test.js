@@ -1,0 +1,76 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { filterJob, isUrgent } from '../src/filter.js';
+import { loadConfig, makeJob } from '../src/job.js';
+
+const config = loadConfig();
+const fl = (over) => makeJob({
+  source: 'freelancer', id: 1, title: 'Angular dashboard fix', description: '',
+  budgetType: 'fixed', budgetMaxUsd: 50, bidCount: 3, ...over,
+});
+const board = (source, over) => makeJob({
+  source, id: 2, title: 'Angular developer', description: 'Contract role', ...over,
+});
+const keep = (job) => filterJob(job, config).keep;
+
+test('fixed budget floor is $30', () => {
+  assert.equal(keep(fl({ budgetMaxUsd: 29.99 })), false);
+  assert.equal(keep(fl({ budgetMaxUsd: 30 })), true);
+});
+
+test('hourly floor is $15/h', () => {
+  assert.equal(keep(fl({ budgetType: 'hourly', budgetMaxUsd: 14 })), false);
+  assert.equal(keep(fl({ budgetType: 'hourly', budgetMaxUsd: 15 })), true);
+});
+
+test('a converted INR budget of $132 passes', () => {
+  assert.equal(keep(fl({ budgetMaxUsd: 132.73 })), true);
+});
+
+test('unknown Freelancer budget is dropped', () => {
+  assert.equal(keep(fl({ budgetMaxUsd: null })), false);
+});
+
+test('block keywords drop the job', () => {
+  const r = filterJob(fl({ title: 'Sales partner, Angular' }), config);
+  assert.equal(r.keep, false);
+  assert.match(r.reason, /sales/);
+});
+
+test('short keywords match whole tokens only', () => {
+  assert.equal(keep(fl({ title: 'Java developer' })), false);
+  assert.equal(keep(fl({ title: 'Need help in C programming' })), false);
+  assert.equal(keep(fl({ title: 'Fix my C# API' })), true);
+  assert.equal(keep(fl({ title: 'ASP.NET Core bug' })), true);
+  assert.equal(keep(fl({ title: 'Upgrade .NET 8 app' })), true);
+  assert.equal(keep(fl({ title: 'Salesforce expert' })), false); // no stack match
+});
+
+test('bid count above 30 is dropped', () => {
+  assert.equal(keep(fl({ bidCount: 31 })), false);
+  assert.equal(keep(fl({ bidCount: 30 })), true);
+});
+
+test('remote boards need an open or Asia location', () => {
+  assert.equal(keep(board('remoteok', { location: 'USA only' })), false);
+  assert.equal(keep(board('remoteok', { location: 'Worldwide' })), true);
+  assert.equal(keep(board('wwr', { location: 'Anywhere in the World' })), true);
+  assert.equal(keep(board('himalayas', { location: null })), true);
+});
+
+test('full-time board jobs need contract or part-time wording', () => {
+  assert.equal(keep(board('himalayas', { employmentType: 'Full Time', description: 'Great team' })), false);
+  assert.equal(keep(board('himalayas', { employmentType: 'Full Time', description: 'contract to hire' })), true);
+  assert.equal(keep(board('himalayas', { employmentType: 'Contractor', description: '' })), true);
+});
+
+test('HN needs only a stack match', () => {
+  assert.equal(keep(makeJob({ source: 'hn', id: 3, title: 'SEEKING FREELANCER | LLM agent' })), true);
+  assert.equal(keep(makeJob({ source: 'hn', id: 4, title: 'SEEKING FREELANCER | iOS app' })), false);
+});
+
+test('urgent sources are Freelancer and HN', () => {
+  assert.equal(isUrgent(fl({})), true);
+  assert.equal(isUrgent(makeJob({ source: 'hn', id: 1 })), true);
+  assert.equal(isUrgent(board('wwr', {})), false);
+});
