@@ -3,7 +3,7 @@ name: radar
 on:
   schedule:
     # Off the :00 mark, the busiest and most delayed slot on GitHub.
-    - cron: "7,37 * * * *"   # poll
+    - cron: "7,37 * * * *"   # poll every 30 min
     - cron: "15 1,12 * * *"  # digest at 08:15 and 19:15 GMT+7
   workflow_dispatch:
     inputs:
