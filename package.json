@@ -7,7 +7,8 @@
   "scripts": {
     "test": "node --test",
     "poll": "node src/main.js poll",
-    "digest": "node src/main.js digest"
+    "digest": "node src/main.js digest",
+    "check-repo": "node src/check-repo.js"
   },
   "engines": {
     "node": ">=22"
