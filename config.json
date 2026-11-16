@@ -1,0 +1,11 @@
+{
+  "freelancerQueries": ["angular", ".net", "c#", "asp.net", "docker", "cloud run", "ai agent", "chatbot", "llm", "automation", "claude", "openai"],
+  "stackKeywords": ["angular", ".net", "c#", "asp.net", "dotnet", "docker", "cloud run", "gcp", "google cloud", "ai agent", "chatbot", "llm", "automation", "claude", "openai", "gpt", "gemini", "n8n", "web scraping"],
+  "blockKeywords": ["commission", "sales", "data entry", "essay", "assignment", "homework", "lead generation", "unpaid"],
+  "minFixedUsd": 30,
+  "minHourlyUsd": 15,
+  "maxBidCount": 30,
+  "alertScore": 7,
+  "digestDraftScore": 8,
+  "allowedLocations": ["anywhere", "worldwide", "asia", "vietnam", "apac", "gmt+7"]
+}
