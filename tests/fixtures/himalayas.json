@@ -1,0 +1,4 @@
+{ "jobs": [
+  { "guid": "https://himalayas.app/companies/fable/jobs/se-contract", "title": "Software Engineer (contract)", "excerpt": "AI agents", "description": "<p>Build LLM agents</p>", "employmentType": "Contractor", "locationRestrictions": [], "categories": ["AI-Engineer"], "minSalary": 50, "maxSalary": 70, "currency": "USD", "salaryPeriod": "hourly", "pubDate": 1794793306, "applicationLink": "https://himalayas.app/companies/fable/jobs/se-contract" },
+  { "guid": "g2", "title": "Engineer", "excerpt": "", "description": "", "employmentType": "Full Time", "locationRestrictions": ["Canada", "USA"], "categories": [], "minSalary": 100, "maxSalary": 120, "currency": "CAD", "salaryPeriod": "hourly", "pubDate": 1794793000, "applicationLink": "https://himalayas.app/g2" }
+] }
