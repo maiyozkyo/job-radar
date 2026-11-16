@@ -1039,63 +1039,7 @@
   "himalayas:https://himalayas.app/companies/contour-education/jobs/business-operations-manager": 1794866437,
   "himalayas:https://himalayas.app/companies/hrspecialist-italia/jobs/agenti-di-vendita-settore-energie-rinnovabili-con-partita-iva": 1794866437
  },
- "pending": [
-  {
-   "url": "https://himalayas.app/companies/micro1/jobs/hardware-expert?utm_source=api",
-   "title": "micro1: Hardware Expert",
-   "description": "Hardware Expert \nPay: $60–$120/hour\nLocation: Global, fully remote\nJob Type: Contractor (~15 hours per week)\nSchedule: Flexible—you choose the hours and days you work, including weekends if desired\nmicro1 is engaging experienced Hardware Engineers to contribute to AI training projects built around complex, real-world engineering problems. In this role, you will use your technical expertise to create, solve, and evaluate engineering challenges that require sound judgment, quantitative reasoning, and reproducible answers.\nWe are looking for engineers who have personally owned meaningful technical work—such as taking a hardware system into production, validating a model against test data, developing a rigorous verification approach, or diagnosing a difficult failure. We value engineers who can connect first-principles reasoning with practical constraints and produce work that can be independently verified.\nScope of Work\nCreate technically rigorous, self-contained hardware engineering problems based on realistic industry or research scenarios.\nDevelop clear reference solutions using engineering calculations, simulations, scripts, experimental reasoning, or other appropriate methods.\nUse tools such as Python, MATLAB, Simulink, SPICE, Julia, C/C++, test automation platforms, or equivalent engineering software to validate results when relevant.\nPreferred Qualifications\nBachelor’s, Master’s, or PhD degree in Electrical Engineering, Mechanical Engineering, Mechatronics, Aerospace Engineering, Systems Engineering, Applied Physics, or a closely related field.\nSignificant professional or research experience in hardware engineering, product development, systems integration, testing, validation, reliability, or failure analysis.\nDemonstrated ownership of a substantial engineering problem—for example, a product or subsystem that reached production, a model validated against physical testing, a test system you developed, or a difficult failure you diagnosed.\nExperience working with Coding Agents is a must\nProcess\nApply to the role and complete the screening questions.\nComplete an AI interview of approximately 30 minutes.\nComplete the hiring manager review.\nCompensation Structure\nCompensation is output-based. Experts are paid per task that meets the project specifications. The time required to complete each task may vary depending on the expert’s experience and workflow.\nMinimum submission requirements apply..Start Timeline & Availability\nWe typically fill roles within 48 hours and are looking for experts who are ready to begin immediately. If selected, you will be expected to start your first task within 24–48 hours of completing onboarding.\nOriginally posted on Himalayas",
-   "budgetType": "salary",
-   "budgetMinUsd": 60,
-   "budgetMaxUsd": 120,
-   "bidCount": null,
-   "location": null,
-   "employmentType": "Contractor",
-   "postedAt": 1794860465,
-   "tags": [
-    "Hardware-Expert",
-    "Hardware-Specialist",
-    "IT-Hardware-Specialist",
-    "Hardware-Technician",
-    "Hardware",
-    "Hardware-Support-Specialist",
-    "Hardware-Engineer",
-    "Hardware-Test-Engineer",
-    "Electrical-Hardware-Engineer"
-   ],
-   "source": "himalayas",
-   "id": "https://himalayas.app/companies/micro1/jobs/hardware-expert",
-   "key": "himalayas:https://himalayas.app/companies/micro1/jobs/hardware-expert"
-  },
-  {
-   "url": "https://himalayas.app/companies/micro1/jobs/legal-counsel?utm_source=api",
-   "title": "micro1: Legal Counsel",
-   "description": "Role Title: Legal CounselRole Type: ContractorLocation: Remote\nmicro1 is engaging Legal Counsels to contribute their legal expertise on a customer's project focused on shaping the future of AI technologies. In this role, you'll apply your expertise to help train next-generation AI systems. Your work will shape how models learn, reason, and perform through high-quality, real-world input. No prior experience in AI is required — your domain knowledge is what matters. This opportunity is ideal for those who excel at both detailed legal analysis and clear, effective communication, with a special emphasis placed on written and verbal skills.\nScope of Work\nAnalyze and review diverse legal documents, providing insightful interpretations and relevant feedback.\nDraft, edit, and evaluate contracts, policies, and regulatory materials to ensure clarity, compliance, and accuracy.\nIdentify potential legal risks and propose solutions aligned with current laws and best practices.\nTranslate complex legal concepts into clear and accessible language for various project deliverables.\nCreate and refine sample legal scenarios, FAQs, or hypothetical situations to inform AI learning modules.\nCollaborate with multidisciplinary teams to ensure alignment on project objectives and legal standards.\nContribute to the development of guidelines and frameworks that support ethical AI practices and compliance.\nPreferred Qualifications\nActive legal qualification and significant professional experience in legal practice.\nExpertise in contract law, regulatory compliance, intellectual property, or technology-related legal fields.\nExceptional written and verbal communication skills, with a strong focus on clarity and precision.\nProven ability to interpret, draft, and analyze complex legal materials.\nFamiliarity with international legal frameworks or cross-border compliance considerations.\nExperience collaborating with cross-functional teams or working in dynamic, remote environments.\nInterest in the intersection of law, technology, and AI innovation is a plus.\nOriginally posted on Himalayas",
-   "budgetType": "salary",
-   "budgetMinUsd": 80,
-   "budgetMaxUsd": 150,
-   "bidCount": null,
-   "location": null,
-   "employmentType": "Contractor",
-   "postedAt": 1794853260,
-   "tags": [
-    "Legal-Counsel",
-    "Lead-Legal-Counsel",
-    "Executive-Legal-Counsel",
-    "Corporate-Legal-Counsel",
-    "General-Legal-Counsel",
-    "Contract-Legal-Counsel",
-    "Associate-Legal-Counsel",
-    "Senior-Legal-Counsel",
-    "Legal-Advisor",
-    "Legal",
-    "Corporate-Counsel",
-    "General-Counsel"
-   ],
-   "source": "himalayas",
-   "id": "https://himalayas.app/companies/micro1/jobs/legal-counsel",
-   "key": "himalayas:https://himalayas.app/companies/micro1/jobs/legal-counsel"
-  }
- ],
+ "pending": [],
  "lastFetch": {
   "remotive": 1794848012,
   "jobicy": 1794862840
