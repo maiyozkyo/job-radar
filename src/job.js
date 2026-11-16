@@ -30,6 +30,8 @@ import { readFileSync } from 'node:fs';
  * @property {number} alertScore
  * @property {number} digestDraftScore
  * @property {string[]} allowedLocations
+ * @property {number} [hourlyRateUsd]   bid suggestion rate
+ * @property {number} [hoursPerDay]     evening hours, for delivery days
  */
 
 /** @returns {Config} */

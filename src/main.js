@@ -12,6 +12,18 @@ const MAX_PENDING = 200;
 
 const claudeWarning = (err) => `Claude lỗi: ${err.message.slice(0, 120)}, chưa chấm điểm`;
 const newestFirst = (a, b) => b.postedAt - a.postedAt;
+const bidOpts = (config) => ({ rate: config.hourlyRateUsd ?? 20, hoursPerDay: config.hoursPerDay ?? 2 });
+
+/**
+ * One line per scored job in the Actions log, so thresholds can be tuned from
+ * real scores. Job titles and URLs are public; proposals are never logged.
+ */
+function logScores(jobs, scored) {
+  jobs.forEach((job, i) => {
+    const s = scored[i];
+    console.log(`score ${s ? s.score : '-'} ${s?.hours != null ? `${s.hours}h` : '-'} ${job.key} | ${job.title.slice(0, 80)} | ${job.url}`);
+  });
+}
 
 async function poll(state, deps) {
   const { config, now } = deps;
@@ -31,7 +43,8 @@ async function poll(state, deps) {
   let unscored = [];
   let unscoredWarning = 'Claude bỏ sót, chưa chấm điểm';
   try {
-    const scored = await deps.scoreJobs(urgent, { draftMin: config.alertScore });
+    const scored = await deps.scoreJobs(urgent, { draftMin: config.alertScore, ...bidOpts(config) });
+    logScores(urgent, scored);
     urgent.forEach((job, i) => {
       if (!scored[i]) unscored.push(job);
       else if (scored[i].score >= config.alertScore) alerts.push({ job, scored: scored[i] });
@@ -57,7 +70,8 @@ async function digest(state, deps) {
 
   let scored;
   try {
-    scored = await deps.scoreJobs(pending, { draftMin: config.digestDraftScore });
+    scored = await deps.scoreJobs(pending, { draftMin: config.digestDraftScore, ...bidOpts(config) });
+    logScores(pending, scored);
   } catch (err) {
     // Keep the queue: the next digest retries instead of dropping the jobs.
     await deps.sendMessage(`⚠️ ${claudeWarning(err)}. ${state.pending.length} job remote để lại cho lần tổng hợp sau.`);

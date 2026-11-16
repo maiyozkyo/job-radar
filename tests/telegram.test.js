@@ -93,3 +93,11 @@ test('unscored jobs are grouped into one message', () => {
   assert.match(text, /Second job/);
   assert.match(text, /⚠️ Claude lỗi/);
 });
+
+test('alert shows the bid suggestion and warns when the budget is too low', () => {
+  const bid = { amountUsd: 120, unit: '', hours: 6, days: 4, netUsd: 108, wantUsd: 120, underpaid: false };
+  const text = formatAlert(job, { ...scored, bid });
+  assert.match(text, /💵 Gợi ý bid: \$120 · ~6 giờ · giao 4 ngày \(≈ nhận \$108\)/);
+  const low = formatAlert(job, { ...scored, bid: { ...bid, amountUsd: 100, wantUsd: 160, underpaid: true, netUsd: 90 } });
+  assert.match(low, /⚠️ Việc ~6 giờ đáng ~\$160, ngân sách khách thấp hơn/);
+});

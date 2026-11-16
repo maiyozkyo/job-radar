@@ -22,10 +22,11 @@ Weigh:
 Return **only** a JSON array, one object per input job, same keys:
 
 ```json
-[{ "key": "freelancer:123", "score": 8, "reasonVi": "...", "proposalEn": "..." }]
+[{ "key": "freelancer:123", "score": 8, "reasonVi": "...", "proposalEn": "...", "hours": 6 }]
 ```
 
 - `score`: integer 1–10.
+- `hours`: your honest estimate of the freelancer's total hours for the job (work, testing, client messages, revisions), as a number; `null` when the scope is too vague to estimate. The bid amount is computed from it, so do not put prices in the proposal.
 - `reasonVi`: one short line in Vietnamese (≤ 15 words) saying why.
 - `proposalEn`: only when {{DRAFT_RULE}}; otherwise `null`.
   - ≤ 120 words, English, written as the freelancer in first person.

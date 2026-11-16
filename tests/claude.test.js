@@ -77,3 +77,20 @@ test('emails and phone numbers in proposals are removed', async () => {
   ]));
   assert.doesNotMatch(out[0].proposalEn, /bob@|912/);
 });
+
+test('hours become a bid suggestion; bad hours are ignored', async () => {
+  const out = await scoreJobs(jobs, { draftMin: 7, rate: 20, hoursPerDay: 2 }, reply([
+    { key: 'freelancer:1', score: 8, reasonVi: 'Hợp', proposalEn: 'Hi', hours: 2 },
+    { key: 'hn:2', score: 5, reasonVi: 'x', proposalEn: null, hours: 'lots' },
+  ]));
+  assert.equal(out[0].hours, 2);
+  assert.equal(out[0].bid.amountUsd, 40);
+  assert.equal(out[1].hours, null);
+  assert.equal(out[1].bid, null);
+});
+
+test('prompt asks for an hours estimate', async () => {
+  let prompt = '';
+  await scoreJobs(jobs, { draftMin: 7 }, async (p) => { prompt = p; return JSON.stringify(good); });
+  assert.match(prompt, /"hours"/);
+});

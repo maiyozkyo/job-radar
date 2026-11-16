@@ -1,9 +1,10 @@
 import { spawn } from 'node:child_process';
 import { readFileSync } from 'node:fs';
-import { netUsd } from './fees.js';
+import { netUsd, suggestBid } from './fees.js';
 
 /**
- * @typedef {{ key: string, score: number, reasonVi: string, proposalEn: string|null }} Scored
+ * `hours` is Claude's effort estimate; `bid` is computed from it (see fees.js).
+ * @typedef {{ key: string, score: number, reasonVi: string, proposalEn: string|null, hours: number|null, bid: ReturnType<typeof suggestBid> }} Scored
  */
 
 export class ClaudeOutputError extends Error {}
@@ -66,7 +67,7 @@ function parseArray(output) {
 }
 
 /** A job Claude skipped comes back as null, so one gap does not sink the batch. */
-function parseScores(output, jobs) {
+function parseScores(output, jobs, bidOpts) {
   const arr = parseArray(output);
   if (!arr.length) throw new ClaudeOutputError('empty reply');
   const byKey = new Map(arr.map((s) => [s?.key, s]));
@@ -75,7 +76,13 @@ function parseScores(output, jobs) {
     if (!s) return null;
     const score = Number(s.score);
     if (!Number.isInteger(score) || score < 1 || score > 10) throw new ClaudeOutputError(`bad score for ${job.key}`);
-    return { key: job.key, score, reasonVi: String(s.reasonVi ?? ''), proposalEn: s.proposalEn ? sanitizeProposal(String(s.proposalEn)) : null };
+    const h = Number(s.hours);
+    const hours = Number.isFinite(h) && h > 0 && h <= 500 ? h : null;
+    return {
+      key: job.key, score, reasonVi: String(s.reasonVi ?? ''),
+      proposalEn: s.proposalEn ? sanitizeProposal(String(s.proposalEn)) : null,
+      hours, bid: suggestBid(job, hours, bidOpts),
+    };
   });
 }
 
@@ -110,7 +117,7 @@ export function defaultRunClaude(prompt) {
  * Scores jobs and drafts proposals for those scoring at least `draftMin`.
  * @returns {Promise<(Scored|null)[]>} in the same order as `jobs`; null when Claude skipped a job
  */
-export async function scoreJobs(jobs, { draftMin }, runClaude = defaultRunClaude) {
+export async function scoreJobs(jobs, { draftMin, rate = 20, hoursPerDay = 2 }, runClaude = defaultRunClaude) {
   if (!jobs.length) return [];
-  return parseScores(await runClaude(buildPrompt(jobs, draftMin)), jobs);
+  return parseScores(await runClaude(buildPrompt(jobs, draftMin)), jobs, { rate, hoursPerDay });
 }

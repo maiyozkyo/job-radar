@@ -13,6 +13,14 @@ function budgetLine(job) {
   return `💰 ${range}${unit}${net != null ? ` (≈ nhận ${money(net)}${unit})` : ''}`;
 }
 
+function bidLines(bid) {
+  if (!bid) return null;
+  return [
+    `💵 Gợi ý bid: ${money(bid.amountUsd)}${bid.unit} · ~${bid.hours} giờ · giao ${bid.days} ngày (≈ nhận ${money(bid.netUsd)}${bid.unit})`,
+    bid.underpaid ? `⚠️ Việc ~${bid.hours} giờ đáng ~${money(bid.wantUsd)}${bid.unit}, ngân sách khách thấp hơn` : null,
+  ].filter(Boolean).join('\n');
+}
+
 function riskLines(job) {
   const flags = riskFlags(job).filter((f) => f.level === 'warn');
   if (!flags.length) return null;
@@ -27,6 +35,7 @@ function jobBlock(job, scored) {
     `[${job.source}] ${job.title}`,
     budgetLine(job),
     scored ? `⭐ ${scored.score}/10 – ${scored.reasonVi}` : null,
+    bidLines(scored?.bid),
     riskLines(job),
     job.url,
     scored?.proposalEn ? `\n✍️ Proposal:\n${scored.proposalEn}` : null,

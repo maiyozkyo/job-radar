@@ -1,10 +1,38 @@
 // Freelancer.com fees (freelancer.com/feesandcharges, checked 2026-11-16):
 // fixed price 10% or $5, whichever is greater; hourly 10%.
 
+const round2 = (n) => Math.round(n * 100) / 100;
+const afterFees = (amount, budgetType) =>
+  round2(budgetType === 'hourly' ? amount * 0.9 : amount - Math.max(amount * 0.1, 5));
+
 /** @param {import('./job.js').Job} job @returns {number|null} */
 export function netUsd(job) {
   if (job.source !== 'freelancer' || job.budgetMaxUsd == null) return null;
+  return afterFees(job.budgetMaxUsd, job.budgetType);
+}
+
+/**
+ * A bid for a Freelancer job from Claude's hours estimate: hours × rate (fixed)
+ * or the rate (hourly), kept inside the client's range. `days` assumes evening
+ * work at `hoursPerDay` plus one day of slack. `underpaid` means the work is
+ * worth more than the client's maximum.
+ * @param {{ rate: number, hoursPerDay: number }} opts
+ */
+export function suggestBid(job, hours, { rate, hoursPerDay }) {
+  if (job.source !== 'freelancer' || job.budgetMaxUsd == null || !(hours > 0)) return null;
+  const min = job.budgetMinUsd ?? 0;
   const max = job.budgetMaxUsd;
-  const net = job.budgetType === 'hourly' ? max * 0.9 : max - Math.max(max * 0.1, 5);
-  return Math.round(net * 100) / 100;
+  const hourly = job.budgetType === 'hourly';
+  const wantUsd = hourly ? rate : Math.round(hours * rate * 100) / 100;
+  const target = hourly ? rate : Math.round(wantUsd / 5) * 5;
+  const amountUsd = Math.min(Math.max(target, min), max);
+  return {
+    amountUsd,
+    unit: hourly ? '/h' : '',
+    hours,
+    days: Math.ceil(hours / hoursPerDay) + 1,
+    netUsd: afterFees(amountUsd, job.budgetType),
+    wantUsd,
+    underpaid: wantUsd > max,
+  };
 }

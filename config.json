@@ -87,5 +87,7 @@
     "vietnam",
     "apac",
     "gmt+7"
-  ]
+  ],
+  "hourlyRateUsd": 20,
+  "hoursPerDay": 2
 }

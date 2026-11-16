@@ -28,3 +28,40 @@ test('config holds the spec floors and thresholds', () => {
   assert.equal(c.alertScore, 7);
   assert.equal(c.digestDraftScore, 8);
 });
+
+import { suggestBid } from '../src/fees.js';
+
+const opts = { rate: 20, hoursPerDay: 2 };
+const job = (budgetType, budgetMinUsd, budgetMaxUsd, source = 'freelancer') => ({ source, budgetType, budgetMinUsd, budgetMaxUsd });
+
+test('fixed bid = hours × rate inside the client range, with net and evening days', () => {
+  assert.deepEqual(suggestBid(job('fixed', 30, 150), 6, opts),
+    { amountUsd: 120, unit: '', hours: 6, days: 4, netUsd: 108, wantUsd: 120, underpaid: false });
+});
+
+test('fixed bid is capped at the budget and flagged when the work is worth more', () => {
+  const b = suggestBid(job('fixed', 50, 100), 8, opts);
+  assert.equal(b.amountUsd, 100);
+  assert.equal(b.wantUsd, 160);
+  assert.equal(b.underpaid, true);
+});
+
+test('fixed bid is raised to the client minimum and rounded to $5', () => {
+  assert.equal(suggestBid(job('fixed', 200, 400), 3, opts).amountUsd, 200);
+  assert.equal(suggestBid(job('fixed', 10, 400), 3.3, opts).amountUsd, 65);
+});
+
+test('hourly bid is the rate inside the range', () => {
+  const b = suggestBid(job('hourly', 15, 25), 10, opts);
+  assert.equal(b.amountUsd, 20);
+  assert.equal(b.unit, '/h');
+  assert.equal(b.netUsd, 18);
+  assert.equal(b.underpaid, false);
+  assert.equal(suggestBid(job('hourly', 10, 15), 10, opts).underpaid, true);
+});
+
+test('no bid without hours, budget or a Freelancer job', () => {
+  assert.equal(suggestBid(job('fixed', 30, 150), null, opts), null);
+  assert.equal(suggestBid(job('fixed', null, null), 5, opts), null);
+  assert.equal(suggestBid(job('salary', null, 90000, 'remoteok'), 5, opts), null);
+});

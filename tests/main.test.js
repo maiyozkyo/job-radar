@@ -123,3 +123,14 @@ test('poll passes the saved rate-limit times to fetchAll and keeps the updated o
   assert.deepEqual(seen, { remotive: NOW - 60 });
   assert.deepEqual(loadState(stateDir).lastFetch, { remotive: NOW - 60, jobicy: NOW });
 });
+
+test('scores are logged with key and title, proposals are not', async () => {
+  const { deps } = setup({ jobs: [urgent(1)] });
+  const lines = [];
+  const orig = console.log;
+  console.log = (l) => lines.push(String(l));
+  try { await run('poll', deps); } finally { console.log = orig; }
+  const line = lines.find((l) => l.startsWith('score '));
+  assert.match(line, /^score 8 - freelancer:1 \| Angular fix \| https:\/\/f\/1$/);
+  assert.ok(!lines.some((l) => l.includes('Hi')), 'proposal text leaked into the log');
+});
