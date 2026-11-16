@@ -49,3 +49,23 @@ Actions secrets:
 Manual run: `gh workflow run radar.yml -f mode=poll` (or `mode=digest`).
 
 Tests: `npm test`.
+
+## Backup trigger (if GitHub's schedule stops firing)
+
+GitHub's `schedule` can be delayed for hours or skipped, especially on new repos. An external cron can start the same workflow through the API instead:
+
+1. Create a **fine-grained personal access token**: GitHub → Settings → Developer settings → Fine-grained tokens. Repository access: only `job-radar`. Permissions: **Actions: Read and write** (nothing else). Expiry: up to 1 year. Worst case if it leaks: someone can start or re-enable this workflow.
+2. On https://cron-job.org (free), create two jobs:
+
+| Job | Schedule (Asia/Ho_Chi_Minh) | Body |
+|---|---|---|
+| radar poll | every 30 minutes | `{"ref":"main","inputs":{"mode":"poll"}}` |
+| radar digest | 08:15 and 19:15 | `{"ref":"main","inputs":{"mode":"digest"}}` |
+
+Both jobs:
+- URL: `https://api.github.com/repos/maiyozkyo/job-radar/actions/workflows/radar.yml/dispatches`
+- Method: `POST`
+- Headers: `Authorization: Bearer <token>`, `Accept: application/vnd.github+json`, `X-GitHub-Api-Version: 2022-11-28`, `Content-Type: application/json`
+- Success is HTTP 204.
+
+The `radar` concurrency group stops runs from overlapping, so GitHub's own schedule and the backup can both stay on.
