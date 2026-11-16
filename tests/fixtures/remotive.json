@@ -1,0 +1,32 @@
+{
+  "0-legal-notice": "Please link back to the URL found on Remotive AND mention Remotive as a source.",
+  "job-count": 2,
+  "jobs": [
+    {
+      "id": 2070001,
+      "url": "https://remotive.com/remote-jobs/writing/technical-writer-2070001",
+      "title": "Technical Writer (API docs)",
+      "company_name": "Acme",
+      "category": "Writing",
+      "tags": ["documentation", "api"],
+      "job_type": "contract",
+      "publication_date": "2026-11-15T10:00:00",
+      "candidate_required_location": "Worldwide",
+      "salary": "$40-$60/hour",
+      "description": "<p>Write <b>API docs</b> for our .NET SDK.</p>"
+    },
+    {
+      "id": 2070002,
+      "url": "https://remotive.com/remote-jobs/software-dev/rails-2070002",
+      "title": "Rails Engineer",
+      "company_name": "",
+      "category": "Software Development",
+      "tags": [],
+      "job_type": "full_time",
+      "publication_date": "2026-11-14T20:33:53",
+      "candidate_required_location": "USA, Canada",
+      "salary": "",
+      "description": "<p>Full-time role.</p>"
+    }
+  ]
+}

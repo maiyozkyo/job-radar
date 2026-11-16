@@ -9,6 +9,15 @@ Rate: about $20–25/h.
 - AI agents and automation with Claude, Gemini and other LLM APIs (tool use, multi-agent workflows, voice-to-order)
 - Docker, Google Cloud Run, Cloud Build, Artifact Registry, Secret Manager, Cloudflare Pages, Neon Postgres
 
+## Other work (done with AI tools, every result reviewed by me)
+
+- English ↔ Vietnamese translation (native Vietnamese, professional English): documents, app/website strings, subtitles
+- Excel / Google Sheets: formulas, cleanup, Apps Script automation
+- Data work: cleaning, merging and converting CSV/Excel/JSON, extracting tables from PDFs
+- Web scraping to CSV/Excel (public data only)
+- Technical writing: API docs, READMEs, how-to guides
+- Desk research and summaries
+
 ## Portfolio (only cite these)
 
 1. **ShopTemplate**: store management system with POS, orders, products, reports, a customer portal, and AI voice ordering (staff speak an order in Vietnamese, Gemini turns it into a draft order). .NET 10 API + Angular.

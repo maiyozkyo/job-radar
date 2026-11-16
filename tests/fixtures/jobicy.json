@@ -1,0 +1,32 @@
+{
+  "friendlyNotice": "Please ensure Jobicy is clearly credited with a direct link to the source.",
+  "jobCount": 2,
+  "jobs": [
+    {
+      "id": 162700,
+      "url": "https://jobicy.com/jobs/162700-vietnamese-translator",
+      "jobTitle": "English to Vietnamese Translator",
+      "companyName": "LinguaCo",
+      "jobIndustry": ["Content &amp; Editorial"],
+      "jobType": ["Contract"],
+      "jobGeo": "Anywhere",
+      "jobLevel": "Any",
+      "jobExcerpt": "Translate app strings",
+      "jobDescription": "<p>Translate app strings from English to Vietnamese.</p>",
+      "pubDate": "2026-11-16T12:49:39+00:00"
+    },
+    {
+      "id": 162628,
+      "url": "https://jobicy.com/jobs/162628-enterprise-sales-engineer",
+      "jobTitle": "Enterprise Sales Engineer",
+      "companyName": "Chainguard",
+      "jobIndustry": ["Sales"],
+      "jobType": ["Full-Time"],
+      "jobGeo": "USA",
+      "jobLevel": "Senior",
+      "jobExcerpt": "",
+      "jobDescription": "",
+      "pubDate": "2026-11-16T12:49:39+00:00"
+    }
+  ]
+}

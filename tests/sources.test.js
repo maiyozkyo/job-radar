@@ -5,6 +5,8 @@ import { fetchHn } from '../src/sources/hn.js';
 import { parseWwr } from '../src/sources/wwr.js';
 import { parseRemoteOk } from '../src/sources/remoteok.js';
 import { parseHimalayas } from '../src/sources/himalayas.js';
+import { parseRemotive } from '../src/sources/remotive.js';
+import { parseJobicy } from '../src/sources/jobicy.js';
 import { fetchAll } from '../src/sources/index.js';
 
 const read = (name) => readFileSync(new URL(`./fixtures/${name}`, import.meta.url), 'utf8');
@@ -58,16 +60,67 @@ test('Himalayas: maps employment type, location and USD-only salary', () => {
   assert.equal(b.budgetMaxUsd, null); // CAD, not converted
 });
 
+const allFetch = (overrides = {}) => async (url) => {
+  for (const [host, res] of Object.entries(overrides)) if (url.includes(host)) return res;
+  if (url.includes('freelancer.com')) return ok(json('freelancer.json'));
+  if (url.includes('weworkremotely')) return ok(null, read('wwr.xml'));
+  if (url.includes('himalayas')) return ok(json('himalayas.json'));
+  if (url.includes('remoteok.com')) return ok(json('remoteok.json'));
+  if (url.includes('remotive.com')) return ok(json('remotive.json'));
+  if (url.includes('jobicy.com')) return ok(json('jobicy.json'));
+  return hnFetch(url);
+};
+
 test('fetchAll: one source down does not stop the others', async () => {
-  const fetchFn = async (url) => {
-    if (url.includes('remoteok.com')) return { ok: false, status: 403, json: async () => ({}), text: async () => '' };
-    if (url.includes('freelancer.com')) return ok(json('freelancer.json'));
-    if (url.includes('weworkremotely')) return ok(null, read('wwr.xml'));
-    if (url.includes('himalayas')) return ok(json('himalayas.json'));
-    return hnFetch(url);
-  };
-  const { jobs, errors } = await fetchAll({ freelancerQueries: ['angular'] }, fetchFn, NOW);
+  const down = { ok: false, status: 403, json: async () => ({}), text: async () => '' };
+  const { jobs, errors } = await fetchAll({ freelancerQueries: ['angular'] }, allFetch({ 'remoteok.com': down }), NOW);
   assert.deepEqual(errors, ['remoteok: HTTP 403']);
   const sources = new Set(jobs.map((j) => j.source));
-  assert.deepEqual([...sources].sort(), ['freelancer', 'himalayas', 'hn', 'wwr']);
+  assert.deepEqual([...sources].sort(), ['freelancer', 'himalayas', 'hn', 'jobicy', 'remotive', 'wwr']);
+});
+
+test('Remotive: company in title, location and job type kept, link back to Remotive', () => {
+  const [a, b] = parseRemotive(json('remotive.json'));
+  assert.equal(a.key, 'remotive:2070001');
+  assert.equal(a.url, 'https://remotive.com/remote-jobs/writing/technical-writer-2070001');
+  assert.equal(a.title, 'Acme: Technical Writer (API docs)');
+  assert.equal(a.location, 'Worldwide');
+  assert.equal(a.employmentType, 'contract');
+  assert.deepEqual(a.tags, ['Writing', 'documentation', 'api']);
+  assert.match(a.description, /API docs/);
+  assert.ok(a.postedAt > 0);
+  assert.equal(b.title, 'Rails Engineer');
+  assert.equal(b.employmentType, 'full_time');
+});
+
+test('Jobicy: maps title, geo, job type and industry', () => {
+  const [a, b] = parseJobicy(json('jobicy.json'));
+  assert.equal(a.key, 'jobicy:162700');
+  assert.equal(a.url, 'https://jobicy.com/jobs/162700-vietnamese-translator');
+  assert.equal(a.title, 'LinguaCo: English to Vietnamese Translator');
+  assert.equal(a.location, 'Anywhere');
+  assert.equal(a.employmentType, 'Contract');
+  assert.deepEqual(a.tags, ['Content & Editorial']);
+  assert.match(a.description, /English to Vietnamese/);
+  assert.equal(b.employmentType, 'Full-Time');
+});
+
+test('fetchAll: Remotive and Jobicy are rate-limited per their API terms', async () => {
+  const calls = [];
+  const fetchFn = async (url) => { calls.push(url); return allFetch()(url); };
+  const lastFetch = { remotive: NOW - 3600, jobicy: NOW - 3 * 3600 };
+  const { okSources } = await fetchAll({ freelancerQueries: ['angular'] }, fetchFn, NOW, lastFetch);
+  assert.ok(!calls.some((u) => u.includes('remotive.com')), 'Remotive asked again within 6 h');
+  assert.ok(calls.some((u) => u.includes('jobicy.com')));
+  assert.ok(!okSources.includes('remotive'));
+  assert.equal(lastFetch.remotive, NOW - 3600);
+  assert.equal(lastFetch.jobicy, NOW);
+});
+
+test('fetchAll: a failed rate-limited source still waits before the next try', async () => {
+  const down = { ok: false, status: 500, json: async () => ({}), text: async () => '' };
+  const lastFetch = {};
+  const { errors } = await fetchAll({ freelancerQueries: ['angular'] }, allFetch({ 'jobicy.com': down }), NOW, lastFetch);
+  assert.deepEqual(errors, ['jobicy: HTTP 500']);
+  assert.equal(lastFetch.jobicy, NOW);
 });

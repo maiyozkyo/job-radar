@@ -11,7 +11,14 @@
     "llm",
     "automation",
     "claude",
-    "openai"
+    "openai",
+    "translation",
+    "vietnamese",
+    "excel",
+    "google sheets",
+    "web scraping",
+    "data extraction",
+    "technical writing"
   ],
   "stackKeywords": [
     "angular",
@@ -33,7 +40,24 @@
     "gemini",
     "n8n",
     "web scraping",
-    "chatgpt"
+    "chatgpt",
+    "vietnamese",
+    "excel",
+    "google sheets",
+    "spreadsheet",
+    "csv",
+    "scraping",
+    "scraper",
+    "data extraction",
+    "data cleaning",
+    "technical writing",
+    "api documentation",
+    "readme",
+    "angularjs",
+    "dockerize",
+    "dockerized",
+    "dockerfile",
+    "chatbots"
   ],
   "blockKeywords": [
     "commission",

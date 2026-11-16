@@ -15,7 +15,8 @@ const newestFirst = (a, b) => b.postedAt - a.postedAt;
 
 async function poll(state, deps) {
   const { config, now } = deps;
-  const { jobs, errors, okSources } = await deps.fetchAll(config);
+  state.lastFetch ??= {};
+  const { jobs, errors, okSources } = await deps.fetchAll(config, undefined, now, state.lastFetch);
   const { fresh, firstRun } = takeNew(state, jobs, now, okSources);
   if (firstRun) {
     await deps.sendMessage('✅ Job radar đã chạy lần đầu, bắt đầu theo dõi.');

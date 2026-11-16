@@ -6,12 +6,13 @@ import { join } from 'node:path';
  * `seeded` records which sources have answered at least once: a source's first
  * batch is only recorded, so a source that was down at the start (or is added
  * later) does not flood the user with every open job.
- * @typedef {{ initialized: boolean, seeded: Record<string, boolean>, seen: Record<string, number>, pending: import('./job.js').Job[] }} State
+ * `lastFetch` holds the last call time of rate-limited sources (unix seconds).
+ * @typedef {{ initialized: boolean, seeded: Record<string, boolean>, seen: Record<string, number>, pending: import('./job.js').Job[], lastFetch: Record<string, number> }} State
  */
 
 const KEEP_SEEN = 60 * 24 * 3600;
 const file = (dir) => join(dir, 'state.json');
-const empty = () => ({ initialized: false, seeded: {}, seen: {}, pending: [] });
+const empty = () => ({ initialized: false, seeded: {}, seen: {}, pending: [], lastFetch: {} });
 
 /** @returns {State} */
 export function loadState(dir) {
@@ -24,7 +25,7 @@ export function loadState(dir) {
     console.warn('state.json is corrupt, starting over');
     return empty();
   }
-  return { initialized: !!s.initialized, seeded: s.seeded ?? {}, seen: s.seen ?? {}, pending: s.pending ?? [] };
+  return { initialized: !!s.initialized, seeded: s.seeded ?? {}, seen: s.seen ?? {}, pending: s.pending ?? [], lastFetch: s.lastFetch ?? {} };
 }
 
 /** Writes to a temp file and renames, so a killed run never leaves half a file. */

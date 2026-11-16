@@ -107,3 +107,19 @@ test('digest with nothing pending sends nothing', async () => {
   await run('digest', deps);
   assert.equal(sent.length, 0);
 });
+
+test('poll passes the saved rate-limit times to fetchAll and keeps the updated ones', async () => {
+  const { deps, stateDir } = setup({ jobs: [] });
+  const s = loadState(stateDir);
+  s.lastFetch = { remotive: NOW - 60 };
+  saveState(stateDir, s);
+  let seen;
+  deps.fetchAll = async (cfg, fetchFn, now, lastFetch) => {
+    seen = { ...lastFetch };
+    lastFetch.jobicy = now;
+    return { jobs: [], errors: [], okSources: ['jobicy'] };
+  };
+  await run('poll', deps);
+  assert.deepEqual(seen, { remotive: NOW - 60 });
+  assert.deepEqual(loadState(stateDir).lastFetch, { remotive: NOW - 60, jobicy: NOW });
+});

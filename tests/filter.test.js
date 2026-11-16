@@ -88,3 +88,28 @@ test('plural and ChatGPT forms of AI keywords match', () => {
   assert.equal(keep(fl({ title: 'Integrate LLMs into our app' })), true);
   assert.equal(keep(fl({ title: 'ChatGPT integration' })), true);
 });
+
+test('Remotive and Jobicy follow the remote-board rules', () => {
+  for (const source of ['remotive', 'jobicy']) {
+    assert.equal(keep(board(source, { location: 'USA' })), false, `${source}: US-only`);
+    assert.equal(keep(board(source, { location: 'Worldwide', employmentType: 'full_time', description: '' })), false, `${source}: full-time`);
+    assert.equal(keep(board(source, { location: 'Anywhere', employmentType: 'Contract' })), true, `${source}: open contract`);
+    assert.equal(isUrgent(board(source)), false);
+  }
+});
+
+test('work Claude can do beyond code passes the keyword filter', () => {
+  for (const title of ['Translate app from English to Vietnamese', 'Google Sheets automation', 'Clean and merge CSV data', 'Web scraping product prices', 'Write API documentation', 'Extract tables from PDF to Excel']) {
+    assert.equal(keep(fl({ title })), true, title);
+  }
+});
+
+test('academic cheating and manual data entry stay blocked', () => {
+  assert.equal(keep(fl({ title: 'Write my essay on Excel history' })), false);
+  assert.equal(keep(fl({ title: 'Data entry from PDF to Excel' })), false);
+});
+
+test('long keywords match at a word start: "excellent" is not Excel', () => {
+  assert.equal(keep(fl({ title: 'Office assistant', description: 'Excellent communication skills' })), false);
+  assert.equal(keep(fl({ title: 'Office assistant', description: 'Build reports in Excel' })), true);
+});

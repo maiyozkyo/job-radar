@@ -2,18 +2,17 @@ import { riskFlags } from './risk.js';
 
 const escape = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-// Short keywords and ones with symbols must match as whole tokens, so ".net"
-// does not hit "asp.network" and "c#" does not hit plain "c". A plural "s" is allowed ("LLMs").
+// Keywords match whole words, so ".net" does not hit "asp.network", "c#" does
+// not hit plain "c" and "excel" does not hit "excellent". A plural "s" is
+// allowed ("LLMs"); other forms ("angularjs", "dockerize") are listed in config.
 const matcher = (kw) => {
-  const k = kw.toLowerCase();
-  if (k.length > 3 && !/[#.]/.test(k)) return (text) => text.includes(k);
-  const re = new RegExp(`(?<![a-z0-9])${escape(k)}s?(?![a-z0-9#])`);
+  const re = new RegExp(`(?<![a-z0-9])${escape(kw.toLowerCase())}s?(?![a-z0-9#])`);
   return (text) => re.test(text);
 };
 const firstMatch = (text, keywords) => keywords.find((kw) => matcher(kw)(text));
 
-const BOARDS = new Set(['wwr', 'remoteok', 'himalayas']);
-const FULL_TIME = /full[\s-]?time/i;
+const BOARDS = new Set(['wwr', 'remoteok', 'himalayas', 'remotive', 'jobicy']);
+const FULL_TIME = /full[\s_-]?time/i; // Remotive writes "full_time"
 const FLEXIBLE = /contract|part[\s-]?time|freelance/i;
 
 /**
