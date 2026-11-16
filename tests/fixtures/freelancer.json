@@ -1,0 +1,45 @@
+{
+  "status": "success",
+  "result": {
+    "projects": [
+      {
+        "id": 40816417,
+        "title": "Angular dashboard fix",
+        "seo_url": "angular/Angular-dashboard-fix",
+        "type": "fixed",
+        "budget": { "minimum": 12500, "maximum": 100000 },
+        "currency": { "code": "INR", "exchange_rate": 0.010618 },
+        "description": "Fix charts in an Angular 17 dashboard.",
+        "preview_description": "Fix charts",
+        "bid_stats": { "bid_count": 6 },
+        "time_submitted": 1794564778,
+        "jobs": [{ "id": 1, "name": "Angular" }, { "id": 2, "name": "TypeScript" }]
+      },
+      {
+        "id": 40816500,
+        "title": "C# API developer",
+        "seo_url": "c-sharp/API-developer",
+        "type": "hourly",
+        "budget": { "minimum": 15, "maximum": 25 },
+        "currency": { "code": "USD", "exchange_rate": 1 },
+        "description": null,
+        "preview_description": "Build an ASP.NET Core API",
+        "bid_stats": { "bid_count": 12 },
+        "time_submitted": 1794564900,
+        "jobs": [{ "id": 3, "name": "C# Programming" }]
+      },
+      {
+        "id": 40816600,
+        "title": "Docker setup",
+        "seo_url": "docker/Docker-setup",
+        "type": "fixed",
+        "budget": { "minimum": 50, "maximum": 100 },
+        "currency": { "code": "EUR" },
+        "description": "Dockerize app",
+        "bid_stats": { "bid_count": 2 },
+        "time_submitted": 1794565000,
+        "jobs": []
+      }
+    ]
+  }
+}
