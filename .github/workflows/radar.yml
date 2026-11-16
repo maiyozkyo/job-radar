@@ -26,7 +26,7 @@ jobs:
     env:
       MODE: ${{ github.event_name == 'workflow_dispatch' && inputs.mode || (github.event.schedule == '0 1,12 * * *' && 'digest' || 'poll') }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Check out state branch
         run: |
@@ -39,7 +39,7 @@ jobs:
             git worktree add --orphan -b state state
           fi
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 22
           cache: npm
@@ -47,7 +47,7 @@ jobs:
       - run: npm ci
 
       - name: Install Claude Code
-        run: npm i -g @anthropic-ai/claude-code
+        run: npm i -g @anthropic-ai/claude-code@2.1.325
 
       - name: Run ${{ env.MODE }}
         run: npm run "$MODE"
