@@ -8,9 +8,9 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: poll or digest
+        description: poll, digest, or selftest (checks Claude only)
         type: choice
-        options: [poll, digest]
+        options: [poll, digest, selftest]
         default: poll
 
 concurrency:
@@ -58,8 +58,12 @@ jobs:
 
       - run: npm ci --ignore-scripts
 
+      # Official package, pinned. Its postinstall puts the native binary in place,
+      # so scripts must run here (they stay off for npm ci above).
       - name: Install Claude Code
-        run: npm i -g --ignore-scripts @anthropic-ai/claude-code@2.1.325
+        run: |
+          npm i -g @anthropic-ai/claude-code@2.1.325
+          claude --version
 
       - name: Run ${{ env.MODE }}
         run: npm run "$MODE"
