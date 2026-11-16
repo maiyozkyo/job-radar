@@ -50,3 +50,10 @@ test('all queries failing rejects so the source is reported', async () => {
   const fetchFn = async () => ({ ok: false, status: 403, json: async () => ({}) });
   await assert.rejects(fetchFreelancer(config, fetchFn), /403/);
 });
+
+test('requests send a User-Agent and a timeout', async () => {
+  let init;
+  await fetchFreelancer({ freelancerQueries: ['angular'] }, async (url, i) => { init = i; return okResponse(fixture); });
+  assert.match(init.headers['User-Agent'], /job-radar/);
+  assert.ok(init.signal);
+});

@@ -19,8 +19,8 @@ test('parses JSON wrapped in prose and returns input order', async () => {
   assert.equal(out[0].proposalEn, 'Hi');
 });
 
-test('a missing key is an output error', async () => {
-  await assert.rejects(scoreJobs(jobs, { draftMin: 7 }, reply([good[0]])), ClaudeOutputError);
+test('an empty array is an output error', async () => {
+  await assert.rejects(scoreJobs(jobs, { draftMin: 7 }, reply([])), ClaudeOutputError);
 });
 
 test('a score outside 1-10 is an output error', async () => {
@@ -63,4 +63,17 @@ test('links in proposals outside the allowlist are removed', async () => {
   assert.doesNotMatch(out.proposalEn, /evil/);
   assert.match(out.proposalEn, /github\.com\/maiyozkyo\/claude-agent-office/);
   assert.match(out.proposalEn, /\[link bị xóa\]/);
+});
+
+test('a string score is coerced and a missing job comes back null', async () => {
+  const out = await scoreJobs(jobs, { draftMin: 7 }, reply([{ ...good[1], score: '8' }]));
+  assert.equal(out[0].score, 8);
+  assert.equal(out[1], null);
+});
+
+test('emails and phone numbers in proposals are removed', async () => {
+  const out = await scoreJobs(jobs, { draftMin: 7 }, reply([
+    { ...good[1], proposalEn: 'Mail me at bob@evil.example or WhatsApp +84 912 345 678.' }, good[0],
+  ]));
+  assert.doesNotMatch(out[0].proposalEn, /bob@|912/);
 });

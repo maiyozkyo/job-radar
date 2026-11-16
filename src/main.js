@@ -4,15 +4,19 @@ import { fetchAll } from './sources/index.js';
 import { filterJob, isUrgent } from './filter.js';
 import { loadState, saveState, takeNew, prune } from './state.js';
 import { scoreJobs } from './claude.js';
-import { formatAlert, formatDigest, sendMessage } from './telegram.js';
+import { formatAlert, formatDigest, formatUnscored, sendMessage } from './telegram.js';
 
 const MAX_DIGEST = 10;
 const MAX_DIGEST_SCORING = 40;
+const MAX_PENDING = 200;
+
+const claudeWarning = (err) => `Claude lỗi: ${err.message.slice(0, 120)}, chưa chấm điểm`;
+const newestFirst = (a, b) => b.postedAt - a.postedAt;
 
 async function poll(state, deps) {
   const { config, now } = deps;
-  const { jobs, errors } = await deps.fetchAll(config);
-  const { fresh, firstRun } = takeNew(state, jobs, now);
+  const { jobs, errors, okSources } = await deps.fetchAll(config);
+  const { fresh, firstRun } = takeNew(state, jobs, now, okSources);
   if (firstRun) {
     await deps.sendMessage('✅ Job radar đã chạy lần đầu, bắt đầu theo dõi.');
     return 1;
@@ -20,46 +24,50 @@ async function poll(state, deps) {
 
   const kept = fresh.filter((j) => filterJob(j, config).keep);
   const urgent = kept.filter(isUrgent);
-  state.pending.push(...kept.filter((j) => !isUrgent(j)));
+  state.pending = [...state.pending, ...kept.filter((j) => !isUrgent(j))].sort(newestFirst).slice(0, MAX_PENDING);
 
-  let alerts;
+  let alerts = [];
+  let unscored = [];
+  let unscoredWarning = 'Claude bỏ sót, chưa chấm điểm';
   try {
     const scored = await deps.scoreJobs(urgent, { draftMin: config.alertScore });
-    alerts = urgent
-      .map((job, i) => ({ job, scored: scored[i], warning: null }))
-      .filter((a) => a.scored.score >= config.alertScore);
+    urgent.forEach((job, i) => {
+      if (!scored[i]) unscored.push(job);
+      else if (scored[i].score >= config.alertScore) alerts.push({ job, scored: scored[i] });
+    });
   } catch (err) {
-    const warning = `Claude lỗi: ${err.message.slice(0, 120)}, chưa chấm điểm`;
-    alerts = urgent.map((job) => ({ job, scored: null, warning }));
+    unscored = urgent;
+    unscoredWarning = claudeWarning(err);
   }
 
-  const sourceWarning = errors.length ? `Nguồn lỗi: ${errors.join('; ')}` : null;
-  for (const [i, a] of alerts.entries()) {
-    const warning = [a.warning, i === 0 ? sourceWarning : null].filter(Boolean).join('\n⚠️ ');
-    await deps.sendMessage(formatAlert(a.job, a.scored, warning || undefined));
-  }
-  return alerts.length;
+  const messages = [
+    ...alerts.map((a) => formatAlert(a.job, a.scored)),
+    ...(unscored.length ? [formatUnscored(unscored, unscoredWarning)] : []),
+  ];
+  if (messages.length && errors.length) messages[0] += `\n\n⚠️ Nguồn lỗi: ${errors.join('; ')}`;
+  for (const text of messages) await deps.sendMessage(text);
+  return messages.length;
 }
 
 async function digest(state, deps) {
   const { config } = deps;
   if (!state.pending.length) return 0;
-  const pending = [...state.pending].sort((a, b) => b.postedAt - a.postedAt).slice(0, MAX_DIGEST_SCORING);
+  const pending = [...state.pending].sort(newestFirst).slice(0, MAX_DIGEST_SCORING);
 
-  let items;
-  let warning;
+  let scored;
   try {
-    const scored = await deps.scoreJobs(pending, { draftMin: config.digestDraftScore });
-    items = pending
-      .map((job, i) => ({ job, scored: scored[i] }))
-      .filter((it) => it.scored.score >= config.alertScore)
-      .sort((a, b) => b.scored.score - a.scored.score);
+    scored = await deps.scoreJobs(pending, { draftMin: config.digestDraftScore });
   } catch (err) {
-    items = pending.map((job) => ({ job, scored: null }));
-    warning = `Claude lỗi: ${err.message.slice(0, 120)}, chưa chấm điểm`;
+    // Keep the queue: the next digest retries instead of dropping the jobs.
+    await deps.sendMessage(`⚠️ ${claudeWarning(err)}. ${state.pending.length} job remote để lại cho lần tổng hợp sau.`);
+    return 1;
   }
 
-  const text = formatDigest(items.slice(0, MAX_DIGEST), warning);
+  const items = pending
+    .map((job, i) => ({ job, scored: scored[i] }))
+    .filter((it) => it.scored && it.scored.score >= config.alertScore)
+    .sort((a, b) => b.scored.score - a.scored.score);
+  const text = formatDigest(items.slice(0, MAX_DIGEST));
   if (text) await deps.sendMessage(text);
   state.pending = [];
   return text ? 1 : 0;

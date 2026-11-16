@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync } from 'node:fs';
+import { mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { loadState, saveState, takeNew, prune } from '../src/state.js';
@@ -12,7 +12,7 @@ const jobs = (...ids) => ids.map((id) => makeJob({ source: 'freelancer', id }));
 
 test('missing state.json gives an empty, uninitialized state', () => {
   const dir = mkdtempSync(join(tmpdir(), 'radar-'));
-  assert.deepEqual(loadState(dir), { initialized: false, seen: {}, pending: [] });
+  assert.deepEqual(loadState(dir), { initialized: false, seeded: {}, seen: {}, pending: [] });
 });
 
 test('first run marks everything seen and returns nothing', () => {
@@ -46,7 +46,29 @@ test('prune drops ids older than 60 days', () => {
 
 test('save then load round-trips', () => {
   const dir = mkdtempSync(join(tmpdir(), 'radar-'));
-  const state = { initialized: true, seen: { a: 1 }, pending: jobs(9) };
+  const state = { initialized: true, seeded: { freelancer: true }, seen: { a: 1 }, pending: jobs(9) };
   saveState(dir, state);
   assert.deepEqual(loadState(dir), state);
+});
+
+test('a source answering for the first time is seeded, not alerted', () => {
+  const state = { initialized: true, seeded: { hn: true }, seen: {}, pending: [] };
+  const { fresh } = takeNew(state, jobs(1, 2), NOW, ['freelancer']);
+  assert.equal(fresh.length, 0);
+  assert.equal(state.seeded.freelancer, true);
+  const next = takeNew(state, jobs(1, 2, 3), NOW, ['freelancer']);
+  assert.deepEqual(next.fresh.map((j) => j.key), ['freelancer:3']);
+});
+
+test('a source that failed stays unseeded', () => {
+  const state = { initialized: false, seeded: {}, seen: {}, pending: [] };
+  takeNew(state, [], NOW, ['hn']);
+  assert.equal(state.seeded.freelancer, undefined);
+  assert.equal(state.seeded.hn, true);
+});
+
+test('a corrupt state.json starts over instead of crashing', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'radar-'));
+  writeFileSync(join(dir, 'state.json'), '{"initialized": true, "seen": {');
+  assert.equal(loadState(dir).initialized, false);
 });

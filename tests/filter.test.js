@@ -74,3 +74,17 @@ test('urgent sources are Freelancer and HN', () => {
   assert.equal(isUrgent(makeJob({ source: 'hn', id: 1 })), true);
   assert.equal(isUrgent(board('wwr', {})), false);
 });
+
+test('block keywords only look at the title and tags', () => {
+  assert.equal(keep(fl({ title: 'Angular dashboard', description: 'Show daily sales and email verification from our .NET API' })), true);
+  assert.equal(keep(fl({ title: 'Angular dashboard', tags: ['Sales'] })), false);
+});
+
+test('a plain "Remote" location counts as open', () => {
+  assert.equal(keep(board('remoteok', { location: 'Remote' })), true);
+});
+
+test('plural and ChatGPT forms of AI keywords match', () => {
+  assert.equal(keep(fl({ title: 'Integrate LLMs into our app' })), true);
+  assert.equal(keep(fl({ title: 'ChatGPT integration' })), true);
+});

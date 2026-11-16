@@ -14,11 +14,11 @@ const board = (id) => makeJob({ source: 'remoteok', id, title: 'Contract Angular
 
 function setup({ jobs = [], errors = [], initialized = true, pending = [], scores = {}, scoreFails = false, sendFails = false } = {}) {
   const stateDir = mkdtempSync(join(tmpdir(), 'radar-'));
-  if (initialized) saveState(stateDir, { initialized: true, seen: {}, pending });
+  if (initialized) saveState(stateDir, { initialized: true, seeded: { freelancer: true, hn: true, wwr: true, remoteok: true, himalayas: true }, seen: {}, pending });
   const sent = [];
   const deps = {
     stateDir, config, env: {}, now: NOW,
-    fetchAll: async () => ({ jobs, errors }),
+    fetchAll: async () => ({ jobs, errors, okSources: ['freelancer', 'hn', 'wwr', 'remoteok', 'himalayas'] }),
     scoreJobs: async (list) => {
       if (scoreFails) throw new Error('token expired');
       return list.map((j) => ({ key: j.key, score: scores[j.key] ?? 8, reasonVi: 'ok', proposalEn: 'Hi' }));
@@ -43,11 +43,28 @@ test('urgent job scored 8 is alerted, scored 6 is not', async () => {
   assert.match(sent[0], /https:\/\/f\/1/);
 });
 
-test('Claude failure still alerts every kept urgent job with a warning', async () => {
+test('Claude failure sends every kept urgent job in one warning message', async () => {
   const { deps, sent } = setup({ jobs: [urgent(1), urgent(2)], scoreFails: true });
   await run('poll', deps);
-  assert.equal(sent.length, 2);
-  assert.ok(sent.every((t) => t.includes('⚠️ Claude lỗi')));
+  assert.equal(sent.length, 1);
+  assert.match(sent[0], /⚠️ Claude lỗi/);
+  assert.match(sent[0], /https:\/\/f\/1/);
+  assert.match(sent[0], /https:\/\/f\/2/);
+});
+
+test('a job Claude skipped is sent unscored, not lost', async () => {
+  const { deps, sent } = setup({ jobs: [urgent(1)] });
+  deps.scoreJobs = async (list) => list.map(() => null);
+  await run('poll', deps);
+  assert.equal(sent.length, 1);
+  assert.match(sent[0], /https:\/\/f\/1/);
+});
+
+test('digest keeps pending when Claude fails', async () => {
+  const { deps, sent, stateDir } = setup({ pending: [board(1)], scoreFails: true });
+  await run('digest', deps);
+  assert.equal(loadState(stateDir).pending.length, 1);
+  assert.match(sent[0], /Claude lỗi/);
 });
 
 test('board jobs are queued, not alerted', async () => {

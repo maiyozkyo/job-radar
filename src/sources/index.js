@@ -6,7 +6,7 @@ import { fetchHimalayas } from './himalayas.js';
 
 /**
  * Runs every source; a failing source is reported in `errors`, never thrown.
- * @returns {Promise<{ jobs: import('../job.js').Job[], errors: string[] }>}
+ * @returns {Promise<{ jobs: import('../job.js').Job[], errors: string[], okSources: string[] }>}
  */
 export async function fetchAll(config, fetchFn = fetch, now = Math.floor(Date.now() / 1000)) {
   const sources = {
@@ -20,9 +20,10 @@ export async function fetchAll(config, fetchFn = fetch, now = Math.floor(Date.no
   const results = await Promise.allSettled(names.map((n) => sources[n]()));
   const jobs = [];
   const errors = [];
+  const okSources = [];
   results.forEach((r, i) => {
-    if (r.status === 'fulfilled') jobs.push(...r.value);
+    if (r.status === 'fulfilled') { jobs.push(...r.value); okSources.push(names[i]); }
     else errors.push(`${names[i]}: ${r.reason?.message ?? r.reason}`);
   });
-  return { jobs, errors };
+  return { jobs, errors, okSources };
 }

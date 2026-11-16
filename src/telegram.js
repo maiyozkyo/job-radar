@@ -63,15 +63,33 @@ export function splitMessage(text, limit = LIMIT) {
   return parts;
 }
 
-export async function sendMessage(text, env, fetchFn = fetch) {
+/** Jobs Claude could not score, in one message instead of one each. */
+export function formatUnscored(jobs, warning) {
+  return [
+    `⚠️ ${warning}`,
+    ...jobs.map((job) => [`[${job.source}] ${job.title}`, budgetLine(job), riskLines(job), job.url].filter(Boolean).join('\n')),
+  ].join('\n\n');
+}
+
+const GAP_MS = 1100; // Telegram allows about one message a second per chat.
+const sleepReal = (ms) => new Promise((r) => setTimeout(r, ms));
+
+export async function sendMessage(text, env, fetchFn = fetch, sleep = sleepReal) {
   const url = `https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`;
+  const post = (part) => fetchFn(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ chat_id: env.TELEGRAM_CHAT_ID, text: part, disable_web_page_preview: true }),
+  });
   for (const part of splitMessage(text)) {
-    const res = await fetchFn(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chat_id: env.TELEGRAM_CHAT_ID, text: part, disable_web_page_preview: true }),
-    });
+    let res = await post(part);
+    if (res.status === 429) {
+      const body = await res.json().catch(() => ({}));
+      await sleep((body?.parameters?.retry_after ?? 5) * 1000);
+      res = await post(part);
+    }
     // Never include the URL in errors: it contains the bot token.
     if (!res.ok) throw new Error(`Telegram sendMessage failed: HTTP ${res.status} ${(await res.text()).slice(0, 200)}`);
+    await sleep(GAP_MS);
   }
 }

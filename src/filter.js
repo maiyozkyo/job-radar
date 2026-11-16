@@ -1,13 +1,13 @@
 import { riskFlags } from './risk.js';
 
-const escape =(s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const escape = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 // Short keywords and ones with symbols must match as whole tokens, so ".net"
-// does not hit "asp.network" and "c#" does not hit plain "c".
+// does not hit "asp.network" and "c#" does not hit plain "c". A plural "s" is allowed ("LLMs").
 const matcher = (kw) => {
   const k = kw.toLowerCase();
   if (k.length > 3 && !/[#.]/.test(k)) return (text) => text.includes(k);
-  const re = new RegExp(`(?<![a-z0-9])${escape(k)}(?![a-z0-9#])`);
+  const re = new RegExp(`(?<![a-z0-9])${escape(k)}s?(?![a-z0-9#])`);
   return (text) => re.test(text);
 };
 const firstMatch = (text, keywords) => keywords.find((kw) => matcher(kw)(text));
@@ -25,7 +25,10 @@ export function filterJob(job, config) {
   const text = `${job.title}\n${job.description}\n${job.tags.join(' ')}`.toLowerCase();
   const drop = (reason) => ({ keep: false, reason });
 
-  const blocked = firstMatch(text, config.blockKeywords);
+  // Block words only in the title and tags: a description saying "daily sales
+  // report" or "email verification" is a normal job.
+  const blocked = firstMatch(`${job.title}
+${job.tags.join(' ')}`.toLowerCase(), config.blockKeywords);
   if (blocked) return drop(`block keyword: ${blocked}`);
   const scam = riskFlags(job).find((f) => f.level === 'block');
   if (scam) return drop(`risk: ${scam.label}`);
@@ -40,7 +43,8 @@ export function filterJob(job, config) {
   }
 
   if (BOARDS.has(job.source)) {
-    const loc = (job.location ?? '').toLowerCase().trim();
+    let loc = (job.location ?? '').toLowerCase().trim();
+    if (loc === 'remote') loc = '';
     if (loc && !config.allowedLocations.some((a) => loc.includes(a))) return drop(`location: ${job.location}`);
     const fullTime = FULL_TIME.test(job.employmentType ?? '') || FULL_TIME.test(job.title);
     if (fullTime && !FLEXIBLE.test(text)) return drop('full-time only');

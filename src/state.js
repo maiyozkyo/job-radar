@@ -1,38 +1,55 @@
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 /**
  * Lives on the `state` branch. Holds job data only, never scores or proposals.
- * @typedef {{ initialized: boolean, seen: Record<string, number>, pending: import('./job.js').Job[] }} State
+ * `seeded` records which sources have answered at least once: a source's first
+ * batch is only recorded, so a source that was down at the start (or is added
+ * later) does not flood the user with every open job.
+ * @typedef {{ initialized: boolean, seeded: Record<string, boolean>, seen: Record<string, number>, pending: import('./job.js').Job[] }} State
  */
 
 const KEEP_SEEN = 60 * 24 * 3600;
 const file = (dir) => join(dir, 'state.json');
+const empty = () => ({ initialized: false, seeded: {}, seen: {}, pending: [] });
 
 /** @returns {State} */
 export function loadState(dir) {
-  if (!existsSync(file(dir))) return { initialized: false, seen: {}, pending: [] };
-  const raw = readFileSync(file(dir), 'utf8').trim();
-  const s = raw ? JSON.parse(raw) : {};
-  return { initialized: !!s.initialized, seen: s.seen ?? {}, pending: s.pending ?? [] };
+  if (!existsSync(file(dir))) return empty();
+  let s;
+  try {
+    const raw = readFileSync(file(dir), 'utf8').trim();
+    s = raw ? JSON.parse(raw) : {};
+  } catch {
+    console.warn('state.json is corrupt, starting over');
+    return empty();
+  }
+  return { initialized: !!s.initialized, seeded: s.seeded ?? {}, seen: s.seen ?? {}, pending: s.pending ?? [] };
 }
 
+/** Writes to a temp file and renames, so a killed run never leaves half a file. */
 export function saveState(dir, state) {
   mkdirSync(dir, { recursive: true });
-  writeFileSync(file(dir), JSON.stringify(state, null, 1) + '\n');
+  const tmp = `${file(dir)}.tmp`;
+  writeFileSync(tmp, JSON.stringify(state, null, 1) + '\n');
+  renameSync(tmp, file(dir));
 }
 
 /**
- * Marks every job seen and returns the ones not seen before. On the first run
- * nothing is returned, so the user is not flooded with every open job.
+ * Marks every job seen and returns the ones not seen before from sources that
+ * were already seeded. `okSources` are the sources that answered this run
+ * (default: the sources present in `jobs`).
  */
-export function takeNew(state, jobs, now) {
+export function takeNew(state, jobs, now, okSources = [...new Set(jobs.map((j) => j.source))]) {
+  // A state written before `seeded` existed already knows every source.
+  if (!state.seeded) state.seeded = Object.fromEntries(state.initialized ? okSources.map((s) => [s, true]) : []);
   const firstRun = !state.initialized;
   const fresh = [];
   for (const job of jobs) {
-    if (!(job.key in state.seen) && !firstRun) fresh.push(job);
+    if (!(job.key in state.seen) && state.seeded[job.source] && !firstRun) fresh.push(job);
     state.seen[job.key] = now;
   }
+  for (const source of okSources) state.seeded[source] = true;
   state.initialized = true;
   return { fresh, firstRun };
 }

@@ -1,4 +1,5 @@
 import { makeJob } from '../job.js';
+import { getJson } from './http.js';
 
 const API = 'https://www.freelancer.com/api/projects/0.1/projects/active/';
 
@@ -37,9 +38,7 @@ export async function fetchFreelancer(config, fetchFn = fetch) {
   for (const q of config.freelancerQueries) {
     const url = `${API}?query=${encodeURIComponent(q)}&limit=30&full_description=true&job_details=true&sort_field=time_updated`;
     try {
-      const res = await fetchFn(url);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      for (const job of parseFreelancer(await res.json())) byId.set(job.id, job);
+      for (const job of parseFreelancer(await getJson(url, fetchFn))) byId.set(job.id, job);
       okCount++;
     } catch (err) {
       lastError = err;

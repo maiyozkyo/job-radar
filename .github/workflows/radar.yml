@@ -2,8 +2,9 @@ name: radar
 
 on:
   schedule:
-    - cron: "*/30 * * * *"   # poll
-    - cron: "0 1,12 * * *"   # digest at 08:00 and 19:00 GMT+7
+    # Off the :00 mark, the busiest and most delayed slot on GitHub.
+    - cron: "7,37 * * * *"   # poll
+    - cron: "15 1,12 * * *"  # digest at 08:15 and 19:15 GMT+7
   workflow_dispatch:
     inputs:
       mode:
@@ -18,25 +19,36 @@ concurrency:
 
 permissions:
   contents: write
+  actions: write   # only for re-enabling this workflow (keepalive)
 
 jobs:
   run:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
-      MODE: ${{ github.event_name == 'workflow_dispatch' && inputs.mode || (github.event.schedule == '0 1,12 * * *' && 'digest' || 'poll') }}
+      MODE: ${{ github.event_name == 'workflow_dispatch' && inputs.mode || (github.event.schedule == '15 1,12 * * *' && 'digest' || 'poll') }}
     steps:
+      # No token left in .git/config while dependencies and the bot run;
+      # the token is used only in the push at the end.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Check out state branch
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if git ls-remote --exit-code --heads origin state > /dev/null; then
+          set +e
+          git ls-remote --exit-code --heads origin state > /dev/null
+          code=$?
+          set -e
+          if [ "$code" = 0 ]; then
             git fetch --depth 1 origin state
             git worktree add -B state state FETCH_HEAD
-          else
+          elif [ "$code" = 2 ]; then
             git worktree add --orphan -b state state
+          else
+            echo "could not reach origin (exit $code)"; exit 1
           fi
 
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -44,10 +56,10 @@ jobs:
           node-version: 22
           cache: npm
 
-      - run: npm ci
+      - run: npm ci --ignore-scripts
 
       - name: Install Claude Code
-        run: npm i -g @anthropic-ai/claude-code@2.1.325
+        run: npm i -g --ignore-scripts @anthropic-ai/claude-code@2.1.325
 
       - name: Run ${{ env.MODE }}
         run: npm run "$MODE"
@@ -59,9 +71,20 @@ jobs:
       - name: Save state
         if: always()
         working-directory: state
+        env:
+          TOKEN: ${{ github.token }}
         run: |
           [ -f state.json ] || exit 0
           git add state.json
           git diff --cached --quiet && exit 0
           git commit -m "state: $MODE $(date -u +%Y-%m-%dT%H:%MZ)"
-          git push origin state
+          remote="https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git push "$remote" state || (sleep 5 && git push "$remote" state)
+
+      # GitHub disables schedules in public repos after 60 days without
+      # activity; re-enabling on each digest keeps the radar alive.
+      - name: Keep schedule enabled
+        if: env.MODE == 'digest'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X PUT "repos/${GITHUB_REPOSITORY}/actions/workflows/radar.yml/enable" || true

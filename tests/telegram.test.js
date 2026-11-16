@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { formatAlert, formatDigest, sendMessage, splitMessage } from '../src/telegram.js';
+import { formatAlert, formatDigest, formatUnscored, sendMessage, splitMessage } from '../src/telegram.js';
 import { makeJob } from '../src/job.js';
 
 const job = makeJob({
@@ -54,14 +54,42 @@ test('sendMessage posts plain text and hides the token on error', async () => {
   await sendMessage('hi', env, async (url, init) => {
     calls.push({ url, body: JSON.parse(init.body) });
     return { ok: true, status: 200, text: async () => '' };
-  });
+  }, async () => {});
   assert.match(calls[0].url, /bot123:SECRET\/sendMessage$/);
   assert.equal(calls[0].body.chat_id, '42');
   assert.equal(calls[0].body.text, 'hi');
   assert.equal('parse_mode' in calls[0].body, false);
 
   await assert.rejects(
-    sendMessage('hi', env, async () => ({ ok: false, status: 401, text: async () => 'Unauthorized' })),
+    sendMessage('hi', env, async () => ({ ok: false, status: 401, text: async () => 'Unauthorized' }), async () => {}),
     (err) => /401/.test(err.message) && !err.message.includes('SECRET'),
   );
+});
+
+test('a 429 waits retry_after and retries once', async () => {
+  const env = { TELEGRAM_BOT_TOKEN: 't', TELEGRAM_CHAT_ID: '1' };
+  const waits = [];
+  let calls = 0;
+  await sendMessage('hi', env, async () => {
+    calls++;
+    if (calls === 1) return { ok: false, status: 429, json: async () => ({ parameters: { retry_after: 3 } }), text: async () => '' };
+    return { ok: true, status: 200, text: async () => '' };
+  }, async (ms) => { waits.push(ms); });
+  assert.equal(calls, 2);
+  assert.ok(waits.includes(3000));
+});
+
+test('sends are paced', async () => {
+  const env = { TELEGRAM_BOT_TOKEN: 't', TELEGRAM_CHAT_ID: '1' };
+  const waits = [];
+  await sendMessage('x'.repeat(5000), env, async () => ({ ok: true, status: 200, text: async () => '' }), async (ms) => { waits.push(ms); });
+  assert.ok(waits.length >= 2 && waits.every((ms) => ms >= 1000));
+});
+
+test('unscored jobs are grouped into one message', () => {
+  const jobsList = [job, { ...job, key: 'freelancer:2', title: 'Second job', url: 'https://f/2' }];
+  const text = formatUnscored(jobsList, 'Claude lỗi');
+  assert.match(text, /Angular dashboard fix/);
+  assert.match(text, /Second job/);
+  assert.match(text, /⚠️ Claude lỗi/);
 });

@@ -38,26 +38,44 @@ function buildPrompt(jobs, draftMin) {
 const ALLOWED_LINKS = [/^https?:\/\/(www\.)?github\.com\/maiyozkyo(\/|$)/i, /^https?:\/\/(www\.)?contra\.com\/(hoang_buu_wctxhu7k|p\/)/i];
 const LINK = /\b(?:https?:\/\/|www\.)[^\s)>\]"']+/gi;
 
+// Contact details pull the talk off-platform, which breaks Freelancer's rules.
+const EMAIL = /[\w.+-]+@[\w-]+(\.[\w-]+)+/g;
+const PHONE = /\+?\d[\d\s().-]{7,}\d/g;
+
 export function sanitizeProposal(text) {
-  return text.replace(LINK, (url) => {
-    const clean = url.replace(/[.,;:!?]+$/, '');
-    const tail = url.slice(clean.length);
-    return ALLOWED_LINKS.some((re) => re.test(clean)) ? url : `[link bị xóa]${tail}`;
-  });
+  return text
+    .replace(LINK, (url) => {
+      const clean = url.replace(/[.,;:!?]+$/, '');
+      const tail = url.slice(clean.length);
+      return ALLOWED_LINKS.some((re) => re.test(clean)) ? url : `[link bị xóa]${tail}`;
+    })
+    .replace(EMAIL, '[email bị xóa]')
+    .replace(PHONE, '[số bị xóa]');
 }
 
-function parseScores(output, jobs) {
-  const start = output.indexOf('[');
-  const end = output.lastIndexOf(']');
+function parseArray(output) {
+  const unfenced = output.replace(/```(?:json)?/gi, '').trim();
+  try {
+    const whole = JSON.parse(unfenced);
+    if (Array.isArray(whole)) return whole;
+  } catch { /* fall through to the bracket slice */ }
+  const start = unfenced.indexOf('[{');
+  const end = unfenced.lastIndexOf(']');
   if (start < 0 || end <= start) throw new ClaudeOutputError('no JSON array in reply');
-  let arr;
-  try { arr = JSON.parse(output.slice(start, end + 1)); } catch { throw new ClaudeOutputError('reply is not valid JSON'); }
-  const byKey = new Map(Array.isArray(arr) ? arr.map((s) => [s?.key, s]) : []);
+  try { return JSON.parse(unfenced.slice(start, end + 1)); } catch { throw new ClaudeOutputError('reply is not valid JSON'); }
+}
+
+/** A job Claude skipped comes back as null, so one gap does not sink the batch. */
+function parseScores(output, jobs) {
+  const arr = parseArray(output);
+  if (!arr.length) throw new ClaudeOutputError('empty reply');
+  const byKey = new Map(arr.map((s) => [s?.key, s]));
   return jobs.map((job) => {
     const s = byKey.get(job.key);
-    if (!s) throw new ClaudeOutputError(`missing score for ${job.key}`);
-    if (!Number.isInteger(s.score) || s.score < 1 || s.score > 10) throw new ClaudeOutputError(`bad score for ${job.key}`);
-    return { key: job.key, score: s.score, reasonVi: String(s.reasonVi ?? ''), proposalEn: s.proposalEn ? sanitizeProposal(String(s.proposalEn)) : null };
+    if (!s) return null;
+    const score = Number(s.score);
+    if (!Number.isInteger(score) || score < 1 || score > 10) throw new ClaudeOutputError(`bad score for ${job.key}`);
+    return { key: job.key, score, reasonVi: String(s.reasonVi ?? ''), proposalEn: s.proposalEn ? sanitizeProposal(String(s.proposalEn)) : null };
   });
 }
 
@@ -90,7 +108,7 @@ export function defaultRunClaude(prompt) {
 
 /**
  * Scores jobs and drafts proposals for those scoring at least `draftMin`.
- * @returns {Promise<Scored[]>} in the same order as `jobs`
+ * @returns {Promise<(Scored|null)[]>} in the same order as `jobs`; null when Claude skipped a job
  */
 export async function scoreJobs(jobs, { draftMin }, runClaude = defaultRunClaude) {
   if (!jobs.length) return [];
