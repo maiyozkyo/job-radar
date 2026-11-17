@@ -49,7 +49,7 @@ Actions secrets:
 | `CLAUDE_CODE_OAUTH_TOKEN` | `claude setup-token` |
 | `REDDIT_CLIENT_ID`, `REDDIT_CLIENT_SECRET` (optional) | reddit.com/prefs/apps → create app → type "script", redirect URI `http://localhost`. The id is under the app name. Without them Reddit is skipped. |
 
-Manual run: `gh workflow run radar.yml -f mode=poll` (or `mode=digest`). Check Claude and the token without sending anything: `mode=selftest`.
+Manual run: `gh workflow run radar.yml -f mode=poll` (or `mode=digest`). Check Claude and the token without sending anything: `mode=selftest`. Full alert (score, bid, milestones, proposal) for one Freelancer job, whatever its score: `gh workflow run radar.yml -f mode=job -f job=<project link>`.
 
 Tests: `npm test`.
 

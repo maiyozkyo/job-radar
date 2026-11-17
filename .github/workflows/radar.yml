@@ -8,10 +8,14 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: poll, digest, or selftest (checks Claude only)
+        description: poll, digest, selftest (checks Claude only), or job (alert for one Freelancer link)
         type: choice
-        options: [poll, digest, selftest]
+        options: [poll, digest, selftest, job]
         default: poll
+      job:
+        description: Freelancer project link or id (mode job only)
+        type: string
+        required: false
 
 concurrency:
   group: radar
@@ -73,6 +77,8 @@ jobs:
           CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
           REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
+          # Passed as data, never pasted into the script.
+          JOB: ${{ inputs.job }}
 
       - name: Save state
         if: always()

@@ -9,7 +9,8 @@
     "poll": "node src/main.js poll",
     "digest": "node src/main.js digest",
     "check-repo": "node src/check-repo.js",
-    "selftest": "node src/selftest.js"
+    "selftest": "node src/selftest.js",
+    "job": "node src/one.js"
   },
   "engines": {
     "node": ">=22"
