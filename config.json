@@ -26,7 +26,8 @@
     "postgresql",
     "python",
     "razor",
-    "laravel"
+    "laravel",
+    "shopify"
   ],
   "stackKeywords": [
     "angular",
@@ -83,6 +84,7 @@
     "razor",
     "cshtml",
     "laravel",
+    "shopify",
     "asp.net mvc",
     "asp.net core mvc",
     "mongodb",
