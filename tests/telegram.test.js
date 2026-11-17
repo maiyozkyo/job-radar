@@ -129,3 +129,30 @@ test('sendMessage sends an HTML alert with buttons, or its plain text when too l
   assert.equal(bodies[1].parse_mode, undefined);
   assert.equal(bodies[1].reply_markup, undefined);
 });
+
+import { localBid } from '../src/telegram.js';
+
+const inr = makeJob({
+  source: 'freelancer', id: 9, title: 'PDF-Word Conversion', url: 'https://www.freelancer.com/projects/x',
+  budgetType: 'fixed', budgetMinUsd: 133.8, budgetMaxUsd: 401.4,
+  currency: { code: 'INR', sign: '₹', usdRate: 0.010704, min: 12500, max: 37500 },
+});
+
+test('non-USD job: bid, milestones and copied amounts are in the project currency', () => {
+  const bid = { amountUsd: 150, unit: '', hours: 7, days: 3, netUsd: 135, wantUsd: 140, underpaid: false };
+  const milestones = [{ name: 'Demo', amountUsd: 60 }, { name: 'Rest', amountUsd: 90 }];
+  const m = formatAlertHtml(inr, { ...scored, key: inr.key, bid, milestones });
+  assert.match(m.text, /💰 ₹12,500–₹37,500 \(≈ \$133\.80–\$401\.40 · nhận ≈ \$361\.26\)/);
+  assert.match(m.text, /💵 Gợi ý bid: ₹14,000 \(≈ \$150\)/);
+  assert.match(m.text, /1\. Demo — ₹5,600\n2\. Rest — ₹8,400/);
+  assert.deepEqual(m.buttons[0].map((b) => b.copy_text.text), ['14000', '3']);
+  assert.deepEqual(m.buttons[1].map((b) => b.copy_text.text), ['Demo', '5600']);
+  assert.deepEqual(m.buttons[2].map((b) => b.copy_text.text), ['Rest', '8400']);
+});
+
+test('local bid stays inside the client budget and is null for USD jobs', () => {
+  const bid = { amountUsd: 40, unit: '' };
+  assert.equal(localBid(inr, bid).amount, 12500); // $40 ≈ ₹3,700, raised to the client minimum
+  assert.equal(localBid(inr, { amountUsd: 900, unit: '' }).amount, 37500);
+  assert.equal(localBid(job, bid), null);
+});

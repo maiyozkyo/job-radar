@@ -4,19 +4,53 @@ import { riskFlags } from './risk.js';
 const LIMIT = 4096;
 const money = (n) => `$${Number.isInteger(n) ? n : n.toFixed(2)}`;
 
+const range = (min, max, fmt) => (min != null && min !== max ? `${fmt(min)}–${fmt(max)}` : fmt(max));
+
+/** Non-USD jobs: amounts in the project's currency, e.g. ₹14,000. */
+const localMoney = (cur) => (n) => `${cur.sign}${n.toLocaleString('en-US')}`;
+
+/** Rounds an amount in the project's currency to a tidy step for its size. */
+const tidy = (n) => {
+  const step = n >= 10000 ? 500 : n >= 1000 ? 100 : n >= 100 ? 10 : 1;
+  return Math.round(n / step) * step;
+};
+
+/**
+ * The bid and milestone amounts in the project's currency, which is what the
+ * Freelancer bid form takes; null for USD jobs. Kept inside the client's
+ * budget, and two milestones still add up to the bid.
+ */
+export function localBid(job, bid, milestones = []) {
+  const cur = job.currency;
+  if (!cur || !bid) return null;
+  let amount = tidy(bid.amountUsd / cur.usdRate);
+  if (cur.min != null) amount = Math.max(amount, cur.min);
+  if (cur.max != null) amount = Math.min(amount, cur.max);
+  if (milestones.length < 2) return { amount, milestones: milestones.map(() => amount) };
+  const first = tidy(amount * 0.4);
+  return { amount, milestones: [first, amount - first] };
+}
+
 function budgetLine(job) {
   const { budgetMinUsd: min, budgetMaxUsd: max } = job;
   if (max == null) return null;
-  const range = min != null && min !== max ? `${money(min)}–${money(max)}` : money(max);
   const unit = job.budgetType === 'hourly' ? '/h' : job.budgetType === 'salary' ? '/năm' : '';
   const net = netUsd(job);
-  return `💰 ${range}${unit}${net != null ? ` (≈ nhận ${money(net)}${unit})` : ''}`;
+  const cur = job.currency;
+  if (cur?.max != null) {
+    return `💰 ${range(cur.min, cur.max, localMoney(cur))}${unit} (≈ ${range(min, max, money)}${unit}${net != null ? ` · nhận ≈ ${money(net)}${unit}` : ''})`;
+  }
+  return `💰 ${range(min, max, money)}${unit}${net != null ? ` (≈ nhận ${money(net)}${unit})` : ''}`;
 }
 
-function bidLines(bid) {
+function bidLines(job, bid) {
   if (!bid) return null;
+  const local = localBid(job, bid);
+  const price = local
+    ? `${localMoney(job.currency)(local.amount)}${bid.unit} (≈ ${money(bid.amountUsd)}${bid.unit})`
+    : `${money(bid.amountUsd)}${bid.unit}`;
   return [
-    `💵 Gợi ý bid: ${money(bid.amountUsd)}${bid.unit} · ~${bid.hours} giờ · giao ${bid.days} ngày (≈ nhận ${money(bid.netUsd)}${bid.unit})`,
+    `💵 Gợi ý bid: ${price} · ~${bid.hours} giờ · giao ${bid.days} ngày (≈ nhận ${money(bid.netUsd)}${bid.unit})`,
     bid.underpaid ? `⚠️ Việc ~${bid.hours} giờ đáng ~${money(bid.wantUsd)}${bid.unit}, ngân sách khách thấp hơn` : null,
   ].filter(Boolean).join('\n');
 }
@@ -35,7 +69,7 @@ function jobBlock(job, scored) {
     `[${job.source}] ${job.title}`,
     budgetLine(job),
     scored ? `⭐ ${scored.score}/10 – ${scored.reasonVi}` : null,
-    bidLines(scored?.bid),
+    bidLines(job, scored?.bid),
     riskLines(job),
     job.url,
     scored?.proposalEn ? `\n✍️ Proposal:\n${scored.proposalEn}` : null,
@@ -64,25 +98,30 @@ export function formatAlertHtml(job, scored, warning) {
     `[${job.source}] ${job.title}`,
     budgetLine(job),
     scored ? `⭐ ${scored.score}/10 – ${scored.reasonVi}` : null,
-    bidLines(scored?.bid),
+    bidLines(job, scored?.bid),
     riskLines(job),
     job.url,
   ].filter(Boolean).map(esc).join('\n');
   const milestones = scored?.milestones ?? [];
+  const bid = scored?.bid;
+  // Copied amounts must be in the currency the bid form uses.
+  const local = localBid(job, bid, milestones);
+  const fmt = local ? localMoney(job.currency) : money;
+  const bidAmount = local ? local.amount : bid?.amountUsd;
+  const msAmount = (m, i) => (local ? local.milestones[i] : m.amountUsd);
   const text = [
     head,
     milestones.length
-      ? `\n📌 Mốc thanh toán:\n${milestones.map((m, i) => `${i + 1}. ${esc(m.name)} — ${money(m.amountUsd)}`).join('\n')}`
+      ? `\n📌 Mốc thanh toán:\n${milestones.map((m, i) => `${i + 1}. ${esc(m.name)} — ${esc(fmt(msAmount(m, i)))}`).join('\n')}`
       : null,
     scored?.proposalEn ? `\n✍️ Proposal (bấm vào khung để copy):\n<pre>${esc(scored.proposalEn)}</pre>` : null,
     warning ? `\n⚠️ ${esc(warning)}` : null,
   ].filter(Boolean).join('\n');
-  const bid = scored?.bid;
   const buttons = [
-    ...(bid ? [[copyButton(`💲 Copy giá ${money(bid.amountUsd)}`, plainAmount(bid.amountUsd)), copyButton(`📅 Copy ${bid.days} ngày`, bid.days)]] : []),
+    ...(bid ? [[copyButton(`💲 Copy giá ${fmt(bidAmount)}`, plainAmount(bidAmount)), copyButton(`📅 Copy ${bid.days} ngày`, bid.days)]] : []),
     ...milestones.map((m, i) => [
       copyButton(`📋 Mốc ${i + 1}: mô tả`, m.name),
-      copyButton(`💲 Mốc ${i + 1}: ${money(m.amountUsd)}`, plainAmount(m.amountUsd)),
+      copyButton(`💲 Mốc ${i + 1}: ${fmt(msAmount(m, i))}`, plainAmount(msAmount(m, i))),
     ]),
   ];
   return { text, html: true, plain: formatAlert(job, scored, warning), buttons };

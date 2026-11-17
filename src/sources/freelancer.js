@@ -22,6 +22,10 @@ export function parseFreelancer(body) {
       bidCount: p.bid_stats?.bid_count ?? null,
       postedAt: p.time_submitted ?? 0,
       tags: (p.jobs ?? []).map((j) => j.name),
+      // Bids are typed in the project's own currency, so keep it for non-USD jobs.
+      currency: p.currency?.code && p.currency.code !== 'USD' && rate
+        ? { code: p.currency.code, sign: p.currency.sign ?? p.currency.code, usdRate: rate, min: p.budget?.minimum ?? null, max: p.budget?.maximum ?? null }
+        : null,
     });
   });
 }
