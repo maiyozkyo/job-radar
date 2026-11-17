@@ -25,7 +25,8 @@
     "typescript",
     "postgresql",
     "python",
-    "razor"
+    "razor",
+    "laravel"
   ],
   "stackKeywords": [
     "angular",
@@ -81,6 +82,7 @@
     "python",
     "razor",
     "cshtml",
+    "laravel",
     "asp.net mvc",
     "asp.net core mvc",
     "mongodb",
