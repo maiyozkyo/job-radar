@@ -40,7 +40,8 @@ test('urgent job scored 8 is alerted, scored 6 is not', async () => {
   const { deps, sent } = setup({ jobs: [urgent(1), urgent(2)], scores: { 'freelancer:2': 6 } });
   await run('poll', deps);
   assert.equal(sent.length, 1);
-  assert.match(sent[0], /https:\/\/f\/1/);
+  assert.equal(sent[0].html, true);
+  assert.match(sent[0].text, /https:\/\/f\/1/);
 });
 
 test('Claude failure sends every kept urgent job in one warning message', async () => {

@@ -4,7 +4,7 @@ import { fetchAll } from './sources/index.js';
 import { filterJob, isUrgent } from './filter.js';
 import { loadState, saveState, takeNew, prune } from './state.js';
 import { scoreJobs } from './claude.js';
-import { formatAlert, formatDigest, formatUnscored, sendMessage } from './telegram.js';
+import { formatAlertHtml, formatDigest, formatUnscored, sendMessage } from './telegram.js';
 
 const MAX_DIGEST = 10;
 const MAX_DIGEST_SCORING = 40;
@@ -55,7 +55,7 @@ async function poll(state, deps) {
   }
 
   const messages = [
-    ...alerts.map((a) => formatAlert(a.job, a.scored)),
+    ...alerts.map((a) => formatAlertHtml(a.job, a.scored)),
     ...(unscored.length ? [formatUnscored(unscored, unscoredWarning)] : []),
   ];
   if (messages.length && errors.length) messages[0] += `\n\n⚠️ Nguồn lỗi: ${errors.join('; ')}`;
@@ -114,7 +114,7 @@ if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
     now: Math.floor(Date.now() / 1000),
     fetchAll,
     scoreJobs,
-    sendMessage: (text) => sendMessage(text, env),
+    sendMessage: (message) => sendMessage(message, env),
   }).then(
     ({ sent }) => console.log(`${mode}: sent ${sent} message(s)`),
     (err) => { console.error(`${mode} failed: ${err.message}`); process.exit(1); },

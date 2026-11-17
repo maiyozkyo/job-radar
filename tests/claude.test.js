@@ -89,6 +89,19 @@ test('hours become a bid suggestion; bad hours are ignored', async () => {
   assert.equal(out[1].bid, null);
 });
 
+test('milestone names get amounts from the bid; links and extra names are dropped', async () => {
+  const out = await scoreJobs(jobs, { draftMin: 7, rate: 20, hoursPerDay: 2 }, reply([
+    { key: 'freelancer:1', score: 8, reasonVi: 'Hợp', proposalEn: 'Hi', hours: 2,
+      milestonesEn: ['Fixed charts\nsee https://evil.example/x', 'Hand-over', 'Third'] },
+    { key: 'hn:2', score: 5, reasonVi: 'x', proposalEn: null, milestonesEn: 'nope' },
+  ]));
+  assert.deepEqual(out[0].milestones, [
+    { name: 'Fixed charts see [link bị xóa]', amountUsd: 16 },
+    { name: 'Hand-over', amountUsd: 24 },
+  ]);
+  assert.deepEqual(out[1].milestones, []);
+});
+
 test('prompt asks for an hours estimate', async () => {
   let prompt = '';
   await scoreJobs(jobs, { draftMin: 7 }, async (p) => { prompt = p; return JSON.stringify(good); });

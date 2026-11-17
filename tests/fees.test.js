@@ -65,3 +65,21 @@ test('no bid without hours, budget or a Freelancer job', () => {
   assert.equal(suggestBid(job('fixed', null, null), 5, opts), null);
   assert.equal(suggestBid(job('salary', null, 90000, 'remoteok'), 5, opts), null);
 });
+
+import { splitMilestones } from '../src/fees.js';
+
+test('two milestones split about 40/60 and add up to the bid', () => {
+  const bid = suggestBid(job('fixed', 250, 750), 14, opts); // $280
+  assert.deepEqual(splitMilestones(bid, ['Demo', 'Hand-over']),
+    [{ name: 'Demo', amountUsd: 112 }, { name: 'Hand-over', amountUsd: 168 }]);
+  const odd = splitMilestones({ ...bid, amountUsd: 65 }, ['a', 'b']);
+  assert.equal(odd[0].amountUsd + odd[1].amountUsd, 65);
+});
+
+test('one milestone takes the whole bid; hourly or no names give none', () => {
+  const bid = suggestBid(job('fixed', 30, 150), 6, opts);
+  assert.deepEqual(splitMilestones(bid, ['Fix']), [{ name: 'Fix', amountUsd: 120 }]);
+  assert.deepEqual(splitMilestones(suggestBid(job('hourly', 15, 25), 10, opts), ['x']), []);
+  assert.deepEqual(splitMilestones(bid, []), []);
+  assert.deepEqual(splitMilestones(null, ['x']), []);
+});

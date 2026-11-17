@@ -47,6 +47,47 @@ export function formatAlert(job, scored, warning) {
   return [jobBlock(job, scored), warning ? `\n⚠️ ${warning}` : null].filter(Boolean).join('\n');
 }
 
+const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+// Telegram's copy button holds at most 256 characters.
+const COPY_MAX = 256;
+const copyButton = (text, copy) => ({ text, copy_text: { text: String(copy).slice(0, COPY_MAX) } });
+const plainAmount = (n) => (Number.isInteger(n) ? String(n) : n.toFixed(2));
+
+/**
+ * One job alert in Telegram HTML: the proposal sits in a code block, which
+ * Telegram copies in one tap, and buttons copy the bid amount, the days and
+ * each milestone. `plain` is the fallback when the HTML would be too long.
+ * @returns {{ text: string, html: true, plain: string, buttons: object[][] }}
+ */
+export function formatAlertHtml(job, scored, warning) {
+  const head = [
+    `[${job.source}] ${job.title}`,
+    budgetLine(job),
+    scored ? `⭐ ${scored.score}/10 – ${scored.reasonVi}` : null,
+    bidLines(scored?.bid),
+    riskLines(job),
+    job.url,
+  ].filter(Boolean).map(esc).join('\n');
+  const milestones = scored?.milestones ?? [];
+  const text = [
+    head,
+    milestones.length
+      ? `\n📌 Mốc thanh toán:\n${milestones.map((m, i) => `${i + 1}. ${esc(m.name)} — ${money(m.amountUsd)}`).join('\n')}`
+      : null,
+    scored?.proposalEn ? `\n✍️ Proposal (bấm vào khung để copy):\n<pre>${esc(scored.proposalEn)}</pre>` : null,
+    warning ? `\n⚠️ ${esc(warning)}` : null,
+  ].filter(Boolean).join('\n');
+  const bid = scored?.bid;
+  const buttons = [
+    ...(bid ? [[copyButton(`💲 Copy giá ${money(bid.amountUsd)}`, plainAmount(bid.amountUsd)), copyButton(`📅 Copy ${bid.days} ngày`, bid.days)]] : []),
+    ...milestones.map((m, i) => [
+      copyButton(`📋 Mốc ${i + 1}: mô tả`, m.name),
+      copyButton(`💲 Mốc ${i + 1}: ${money(m.amountUsd)}`, plainAmount(m.amountUsd)),
+    ]),
+  ];
+  return { text, html: true, plain: formatAlert(job, scored, warning), buttons };
+}
+
 /** The twice-daily remote-board digest; null when there is nothing to send. */
 export function formatDigest(items, warning) {
   if (!items.length) return null;
@@ -83,14 +124,24 @@ export function formatUnscored(jobs, warning) {
 const GAP_MS = 1100; // Telegram allows about one message a second per chat.
 const sleepReal = (ms) => new Promise((r) => setTimeout(r, ms));
 
-export async function sendMessage(text, env, fetchFn = fetch, sleep = sleepReal) {
+/**
+ * Sends plain text (split when long), or a message from formatAlertHtml: HTML
+ * with copy buttons when it fits in one message, else its plain fallback.
+ * @param {string | { text: string, html: true, plain: string, buttons: object[][] }} message
+ */
+export async function sendMessage(message, env, fetchFn = fetch, sleep = sleepReal) {
   const url = `https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`;
+  const rich = typeof message === 'object' && message.html && message.text.length <= LIMIT ? message : null;
+  const extra = rich
+    ? { parse_mode: 'HTML', ...(rich.buttons.length ? { reply_markup: { inline_keyboard: rich.buttons } } : {}) }
+    : {};
   const post = (part) => fetchFn(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ chat_id: env.TELEGRAM_CHAT_ID, text: part, disable_web_page_preview: true }),
+    body: JSON.stringify({ chat_id: env.TELEGRAM_CHAT_ID, text: part, disable_web_page_preview: true, ...extra }),
   });
-  for (const part of splitMessage(text)) {
+  const parts = rich ? [rich.text] : splitMessage(typeof message === 'object' ? message.plain : message);
+  for (const part of parts) {
     let res = await post(part);
     if (res.status === 429) {
       const body = await res.json().catch(() => ({}));

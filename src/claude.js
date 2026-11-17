@@ -1,10 +1,11 @@
 import { spawn } from 'node:child_process';
 import { readFileSync } from 'node:fs';
-import { netUsd, suggestBid } from './fees.js';
+import { netUsd, splitMilestones, suggestBid } from './fees.js';
 
 /**
  * `hours` is Claude's effort estimate; `bid` is computed from it (see fees.js).
- * @typedef {{ key: string, score: number, reasonVi: string, proposalEn: string|null, hours: number|null, bid: ReturnType<typeof suggestBid> }} Scored
+ * `milestones` splits the bid over Claude's milestone names (fixed-price bids only).
+ * @typedef {{ key: string, score: number, reasonVi: string, proposalEn: string|null, hours: number|null, bid: ReturnType<typeof suggestBid>, milestones: ReturnType<typeof splitMilestones> }} Scored
  */
 
 export class ClaudeOutputError extends Error {}
@@ -66,6 +67,16 @@ function parseArray(output) {
   try { return JSON.parse(unfenced.slice(start, end + 1)); } catch { throw new ClaudeOutputError('reply is not valid JSON'); }
 }
 
+const MAX_MILESTONE = 100;
+
+/** At most two one-line names, links removed like in proposals. */
+function milestoneNames(raw) {
+  if (!Array.isArray(raw)) return [];
+  return raw.slice(0, 2)
+    .map((n) => sanitizeProposal(String(n ?? '')).replace(/\s+/g, ' ').trim().slice(0, MAX_MILESTONE))
+    .filter(Boolean);
+}
+
 /** A job Claude skipped comes back as null, so one gap does not sink the batch. */
 function parseScores(output, jobs, bidOpts) {
   const arr = parseArray(output);
@@ -78,10 +89,11 @@ function parseScores(output, jobs, bidOpts) {
     if (!Number.isInteger(score) || score < 1 || score > 10) throw new ClaudeOutputError(`bad score for ${job.key}`);
     const h = Number(s.hours);
     const hours = Number.isFinite(h) && h > 0 && h <= 500 ? h : null;
+    const bid = suggestBid(job, hours, bidOpts);
     return {
       key: job.key, score, reasonVi: String(s.reasonVi ?? ''),
       proposalEn: s.proposalEn ? sanitizeProposal(String(s.proposalEn)) : null,
-      hours, bid: suggestBid(job, hours, bidOpts),
+      hours, bid, milestones: splitMilestones(bid, milestoneNames(s.milestonesEn)),
     };
   });
 }

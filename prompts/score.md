@@ -22,11 +22,12 @@ Weigh:
 Return **only** a JSON array, one object per input job, same keys:
 
 ```json
-[{ "key": "freelancer:123", "score": 8, "reasonVi": "...", "proposalEn": "...", "hours": 6 }]
+[{ "key": "freelancer:123", "score": 8, "reasonVi": "...", "proposalEn": "...", "hours": 6, "milestonesEn": ["...", "..."] }]
 ```
 
 - `score`: integer 1–10.
 - `hours`: your honest estimate of the freelancer's total hours for the job (work, testing, client messages, revisions), as a number; `null` when the scope is too vague to estimate. The bid amount is computed from it, so do not put prices in the proposal.
+- `milestonesEn`: only with a `proposalEn` for a fixed-price job; otherwise `null`. Payment milestones in delivery order, each one line of English (≤ 90 characters) naming a concrete deliverable the client can check, e.g. "Working demo on your test inbox". Use one milestone when the job is about 8 hours or less, two otherwise. No prices: the amounts are computed from the bid.
 - `reasonVi`: one short line in Vietnamese (≤ 15 words) saying why.
 - `proposalEn`: only when {{DRAFT_RULE}}; otherwise `null`.
   - ≤ 120 words, English, written as the freelancer in first person.

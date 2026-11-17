@@ -36,3 +36,18 @@ export function suggestBid(job, hours, { rate, hoursPerDay }) {
     underpaid: wantUsd > max,
   };
 }
+
+/**
+ * Splits a fixed-price bid over Claude's milestone names: one milestone takes
+ * the whole amount; two take about 40% / 60% in whole dollars, always adding
+ * up to the bid. Hourly bids and missing names give [].
+ * @param {ReturnType<typeof suggestBid>} bid
+ * @param {string[]} names
+ * @returns {{ name: string, amountUsd: number }[]}
+ */
+export function splitMilestones(bid, names) {
+  if (!bid || bid.unit !== '' || !names?.length) return [];
+  if (names.length === 1 || bid.amountUsd < 20) return [{ name: names[0], amountUsd: bid.amountUsd }];
+  const first = Math.round(bid.amountUsd * 0.4);
+  return [{ name: names[0], amountUsd: first }, { name: names[1], amountUsd: Math.round((bid.amountUsd - first) * 100) / 100 }];
+}

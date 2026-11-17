@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { formatAlert, formatDigest, formatUnscored, sendMessage, splitMessage } from '../src/telegram.js';
+import { formatAlert, formatAlertHtml, formatDigest, formatUnscored, sendMessage, splitMessage } from '../src/telegram.js';
 import { makeJob } from '../src/job.js';
 
 const job = makeJob({
@@ -100,4 +100,32 @@ test('alert shows the bid suggestion and warns when the budget is too low', () =
   assert.match(text, /💵 Gợi ý bid: \$120 · ~6 giờ · giao 4 ngày \(≈ nhận \$108\)/);
   const low = formatAlert(job, { ...scored, bid: { ...bid, amountUsd: 100, wantUsd: 160, underpaid: true, netUsd: 90 } });
   assert.match(low, /⚠️ Việc ~6 giờ đáng ~\$160, ngân sách khách thấp hơn/);
+});
+
+test('HTML alert: proposal in a code block, milestones listed, copy buttons, text escaped', () => {
+  const bid = { amountUsd: 280, unit: '', hours: 14, days: 5, netUsd: 252, wantUsd: 280, underpaid: false };
+  const milestones = [{ name: 'Demo <inbox> & review', amountUsd: 112 }, { name: 'Hand-over', amountUsd: 168 }];
+  const m = formatAlertHtml({ ...job, title: 'Fix <b>' }, { ...scored, proposalEn: 'Use a < b & c', bid, milestones });
+  assert.equal(m.html, true);
+  assert.match(m.text, /Fix &lt;b&gt;/);
+  assert.match(m.text, /<pre>Use a &lt; b &amp; c<\/pre>/);
+  assert.match(m.text, /1\. Demo &lt;inbox&gt; &amp; review — \$112/);
+  assert.deepEqual(m.buttons[0].map((b) => b.copy_text.text), ['280', '5']);
+  assert.deepEqual(m.buttons[1].map((b) => b.copy_text.text), ['Demo <inbox> & review', '112']);
+  assert.deepEqual(m.buttons[2].map((b) => b.copy_text.text), ['Hand-over', '168']);
+  assert.match(m.plain, /Use a < b & c/);
+});
+
+test('sendMessage sends an HTML alert with buttons, or its plain text when too long', async () => {
+  const env = { TELEGRAM_BOT_TOKEN: 't', TELEGRAM_CHAT_ID: '1' };
+  const bodies = [];
+  const ok = async (url, init) => { bodies.push(JSON.parse(init.body)); return { ok: true, status: 200, text: async () => '' }; };
+  const m = { text: '<pre>hi</pre>', html: true, plain: 'hi', buttons: [[{ text: 'x', copy_text: { text: 'y' } }]] };
+  await sendMessage(m, env, ok, async () => {});
+  assert.equal(bodies[0].parse_mode, 'HTML');
+  assert.deepEqual(bodies[0].reply_markup.inline_keyboard, m.buttons);
+  await sendMessage({ ...m, text: 'x'.repeat(5000) }, env, ok, async () => {});
+  assert.equal(bodies[1].text, 'hi');
+  assert.equal(bodies[1].parse_mode, undefined);
+  assert.equal(bodies[1].reply_markup, undefined);
 });
