@@ -8,7 +8,7 @@ Rate: about $20–25/h.
 - .NET (C#, ASP.NET Core Web API, ASP.NET Core MVC with Razor views, .NET 10), Angular (TypeScript), PostgreSQL, MongoDB, Redis
 - Python for small, well-scoped work: scripts, automation, scraping, data processing, small API integrations (working knowledge, not expert: no long-term roles or large Python codebases)
 - Laravel (PHP) for small, well-scoped work in an existing project: bug fixes, one feature, API integrations, endpoints (working knowledge from study, no client projects yet: no long-term roles, no sites from scratch, no WordPress)
-- Shopify (used at my day job): theme customization in Liquid, store setup and settings, apps and Shopify API integrations
+- Shopify (used at my day job): store setup and admin, Shopify API integrations (e.g. a .NET product landing page fed from Shopify), apps and custom pages outside the theme. Not a Liquid theme specialist: small theme edits only
 - AI agents and automation with Claude, Gemini and other LLM APIs (tool use, multi-agent workflows, voice-to-order)
 - Docker, Google Cloud Run, Cloud Build, Artifact Registry, Secret Manager, Cloudflare Pages, Neon Postgres
 
