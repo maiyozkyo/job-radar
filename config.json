@@ -18,7 +18,12 @@
     "google sheets",
     "web scraping",
     "data extraction",
-    "technical writing"
+    "technical writing",
+    "api integration",
+    "bug fix",
+    "webhook",
+    "typescript",
+    "postgresql"
   ],
   "stackKeywords": [
     "angular",
@@ -57,7 +62,20 @@
     "dockerize",
     "dockerized",
     "dockerfile",
-    "chatbots"
+    "chatbots",
+    "fix bug",
+    "bug fix",
+    "bugfix",
+    "api integration",
+    "integrate api",
+    "integrate an api",
+    "webhook",
+    "rest api",
+    "migrate database",
+    "database migration",
+    "postgresql",
+    "postgres",
+    "typescript"
   ],
   "blockKeywords": [
     "commission",
