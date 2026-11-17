@@ -89,7 +89,6 @@
   "blockKeywords": [
     "commission",
     "sales",
-    "data entry",
     "essay",
     "assignment",
     "homework",
@@ -101,6 +100,9 @@
     "youtube",
     "verification",
     "account opening"
+  ],
+  "titleBlockKeywords": [
+    "data entry"
   ],
   "minFixedUsd": 30,
   "minHourlyUsd": 15,

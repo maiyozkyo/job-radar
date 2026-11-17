@@ -25,9 +25,11 @@ export function filterJob(job, config) {
   const drop = (reason) => ({ keep: false, reason });
 
   // Block words only in the title and tags: a description saying "daily sales
-  // report" or "email verification" is a normal job.
+  // report" or "email verification" is a normal job. Some block words only in
+  // the title: Freelancer tags Excel cleanup jobs "Data Entry".
   const blocked = firstMatch(`${job.title}
-${job.tags.join(' ')}`.toLowerCase(), config.blockKeywords);
+${job.tags.join(' ')}`.toLowerCase(), config.blockKeywords)
+    ?? firstMatch(job.title.toLowerCase(), config.titleBlockKeywords ?? []);
   if (blocked) return drop(`block keyword: ${blocked}`);
   const scam = riskFlags(job).find((f) => f.level === 'block');
   if (scam) return drop(`risk: ${scam.label}`);

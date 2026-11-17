@@ -109,6 +109,11 @@ test('academic cheating and manual data entry stay blocked', () => {
   assert.equal(keep(fl({ title: 'Data entry from PDF to Excel' })), false);
 });
 
+test('a "Data Entry" tag alone does not block Excel cleanup', () => {
+  assert.equal(keep(fl({ title: 'Excel Data Cleanup Expert', tags: ['Excel', 'Data Entry'] })), true);
+  assert.equal(keep(fl({ title: 'Excel data entry, 150 pages', tags: ['Excel'] })), false);
+});
+
 test('long keywords match at a word start: "excellent" is not Excel', () => {
   assert.equal(keep(fl({ title: 'Office assistant', description: 'Excellent communication skills' })), false);
   assert.equal(keep(fl({ title: 'Office assistant', description: 'Build reports in Excel' })), true);

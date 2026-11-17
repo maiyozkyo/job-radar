@@ -23,7 +23,8 @@ import { readFileSync } from 'node:fs';
  * @typedef {object} Config
  * @property {string[]} freelancerQueries
  * @property {string[]} stackKeywords
- * @property {string[]} blockKeywords
+ * @property {string[]} blockKeywords      matched in title and tags
+ * @property {string[]} [titleBlockKeywords] matched in the title only
  * @property {number} minFixedUsd
  * @property {number} minHourlyUsd
  * @property {number} maxBidCount
