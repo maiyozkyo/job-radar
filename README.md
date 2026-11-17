@@ -8,7 +8,7 @@ Finds freelance and remote jobs that fit my stack, has Claude score them and dra
 
 Every 30 minutes (at :07 and :37), GitHub Actions:
 
-1. Reads public job sources: Freelancer.com API, the HN "Freelancer? Seeking freelancer?" thread, We Work Remotely RSS, [RemoteOK](https://remoteok.com) API, Himalayas API, [Remotive](https://remotive.com) API (at most every 6 hours, per its terms) and [Jobicy](https://jobicy.com) API (at most every 2 hours; its terms say no more than hourly). Alerts name the source and link to its listing, as Remotive and Jobicy require. No logged-in access to any platform.
+1. Reads public job sources: Freelancer.com API, the HN "Freelancer? Seeking freelancer?" thread, We Work Remotely RSS, [RemoteOK](https://remoteok.com) API, Himalayas API, [Remotive](https://remotive.com) API (at most every 6 hours, per its terms) and [Jobicy](https://jobicy.com) API (at most every 2 hours; its terms say no more than hourly). Alerts name the source and link to its listing, as Remotive and Jobicy require. Reddit `[Hiring]` posts in r/forhire, r/freelance_forhire and r/jobbit are read through the official API with app-only OAuth, only when the Reddit secrets are set; Reddit blocks anonymous requests from GitHub's runners. No logged-in access to any platform.
    Beyond the code stack, it also looks for work an AI assistant can do with the freelancer reviewing it: English ↔ Vietnamese translation, Excel/Google Sheets, data cleaning and extraction, web scraping, technical writing (see `profile.md` "Other work").
    Each alert for a Freelancer job also suggests a bid: Claude estimates the hours, the bot multiplies by `hourlyRateUsd` (config), keeps it inside the client's range, shows the net after fees and the delivery days at `hoursPerDay` evening hours, and warns when the budget is below what the work is worth. Every scored job is logged as `score <n> <hours> <key> | <title> | <url>` in the Actions log (no proposals) to tune thresholds.
 2. Drops jobs already seen and filters by stack, budget (Freelancer: ≥ $30 fixed, ≥ $15/h), bid count and location (`config.json`).
@@ -47,6 +47,7 @@ Actions secrets:
 | `TELEGRAM_BOT_TOKEN` | @BotFather |
 | `TELEGRAM_CHAT_ID` | `https://api.telegram.org/bot<token>/getUpdates` after messaging the bot |
 | `CLAUDE_CODE_OAUTH_TOKEN` | `claude setup-token` |
+| `REDDIT_CLIENT_ID`, `REDDIT_CLIENT_SECRET` (optional) | reddit.com/prefs/apps → create app → type "script", redirect URI `http://localhost`. The id is under the app name. Without them Reddit is skipped. |
 
 Manual run: `gh workflow run radar.yml -f mode=poll` (or `mode=digest`). Check Claude and the token without sending anything: `mode=selftest`.
 

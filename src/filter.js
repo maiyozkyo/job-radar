@@ -53,4 +53,4 @@ ${job.tags.join(' ')}`.toLowerCase(), config.blockKeywords);
 }
 
 /** Sources where clients decide within hours, so alerts go out at once. */
-export const isUrgent = (job) => job.source === 'freelancer' || job.source === 'hn';
+export const isUrgent = (job) => job.source === 'freelancer' || job.source === 'hn' || job.source === 'reddit';

@@ -1,0 +1,12 @@
+{
+  "kind": "Listing",
+  "data": {
+    "children": [
+      { "kind": "t3", "data": { "id": "abc1", "title": "[Hiring] Fix a bug in our ASP.NET Core API", "selftext": "Budget $150, fixed. Remote.", "permalink": "/r/forhire/comments/abc1/hiring_fix_a_bug/", "created_utc": 1794299000.0, "subreddit": "forhire", "link_flair_text": "Hiring - Open", "stickied": false } },
+      { "kind": "t3", "data": { "id": "abc2", "title": "[For Hire] Full-stack dev, $20/h", "selftext": "Hire me", "permalink": "/r/forhire/comments/abc2/for_hire/", "created_utc": 1794298000.0, "subreddit": "forhire", "link_flair_text": "For Hire", "stickied": false } },
+      { "kind": "t3", "data": { "id": "abc3", "title": "Need a Python script to clean CSV files", "selftext": "Paying $60", "permalink": "/r/jobbit/comments/abc3/need_python/", "created_utc": 1794297000.0, "subreddit": "jobbit", "link_flair_text": "Hiring", "stickied": false } },
+      { "kind": "t3", "data": { "id": "abc4", "title": "[Hiring] Rules and scam warnings", "selftext": "Read before posting", "permalink": "/r/forhire/comments/abc4/rules/", "created_utc": 1794200000.0, "subreddit": "forhire", "link_flair_text": null, "stickied": true } },
+      { "kind": "t3", "data": { "id": "abc5", "title": "[HIRING] Angular dev for a dashboard", "selftext": "", "permalink": "/r/freelance_forhire/comments/abc5/angular/", "created_utc": 1794296000.0, "subreddit": "freelance_forhire", "link_flair_text": null, "stickied": false, "removed_by_category": "moderator" } }
+    ]
+  }
+}

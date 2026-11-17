@@ -5,6 +5,7 @@ import { fetchRemoteOk } from './remoteok.js';
 import { fetchHimalayas } from './himalayas.js';
 import { fetchRemotive } from './remotive.js';
 import { fetchJobicy } from './jobicy.js';
+import { fetchReddit, hasRedditKeys } from './reddit.js';
 
 /**
  * Minimum seconds between calls, from each API's terms. Polls run every 30
@@ -15,11 +16,12 @@ export const RATE_LIMITS = { remotive: 6 * 3600, jobicy: 2 * 3600 };
 
 /**
  * Runs every source that is due; a failing source is reported in `errors`,
- * never thrown. `lastFetch` (from state) is updated in place for rate-limited
+ * never thrown. Reddit runs only when its API keys are in `env`.
+ * `lastFetch` (from state) is updated in place for rate-limited
  * sources, also when the call fails, so a broken API is not hammered.
  * @returns {Promise<{ jobs: import('../job.js').Job[], errors: string[], okSources: string[] }>}
  */
-export async function fetchAll(config, fetchFn = fetch, now = Math.floor(Date.now() / 1000), lastFetch = {}) {
+export async function fetchAll(config, fetchFn = fetch, now = Math.floor(Date.now() / 1000), lastFetch = {}, env = process.env) {
   const sources = {
     freelancer: () => fetchFreelancer(config, fetchFn),
     hn: () => fetchHn(fetchFn, now),
@@ -29,6 +31,7 @@ export async function fetchAll(config, fetchFn = fetch, now = Math.floor(Date.no
     remotive: () => fetchRemotive(fetchFn),
     jobicy: () => fetchJobicy(fetchFn),
   };
+  if (hasRedditKeys(env)) sources.reddit = () => fetchReddit(env, fetchFn);
   const due = (name) => !(name in RATE_LIMITS) || now - (lastFetch[name] ?? 0) >= RATE_LIMITS[name];
   const names = Object.keys(sources).filter(due);
   for (const name of names) if (name in RATE_LIMITS) lastFetch[name] = now;
