@@ -23,7 +23,9 @@
     "bug fix",
     "webhook",
     "typescript",
-    "postgresql"
+    "postgresql",
+    "python",
+    "razor"
   ],
   "stackKeywords": [
     "angular",
@@ -75,7 +77,12 @@
     "database migration",
     "postgresql",
     "postgres",
-    "typescript"
+    "typescript",
+    "python",
+    "razor",
+    "cshtml",
+    "asp.net mvc",
+    "asp.net core mvc"
   ],
   "blockKeywords": [
     "commission",
