@@ -82,7 +82,9 @@
     "razor",
     "cshtml",
     "asp.net mvc",
-    "asp.net core mvc"
+    "asp.net core mvc",
+    "mongodb",
+    "redis"
   ],
   "blockKeywords": [
     "commission",
@@ -114,5 +116,5 @@
     "gmt+7"
   ],
   "hourlyRateUsd": 20,
-  "hoursPerDay": 4
+  "hoursPerDay": 5
 }
