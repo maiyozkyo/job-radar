@@ -115,3 +115,8 @@
 2026-11-18T11:45Z run poll fresh=6 kept=0 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=6
 2026-11-18T11:51Z score 3 - freelancer:40824321 | Multi-Accounting Integrator Browser Extension | https://www.freelancer.com/projects/api-integration/Multi-Accounting-Integrator-Browser
 2026-11-18T11:51Z run poll fresh=5 kept=1 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2, unknown budget=1, block keyword=1
+2026-11-18T11:57Z score 6 - freelancer:40824327 | n8n Workflow Automation & Multi-Model AI Agents (Claude & Gemini) | https://www.freelancer.com/projects/php/Workflow-Automation-Multi-Model-Agents-40824327
+2026-11-18T11:57Z score 2 - freelancer:40824312 | Daily Zoho Books Finance Support | https://www.freelancer.com/projects/accounting/Daily-Zoho-Books-Finance-Support
+2026-11-18T11:57Z score 5 - freelancer:38197146 | PHP Developer Needed for Payment Gateway API | https://www.freelancer.com/projects/php/PHP-Developer-Needed-for-Payment-38197146
+2026-11-18T11:57Z score 1 - freelancer:38128492 | Android App Development with API | https://www.freelancer.com/projects/android/Android-App-Development-with-API-38128492
+2026-11-18T11:57Z run poll fresh=6 kept=4 scored=4 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2
