@@ -1,12 +1,15 @@
-// Scores one Freelancer job on request and sends the full alert (score, bid,
-// milestones, proposal) whatever the score. No state is read or written.
-// Usage: node src/one.js <project URL or id>   (Actions: mode=job, job=<URL>)
+// Scores one job on request and sends the full alert (score, bid, milestones,
+// proposal) whatever the score. No state is read or written.
+// Input: a Freelancer project URL or id, or `paste:<key>` for a job the user
+// pasted to the bot (any platform; text read from the Worker).
+// Usage: node src/one.js <input>   (Actions: mode=job, job=<input>)
 import { pathToFileURL } from 'node:url';
 import { loadConfig } from './job.js';
 import { parseFreelancer } from './sources/freelancer.js';
 import { getJson } from './sources/http.js';
 import { scoreJobs } from './claude.js';
 import { formatAlertHtml, sendMessage } from './telegram.js';
+import { bidFromHours, fetchPaste, pastedJob } from './paste.js';
 
 const API = 'https://www.freelancer.com/api/projects/0.1/projects/';
 const DETAILS = 'full_description=true&job_details=true';
@@ -22,13 +25,24 @@ export function projectApiUrl(input) {
   return m ? `${API}?seo_urls[]=${encodeURIComponent(m[1])}&${DETAILS}` : null;
 }
 
-export async function alertOne(input, { config, scoreJobs: score, sendMessage: send, fetchFn = fetch }) {
+const PASTE = /^paste:([0-9a-f-]{36})$/;
+
+async function loadJob(input, env, fetchFn) {
+  const paste = String(input ?? '').trim().match(PASTE);
+  if (paste) return pastedJob(paste[1], await fetchPaste(paste[1], env, fetchFn));
   const api = projectApiUrl(input);
   if (!api) throw new Error('not a freelancer.com project link or id');
   const [job] = parseFreelancer(await getJson(api, fetchFn));
   if (!job) throw new Error('project not found');
-  const rate = config.hourlyRateUsd ?? 20;
-  const [scored] = await score([job], { draftMin: 1, rate, hoursPerDay: config.hoursPerDay ?? 2, discount: config.firstJobDiscount ?? 1 });
+  return job;
+}
+
+export async function alertOne(input, { config, env = {}, scoreJobs: score, sendMessage: send, fetchFn = fetch }) {
+  const job = await loadJob(input, env, fetchFn);
+  const opts = { rate: config.hourlyRateUsd ?? 20, hoursPerDay: config.hoursPerDay ?? 2 };
+  let [scored] = await score([job], { draftMin: 1, ...opts, discount: config.firstJobDiscount ?? 1 });
+  // A pasted job has no known budget: price it from Claude's hours at the full rate.
+  if (scored && !scored.bid && job.source === 'paste') scored = { ...scored, bid: bidFromHours(scored.hours, opts) };
   await send(formatAlertHtml(job, scored, scored ? null : 'Claude bỏ sót, chưa chấm điểm'));
   return { job, scored };
 }
@@ -39,7 +53,7 @@ if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
     if (!env[name]) { console.error(`missing ${name}`); process.exit(1); }
   }
   alertOne(process.argv[2] ?? env.JOB, {
-    config: loadConfig(), scoreJobs, sendMessage: (m) => sendMessage(m, env),
+    config: loadConfig(), env, scoreJobs, sendMessage: (m) => sendMessage(m, env),
   }).then(
     ({ job, scored }) => console.log(`job: ${job.key} score ${scored?.score ?? '-'}`),
     (err) => { console.error(`job failed: ${err.message}`); process.exit(1); },

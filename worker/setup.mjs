@@ -1,6 +1,7 @@
 // One-time setup for the Worker, run on your own machine from the repo root:
 //   node worker/setup.mjs              everything: KV, secrets, deploy, Telegram webhook, Freelancer token
 //   node worker/setup.mjs freelancer   only the Freelancer token (e.g. after the app is approved)
+//   node worker/setup.mjs paste        deploy, then turn on "paste a job to the bot" (new webhook + PASTE_TOKEN)
 // Secrets are typed in hidden and go straight to `wrangler secret put`; nothing is written to disk.
 import { spawn } from 'node:child_process';
 import { randomBytes } from 'node:crypto';
@@ -216,6 +217,48 @@ async function freelancerToken() {
   if (body.refresh_token) await putSecret('FREELANCER_REFRESH_TOKEN', body.refresh_token);
 }
 
+async function deploy() {
+  const url = workerUrlFrom(await wrangler(['deploy']));
+  if (!url) throw new Error('không đọc được URL của Worker từ kết quả deploy');
+  return url;
+}
+
+/** Sets a GitHub Actions secret through gh, value on stdin. */
+const ghSecret = (name, value) => new Promise((resolve, reject) => {
+  const child = spawn('gh', ['secret', 'set', name, '-R', 'maiyozkyo/job-radar'], { shell: process.platform === 'win32', stdio: ['pipe', 'ignore', 'inherit'] });
+  child.on('error', reject);
+  child.on('close', (code) => (code === 0 ? (console.log(`  ✓ GitHub secret ${name}`), resolve()) : reject(new Error(`gh secret set ${name} exited ${code} (cần: gh auth login)`))));
+  child.stdin.end(value);
+});
+
+/**
+ * Webhook for button taps and messages, with a new secret, and a new
+ * PASTE_TOKEN shared by the Worker and Actions (pasted jobs are read with it).
+ */
+async function connectTelegram(botToken, url) {
+  const webhookSecret = randomBytes(24).toString('hex');
+  const pasteToken = randomBytes(24).toString('hex');
+  await putSecret('TG_WEBHOOK_SECRET', webhookSecret);
+  await putSecret('PASTE_TOKEN', pasteToken);
+  await ghSecret('PASTE_TOKEN', pasteToken);
+  const hook = await fetch(`https://api.telegram.org/bot${botToken}/setWebhook`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ url: `${url}/telegram`, secret_token: webhookSecret, allowed_updates: ['callback_query', 'message'] }),
+  }).then((r) => r.json()).catch(() => ({}));
+  if (!hook.ok) throw new Error(`setWebhook lỗi: ${hook.description ?? 'không rõ'}`);
+  console.log(`  ✓ webhook ${url}/telegram (nút bấm + tin nhắn)`);
+}
+
+async function paste() {
+  console.log('Deploy Worker…');
+  const url = await deploy();
+  console.log('\nBật dán job vào bot:');
+  const botToken = await ask('   TELEGRAM_BOT_TOKEN của bot job-radar: ', { hidden: true });
+  await connectTelegram(botToken, url);
+  console.log('\nXong. Gửi cho bot nội dung job hoặc link Freelancer để thử.');
+}
+
 async function full() {
   await ensureLogin();
   await ensureKv();
@@ -224,31 +267,22 @@ async function full() {
   const botToken = await ask('   TELEGRAM_BOT_TOKEN của bot job-radar (@BotFather → /mybots → API Token): ', { hidden: true });
   const chatId = await telegramChatId(botToken);
   const ghToken = await ask('   GH_DISPATCH_TOKEN (fine-grained, chỉ job-radar, Actions: Read and write): ', { hidden: true });
-  const webhookSecret = randomBytes(24).toString('hex');
 
   console.log('\n4) Deploy Worker…');
-  const url = workerUrlFrom(await wrangler(['deploy']));
-  if (!url) throw new Error('không đọc được URL của Worker từ kết quả deploy');
-
+  const url = await deploy();
   await putSecret('TELEGRAM_BOT_TOKEN', botToken);
   await putSecret('TELEGRAM_CHAT_ID', chatId);
   await putSecret('GH_DISPATCH_TOKEN', ghToken);
-  await putSecret('TG_WEBHOOK_SECRET', webhookSecret);
 
-  console.log('\n5) Nối nút bấm Telegram với Worker…');
-  const hook = await fetch(`https://api.telegram.org/bot${botToken}/setWebhook`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ url: `${url}/telegram`, secret_token: webhookSecret, allowed_updates: ['callback_query'] }),
-  }).then((r) => r.json()).catch(() => ({}));
-  if (!hook.ok) throw new Error(`setWebhook lỗi: ${hook.description ?? 'không rõ'}`);
-  console.log(`  ✓ ${url}/telegram`);
+  console.log('\n5) Nối Telegram với Worker…');
+  await connectTelegram(botToken, url);
 
   await freelancerToken();
   console.log('\nXong. Worker quét Freelancer mỗi phút; nút ✅ bid khi có FREELANCER_TOKEN.');
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
-  (process.argv[2] === 'freelancer' ? freelancerToken() : full())
+  const steps = { freelancer: freelancerToken, paste };
+  (steps[process.argv[2]] ?? full)()
     .catch((err) => { console.error(`\n✗ ${err.message}`); process.exit(1); });
 }

@@ -85,6 +85,12 @@ After that, `getUpdates` no longer works for this bot (Telegram allows a webhook
 
 Freelancer token: create an app at https://accounts.freelancer.com/settings/develop and generate a token for your own account with the scope that allows bidding. It can bid as you: keep it only in the Worker secret.
 
+## Paste a job to the bot
+
+Send the bot a Freelancer project link, or paste or forward a job post from any platform (Upwork, Contra, Fiverr, LinkedIn, …). About a minute later the full alert comes back: score, proposal in a copy block, and a price from Claude's hours at `hourlyRateUsd` (no one-tap bid off Freelancer). Pasted text waits in the Worker's KV for a day; the workflow gets only `paste:<key>` and reads the text from the Worker with `PASTE_TOKEN`, so it never shows in the public Actions log. Only messages from `TELEGRAM_CHAT_ID` count.
+
+Turn it on once: `node worker/setup.mjs paste` (deploys the Worker, sets the webhook for taps and messages, and puts a new `PASTE_TOKEN` in both the Worker and the repo's Actions secrets through `gh`).
+
 ## Backup trigger (if GitHub's schedule stops firing)
 
 GitHub's `schedule` can be delayed for hours or skipped, especially on new repos. An external cron can start the same workflow through the API instead:

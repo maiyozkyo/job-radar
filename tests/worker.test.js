@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import worker, { cleanEnv, fastPoll, onTap } from '../worker/index.js';
+import worker, { cleanEnv, fastPoll, onMessage, onTap } from '../worker/index.js';
 
 const NOW = 1794300000;
 const kv = (init = {}) => {
@@ -142,4 +142,61 @@ test('secrets are trimmed, and one with a stray character is named', async () =>
 test('the webhook accepts a secret saved with a trailing newline', async () => {
   const req = new Request('https://w.example/telegram', { method: 'POST', headers: { 'X-Telegram-Bot-Api-Secret-Token': 's' }, body: '{}' });
   assert.equal((await worker.fetch(req, { TG_WEBHOOK_SECRET: 's\n' })).status, 200);
+});
+
+// --- pasted jobs ---
+
+const owner = { id: 42 };
+const msgEnv = () => ({ TELEGRAM_CHAT_ID: '42', TELEGRAM_BOT_TOKEN: 'TG', GH_REPO: 'me/job-radar', GH_DISPATCH_TOKEN: 'GH', PASTE_TOKEN: 'P', RADAR_KV: kv() });
+function msgFetch() {
+  const sent = [];
+  const dispatched = [];
+  const fetchFn = async (url, init = {}) => {
+    if (url.includes('api.github.com')) { dispatched.push(JSON.parse(init.body).inputs); return { ok: true, status: 204 }; }
+    sent.push(JSON.parse(init.body).text);
+    return { ok: true, status: 200 };
+  };
+  return { sent, dispatched, fetchFn };
+}
+const post = 'Upwork job: Fix our Angular 17 dashboard charts. They break after the last update. Budget $150, need it in 2 days.';
+
+test('a pasted job is kept in KV and job mode gets only its key', async () => {
+  const env = msgEnv();
+  const { sent, dispatched, fetchFn } = msgFetch();
+  await onMessage({ message_id: 1, chat: { id: 42 }, from: owner, text: post }, env, fetchFn);
+  assert.equal(dispatched.length, 1);
+  assert.equal(dispatched[0].mode, 'job');
+  const [, key] = dispatched[0].job.match(/^paste:([0-9a-f-]{36})$/);
+  assert.equal(env.RADAR_KV.data[`paste:${key}`], post);
+  assert.match(sent[0], /Đang chấm/);
+});
+
+test('a Freelancer link goes to job mode as is', async () => {
+  const { dispatched, fetchFn } = msgFetch();
+  const link = 'https://www.freelancer.com/projects/excel-vba/Excel-Cleanup';
+  await onMessage({ message_id: 1, chat: { id: 42 }, from: owner, text: link }, msgEnv(), fetchFn);
+  assert.deepEqual(dispatched, [{ mode: 'job', job: link }]);
+});
+
+test('short text and commands get help; strangers are ignored', async () => {
+  const { sent, dispatched, fetchFn } = msgFetch();
+  await onMessage({ message_id: 1, chat: { id: 42 }, from: owner, text: 'hi' }, msgEnv(), fetchFn);
+  await onMessage({ message_id: 2, chat: { id: 42 }, from: owner, text: '/start' }, msgEnv(), fetchFn);
+  await onMessage({ message_id: 3, chat: { id: 7 }, from: { id: 7 }, text: post }, msgEnv(), fetchFn);
+  assert.equal(dispatched.length, 0);
+  assert.equal(sent.length, 2);
+  assert.match(sent[0], /Ngắn quá/);
+});
+
+test('/paste/<key> returns the text only with the token', async () => {
+  const key = '0f8fad5b-d9cb-469f-a165-70867728950e';
+  const env = { PASTE_TOKEN: 'P', RADAR_KV: kv({ [`paste:${key}`]: post }) };
+  const get = (auth, k = key) => worker.fetch(new Request(`https://w.example/paste/${k}`, { headers: auth ? { Authorization: auth } : {} }), env);
+  assert.equal((await get()).status, 403);
+  assert.equal((await get('Bearer wrong')).status, 403);
+  const ok = await get('Bearer P');
+  assert.equal(ok.status, 200);
+  assert.equal(await ok.text(), post);
+  assert.equal((await get('Bearer P', '1f8fad5b-d9cb-469f-a165-70867728950e')).status, 404);
+  assert.equal((await worker.fetch(new Request(`https://w.example/paste/${key}`), { RADAR_KV: env.RADAR_KV })).status, 403);
 });

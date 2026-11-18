@@ -1,12 +1,17 @@
-// Cloudflare Worker (free plan) with two jobs:
+// Cloudflare Worker (free plan) with three jobs:
 // 1. Every minute: look for new matching Freelancer projects and, if any,
 //    start the radar workflow at once (it scores and alerts as usual).
-// 2. Telegram webhook: when the user taps ✅ on an alert, place that bid
-//    through the official Freelancer API. Nothing is bid without a tap.
+// 2. Telegram webhook, taps: when the user taps ✅ on an alert, place that
+//    bid through the official Freelancer API. Nothing is bid without a tap.
+// 3. Telegram webhook, messages: a job the user pastes or forwards (any
+//    platform) or a Freelancer link is scored and drafted by the workflow in
+//    job mode. Pasted text waits in KV for a day and is read back through
+//    /paste/<key> with PASTE_TOKEN, so it never shows in the public Actions log.
 import config from '../config.json' with { type: 'json' };
 import { fetchFreelancer } from '../src/sources/freelancer.js';
 import { pickFresh } from '../src/fastpoll.js';
 import { extractProposal, parseCallback, placeBid } from '../src/bid.js';
+import { isFreelancerLink, MAX_PASTE, MIN_PASTE } from '../src/paste.js';
 
 const nowSec = () => Math.floor(Date.now() / 1000);
 
@@ -16,6 +21,13 @@ export async function fastPoll(env, fetchFn = fetch, now = nowSec()) {
   const seen = JSON.parse((await env.RADAR_KV.get('seen')) ?? '{}');
   const { fresh, seen: next } = pickFresh(jobs, seen, now, config);
   if (!fresh.length) return 0;
+  await dispatch(env, { mode: 'poll' }, fetchFn);
+  await env.RADAR_KV.put('seen', JSON.stringify(next));
+  return fresh.length;
+}
+
+/** Starts radar.yml with these inputs. */
+async function dispatch(env, inputs, fetchFn) {
   const res = await fetchFn(`https://api.github.com/repos/${env.GH_REPO}/actions/workflows/radar.yml/dispatches`, {
     method: 'POST',
     headers: {
@@ -25,11 +37,9 @@ export async function fastPoll(env, fetchFn = fetch, now = nowSec()) {
       'User-Agent': 'job-radar-worker',
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ ref: 'main', inputs: { mode: 'poll' } }),
+    body: JSON.stringify({ ref: 'main', inputs }),
   });
   if (res.status !== 204) throw new Error(`workflow dispatch failed: HTTP ${res.status}`);
-  await env.RADAR_KV.put('seen', JSON.stringify(next));
-  return fresh.length;
 }
 
 const telegram = (env, fetchFn) => async (method, body) => {
@@ -80,6 +90,39 @@ export async function onTap(cq, env, fetchFn = fetch) {
   }
 }
 
+const HELP = 'Gửi cho mình link job Freelancer, hoặc dán/chuyển tiếp nội dung job (Upwork, Contra, Fiverr, LinkedIn…) gồm mô tả và ngân sách. Khoảng 1 phút sau sẽ có điểm, proposal và giá gợi ý.';
+
+/** A message from the owner: a Freelancer link or a pasted job goes to job mode. Others are ignored. */
+export async function onMessage(msg, env, fetchFn = fetch) {
+  if (String(msg.chat?.id) !== String(env.TELEGRAM_CHAT_ID) || String(msg.from?.id) !== String(env.TELEGRAM_CHAT_ID)) return;
+  const tg = telegram(env, fetchFn);
+  const reply = (text) => tg('sendMessage', { chat_id: msg.chat.id, reply_to_message_id: msg.message_id, text });
+  const text = String(msg.text ?? msg.caption ?? '').trim();
+  if (!text || text.startsWith('/')) return reply(HELP);
+
+  let job;
+  if (isFreelancerLink(text)) job = text;
+  else if (text.length < MIN_PASTE) return reply(`Ngắn quá để chấm. ${HELP}`);
+  else {
+    const key = crypto.randomUUID();
+    await env.RADAR_KV.put(`paste:${key}`, text.slice(0, MAX_PASTE), { expirationTtl: 86400 });
+    job = `paste:${key}`;
+  }
+  try {
+    await dispatch(env, { mode: 'job', job }, fetchFn);
+    await reply('⏳ Đang chấm và viết proposal, khoảng 1 phút…');
+  } catch (err) {
+    await reply(`⚠️ Không chạy được: ${String(err.message).slice(0, 200)}`);
+  }
+}
+
+/** GET /paste/<key> for the workflow: the pasted text, only with PASTE_TOKEN. */
+async function readPaste(request, env, key) {
+  if (!env.PASTE_TOKEN || request.headers.get('Authorization') !== `Bearer ${env.PASTE_TOKEN}`) return new Response('forbidden', { status: 403 });
+  const text = await env.RADAR_KV.get(`paste:${key}`);
+  return text == null ? new Response('not found', { status: 404 }) : new Response(text, { headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
+}
+
 /**
  * Secrets pasted in a terminal or the dashboard can carry a newline or a stray
  * space, which makes fetch throw "Invalid header value". Trim string values,
@@ -103,6 +146,8 @@ export default {
   async fetch(request, rawEnv) {
     const env = cleanEnv(rawEnv);
     const { pathname } = new URL(request.url);
+    const paste = pathname.match(/^\/paste\/([0-9a-f-]{36})$/);
+    if (request.method === 'GET' && paste) return readPaste(request, env, paste[1]);
     if (request.method !== 'POST' || pathname !== '/telegram') return new Response('not found', { status: 404 });
     // Telegram sends the secret given to setWebhook; anything else is not Telegram.
     if (!env.TG_WEBHOOK_SECRET || request.headers.get('X-Telegram-Bot-Api-Secret-Token') !== env.TG_WEBHOOK_SECRET) {
@@ -110,6 +155,7 @@ export default {
     }
     const update = await request.json().catch(() => null);
     if (update?.callback_query) await onTap(update.callback_query, env);
+    else if (update?.message) await onMessage(update.message, env);
     return new Response('ok');
   },
 };

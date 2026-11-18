@@ -16,6 +16,7 @@ Weigh:
 - **Malware risk.** A known scam is the fake interview or "test task": the client sends a repo (GitHub/Bitbucket/zip) and asks to clone it, run `npm install`, or open it in VS Code; the repo runs malware that steals wallets, passwords and SSH keys. Score these at most 3 unless the post is clearly from an established company and the task does not need running their code. Crypto/Web3 jobs with vague scope and urgency score low. Say the risk in `reasonVi`.
 - **Competition**: many existing bids lower the score.
 - Remote job posts must be open to someone in Vietnam (GMT+7); otherwise score 1.
+- `paste` jobs are posts the freelancer copied from another platform (Upwork, Contra, Fiverr, LinkedIn, …), so the budget, bid count and client details are only what the text says. Read them from the text when present.
 
 ## Output
 

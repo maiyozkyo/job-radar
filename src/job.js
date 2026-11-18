@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
  * One job, normalized from any source.
  * @typedef {object} Job
  * @property {string} key            "source:id"
- * @property {'freelancer'|'hn'|'wwr'|'remoteok'|'himalayas'|'remotive'|'jobicy'|'reddit'} source
+ * @property {'freelancer'|'hn'|'wwr'|'remoteok'|'himalayas'|'remotive'|'jobicy'|'reddit'|'paste'} source
  * @property {string} id
  * @property {string} url
  * @property {string} title

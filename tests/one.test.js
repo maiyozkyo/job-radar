@@ -38,3 +38,20 @@ test('alertOne fails clearly on a bad link or a missing project', async () => {
   await assert.rejects(alertOne('https://evil.example/x', deps), /not a freelancer\.com project/);
   await assert.rejects(alertOne('1', { ...deps, fetchFn: async () => ({ ok: true, json: async () => ({ result: { projects: [] } }) }) }), /project not found/);
 });
+
+test('alertOne scores a pasted job and prices it from the hours', async () => {
+  const key = '0f8fad5b-d9cb-469f-a165-70867728950e';
+  const sent = [];
+  const { job, scored } = await alertOne(`paste:${key}`, {
+    config: { hourlyRateUsd: 20, hoursPerDay: 5 },
+    env: { WORKER_URL: 'https://w.example', PASTE_TOKEN: 'P' },
+    fetchFn: async () => ({ ok: true, status: 200, text: async () => 'Upwork: Fix Angular charts\nBudget $150, 2 days.' }),
+    scoreJobs: async (jobs) => [{ key: jobs[0].key, score: 8, reasonVi: 'ok', proposalEn: 'Hi', hours: 6, bid: null, milestones: [] }],
+    sendMessage: async (m) => { sent.push(m); },
+  });
+  assert.equal(job.key, `paste:${key}`);
+  assert.equal(scored.bid.amountUsd, 120);
+  assert.match(sent[0].text, /\[paste\] Upwork: Fix Angular charts/);
+  assert.match(sent[0].text, /💵 Gợi ý bid: \$120 · ~6 giờ · giao 3 ngày/);
+  assert.ok(!sent[0].buttons.flat().some((b) => b.callback_data), 'no one-tap bid off Freelancer');
+});
