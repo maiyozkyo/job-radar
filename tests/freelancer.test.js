@@ -18,6 +18,12 @@ test('converts a non-USD budget with exchange_rate', () => {
   assert.deepEqual(inr.tags, ['Angular', 'TypeScript']);
 });
 
+test('is_escrow_project marks the job; anything else does not', () => {
+  const [a, b] = parseFreelancer({ result: { projects: [{ ...fixture.result.projects[0], is_escrow_project: true }, fixture.result.projects[0]] } });
+  assert.equal(a.escrow, true);
+  assert.equal(b.escrow, false);
+});
+
 test('hourly job keeps type and falls back to preview_description', () => {
   const hourly = parseFreelancer(fixture)[1];
   assert.equal(hourly.budgetType, 'hourly');

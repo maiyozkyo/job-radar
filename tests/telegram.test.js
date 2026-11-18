@@ -167,6 +167,16 @@ test('one-tap bid: one milestone asks 100% upfront; no button without a proposal
   assert.ok(noTap(formatAlertHtml({ ...job, source: 'hn' }, { ...scored, bid, milestones: [] })));
 });
 
+test('an Escrow.com project says so and has no one-tap bid, only copy buttons', () => {
+  const bid = { amountUsd: 45, unit: '', hours: 2, days: 1, netUsd: 40, wantUsd: 45, underpaid: false };
+  const m = formatAlertHtml({ ...job, escrow: true }, { ...scored, bid, milestones: [] });
+  assert.ok(!m.buttons.flat().some((b) => b.callback_data));
+  assert.ok(m.buttons.flat().some((b) => b.copy_text));
+  assert.match(m.text, /Escrow\.com/);
+  assert.match(formatAlert({ ...job, escrow: true }, scored), /Escrow\.com/);
+  assert.doesNotMatch(formatAlertHtml(job, { ...scored, bid, milestones: [] }).text, /Escrow/);
+});
+
 test('local bid stays inside the client budget and is null for USD jobs', () => {
   const bid = { amountUsd: 40, unit: '' };
   assert.equal(localBid(inr, bid).amount, 12500); // $40 ≈ ₹3,700, raised to the client minimum

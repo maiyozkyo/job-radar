@@ -17,6 +17,7 @@ import { readFileSync } from 'node:fs';
  * @property {string|null} employmentType
  * @property {number} postedAt       unix seconds
  * @property {string[]} tags
+ * @property {boolean} [escrow]      Freelancer Escrow.com project: bidding needs a linked Escrow.com account
  * @property {{ code: string, sign: string, usdRate: number, min: number|null, max: number|null }|null} [currency]
  *           Freelancer jobs not in USD: the project currency, USD per unit, and the budget in that currency
  */

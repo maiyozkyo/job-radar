@@ -75,13 +75,15 @@ export function competitionLine(job, now = Date.now() / 1000) {
   return `👥 ${job.bidCount} bid${age}${hint}`;
 }
 
+const ESCROW_NOTE = '🔒 Escrow.com project: phải liên kết tài khoản Escrow.com mới bid được';
+
 function riskLines(job) {
   const flags = riskFlags(job).filter((f) => f.level === 'warn');
-  if (!flags.length) return null;
-  return [
-    ...flags.map((f) => `🚩 ${f.label}`),
-    '🛡️ Không chạy code/cài gì của khách trên máy chính, chỉ mở trong VM hoặc Codespaces.',
-  ].join('\n');
+  const lines = flags.length
+    ? [...flags.map((f) => `🚩 ${f.label}`), '🛡️ Không chạy code/cài gì của khách trên máy chính, chỉ mở trong VM hoặc Codespaces.']
+    : [];
+  if (job.escrow) lines.push(ESCROW_NOTE);
+  return lines.length ? lines.join('\n') : null;
 }
 
 function jobBlock(job, scored, now) {
@@ -140,8 +142,9 @@ export function formatAlertHtml(job, scored, warning, now) {
     warning ? `\n⚠️ ${esc(warning)}` : null,
   ].filter(Boolean).join('\n');
   // One-tap bid: the Worker places exactly this bid, with the proposal from
-  // the <pre> block, only when the user taps ✅.
-  const tapBid = job.source === 'freelancer' && bid && scored?.proposalEn;
+  // the <pre> block, only when the user taps ✅. Escrow.com projects refuse
+  // API bids without a linked Escrow.com account, so they get no ✅.
+  const tapBid = job.source === 'freelancer' && !job.escrow && bid && scored?.proposalEn;
   const firstPct = milestones.length >= 2 ? Math.round((msAmount(milestones[0], 0) / bidAmount) * 100) : 100;
   const buttons = [
     ...(tapBid ? [[
