@@ -36,3 +36,4 @@
 2026-11-18T07:35Z run poll fresh=5 kept=2 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=3
 2026-11-18T07:37Z score 3 - freelancer:40823938 | Education Librarian Email List | https://www.freelancer.com/projects/data-analysis/Education-Librarian-Email-List
 2026-11-18T07:37Z run poll fresh=1 kept=1 scored=1 unscored=0 alerts=0 sent=0
+2026-11-18T07:45Z run poll fresh=3 kept=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2, block keyword=1
