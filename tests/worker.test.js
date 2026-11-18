@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import worker, { fastPoll, onTap } from '../worker/index.js';
+import worker, { cleanEnv, fastPoll, onTap } from '../worker/index.js';
 
 const NOW = 1794300000;
 const kv = (init = {}) => {
@@ -128,4 +128,18 @@ test('webhook rejects requests without the secret header', async () => {
   assert.equal((await worker.fetch(req({ 'X-Telegram-Bot-Api-Secret-Token': 's' }), secret)).status, 200);
   assert.equal((await worker.fetch(req({}), {})).status, 403);
   assert.equal((await worker.fetch(new Request('https://w.example/other'), secret)).status, 404);
+});
+
+test('secrets are trimmed, and one with a stray character is named', async () => {
+  const env = { GH_DISPATCH_TOKEN: 'github_pat_X\r\n', GH_REPO: ' me/job-radar ', RADAR_KV: { get: () => null } };
+  const clean = cleanEnv(env);
+  assert.equal(clean.GH_DISPATCH_TOKEN, 'github_pat_X');
+  assert.equal(clean.GH_REPO, 'me/job-radar');
+  assert.equal(clean.RADAR_KV, env.RADAR_KV);
+  assert.throws(() => cleanEnv({ GH_DISPATCH_TOKEN: 'github​pat' }), /GH_DISPATCH_TOKEN có ký tự lạ \(độ dài 10\)/);
+});
+
+test('the webhook accepts a secret saved with a trailing newline', async () => {
+  const req = new Request('https://w.example/telegram', { method: 'POST', headers: { 'X-Telegram-Bot-Api-Secret-Token': 's' }, body: '{}' });
+  assert.equal((await worker.fetch(req, { TG_WEBHOOK_SECRET: 's\n' })).status, 200);
 });

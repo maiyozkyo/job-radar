@@ -80,12 +80,28 @@ export async function onTap(cq, env, fetchFn = fetch) {
   }
 }
 
+/**
+ * Secrets pasted in a terminal or the dashboard can carry a newline or a stray
+ * space, which makes fetch throw "Invalid header value". Trim string values,
+ * and say which secret still has a character no header can carry.
+ */
+export function cleanEnv(env) {
+  const out = { ...env };
+  for (const [k, v] of Object.entries(env)) {
+    if (typeof v !== 'string') continue;
+    out[k] = v.trim();
+    if (/[^\x20-\x7e]/.test(out[k])) throw new Error(`${k} có ký tự lạ (độ dài ${out[k].length}), đặt lại secret này`);
+  }
+  return out;
+}
+
 export default {
-  async scheduled(_event, env) {
-    await fastPoll(env);
+  async scheduled(_event, rawEnv) {
+    await fastPoll(cleanEnv(rawEnv));
   },
 
-  async fetch(request, env) {
+  async fetch(request, rawEnv) {
+    const env = cleanEnv(rawEnv);
     const { pathname } = new URL(request.url);
     if (request.method !== 'POST' || pathname !== '/telegram') return new Response('not found', { status: 404 });
     // Telegram sends the secret given to setWebhook; anything else is not Telegram.
