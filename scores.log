@@ -25,3 +25,6 @@
 2026-11-18T06:45Z run poll fresh=3 kept=0 scored=0 unscored=0 alerts=0 sent=0 dropped: hourly below floor=2, block keyword=1
 2026-11-18T07:00Z score 1 - freelancer:40823859 | Blender Character — Near-Infrared (NIR) Skin, Eyes & Modular Accessories for Syn | https://www.freelancer.com/projects/blender/Blender-Character-Near-Infrared-NIR
 2026-11-18T07:00Z run poll fresh=8 kept=1 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=3, no stack keyword=3, hourly below floor=1
+2026-11-18T07:10Z score 2 - freelancer:40823888 | Cloud Tailoring Shop Management Software | https://www.freelancer.com/projects/cloud-computing/Cloud-Tailoring-Shop-Management-Software
+2026-11-18T07:10Z score 2 - freelancer:40823885 | Panduan Cari Penghasilan Online | https://www.freelancer.com/projects/digital-marketing/Panduan-Cari-Penghasilan-Online
+2026-11-18T07:10Z run poll fresh=8 kept=2 scored=2 unscored=0 alerts=0 sent=0 dropped: no stack keyword=5, too many bids=1
