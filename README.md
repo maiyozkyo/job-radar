@@ -60,7 +60,9 @@ Tests: `npm test`.
 1. **Every minute** it checks Freelancer (10 newest per search term, short descriptions) and, when a new project passes the filters, starts `radar.yml` at once. New Freelancer jobs reach Telegram in about 1–1.5 minutes instead of up to 15.
 2. **Telegram webhook.** A Freelancer alert with a drafted proposal and a bid suggestion gets two more buttons above the copy buttons: **✅ Bid** and **❌ Bỏ**. Tapping ✅ places exactly the suggested bid (amount in the project's currency, delivery days, first milestone as the upfront %) through the official Freelancer API, with the proposal from the message. The buttons are swapped out before the bid goes out, so a double tap cannot bid twice. Only taps from `TELEGRAM_CHAT_ID` count. To change the price or text, open the job and bid by hand.
 
-Setup, once (from `worker/`):
+Setup, once: run `node worker/setup.mjs` from the repo root. It logs in to Cloudflare, creates the KV namespace, asks for each secret (hidden input, nothing saved to disk), deploys, sets the Telegram webhook and gets the Freelancer token through OAuth (app redirect URI: `https://localhost/callback`; scopes: manage bids, view profile). After the Freelancer app is approved, `node worker/setup.mjs freelancer` redoes only the token.
+
+The same by hand (from `worker/`):
 
 ```
 npx wrangler login
