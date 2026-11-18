@@ -98,20 +98,33 @@ function parseScores(output, jobs, bidOpts) {
   });
 }
 
+/** Windows: shell:true starts cmd.exe, so kill the whole tree or claude.exe lingers. */
+function killTree(child) {
+  if (process.platform === 'win32') spawn('taskkill', ['/pid', String(child.pid), '/T', '/F'], { windowsHide: true });
+  else child.kill();
+}
+
+const TIMEOUT_MS = 5 * 60_000;
+
 /** Runs Claude Code headless with no tools; the prompt goes in on stdin. */
-export function defaultRunClaude(prompt) {
+export function defaultRunClaude(prompt, { timeoutMs = TIMEOUT_MS, command = 'claude', args } = {}) {
   return new Promise((resolve, reject) => {
-    const child = spawn('claude', ['-p', '--output-format', 'json', '--tools', '', '--model', 'sonnet', '--no-session-persistence'], {
+    const child = spawn(command, args ?? ['-p', '--output-format', 'json', '--tools', '', '--model', 'sonnet', '--no-session-persistence'], {
       stdio: ['pipe', 'pipe', 'pipe'],
       shell: process.platform === 'win32',
-      timeout: 5 * 60_000,
+      windowsHide: true,
     });
     let out = '';
     let err = '';
+    let timedOut = false;
+    // Not spawn's own `timeout`: on Windows it would kill only cmd.exe.
+    const timer = setTimeout(() => { timedOut = true; killTree(child); }, timeoutMs);
     child.stdout.on('data', (d) => { out += d; });
     child.stderr.on('data', (d) => { err += d; });
-    child.on('error', reject);
+    child.on('error', (e) => { clearTimeout(timer); reject(e); });
     child.on('close', (code) => {
+      clearTimeout(timer);
+      if (timedOut) return reject(new Error(`claude timed out after ${Math.round(timeoutMs / 1000)}s`));
       if (code !== 0) return reject(new Error(`claude exited ${code}: ${err.slice(0, 300)}`));
       try {
         const res = JSON.parse(out);
@@ -121,6 +134,7 @@ export function defaultRunClaude(prompt) {
         reject(new Error('claude returned non-JSON'));
       }
     });
+    child.stdin.on('error', () => {}); // a child killed early must not crash the run with EPIPE
     child.stdin.end(prompt);
   });
 }
