@@ -168,7 +168,7 @@ test('a pasted job is kept in KV and job mode gets only its key', async () => {
   assert.equal(dispatched[0].mode, 'job');
   const [, key] = dispatched[0].job.match(/^paste:([0-9a-f-]{36})$/);
   assert.equal(env.RADAR_KV.data[`paste:${key}`], post);
-  assert.match(sent[0], /Đang đọc tin/);
+  assert.match(sent[0], /Đại ca chờ em/);
 });
 
 test('a Freelancer link goes to job mode as is', async () => {
@@ -184,7 +184,7 @@ test('a Freelancer link with a note around it still goes to job mode as a link',
   await onMessage({ message_id: 1, chat: { id: 42 }, from: owner, text: `Job này ổn không?
 ${link}` }, msgEnv(), fetchFn);
   assert.deepEqual(dispatched, [{ mode: 'job', job: link }]);
-  assert.match(sent[0], /Đang chấm/);
+  assert.match(sent[0], /Đại ca chờ em/);
 });
 
 test('short chat goes to job mode as a paste for Claude to answer', async () => {
@@ -193,7 +193,7 @@ test('short chat goes to job mode as a paste for Claude to answer', async () => 
   await onMessage({ message_id: 1, chat: { id: 42 }, from: owner, text: 'hi, hôm nay có job nào hay không?' }, env, fetchFn);
   const [, key] = dispatched[0].job.match(/^paste:([0-9a-f-]{36})$/);
   assert.equal(env.RADAR_KV.data[`paste:${key}`], 'hi, hôm nay có job nào hay không?');
-  assert.match(sent[0], /Đang đọc tin/);
+  assert.match(sent[0], /Đại ca chờ em/);
 });
 
 test('commands get help; strangers are ignored', async () => {
@@ -203,6 +203,7 @@ test('commands get help; strangers are ignored', async () => {
   assert.equal(dispatched.length, 0);
   assert.equal(sent.length, 1);
   assert.match(sent[0], /link job Freelancer/);
+  assert.match(sent[0], /Đại ca gửi em/);
 });
 
 test('/paste/<key> returns the text only with the token', async () => {
@@ -217,3 +218,4 @@ test('/paste/<key> returns the text only with the token', async () => {
   assert.equal((await get('Bearer P', '1f8fad5b-d9cb-469f-a165-70867728950e')).status, 404);
   assert.equal((await worker.fetch(new Request(`https://w.example/paste/${key}`), { RADAR_KV: env.RADAR_KV })).status, 403);
 });
+

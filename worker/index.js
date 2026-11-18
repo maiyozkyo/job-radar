@@ -77,7 +77,7 @@ export async function onTap(cq, env, fetchFn = fetch) {
   }
 
   const description = extractProposal(msg);
-  if (!description) return answer('Không thấy proposal trong tin, bid tay nhé');
+  if (!description) return answer('Không thấy proposal trong tin, đại ca bid tay nhé');
 
   // Swap the buttons out first, so a double tap cannot send a second bid.
   await answer('Đang bid…');
@@ -91,7 +91,7 @@ export async function onTap(cq, env, fetchFn = fetch) {
   }
 }
 
-const HELP = 'Gửi cho mình link job Freelancer, hoặc dán/chuyển tiếp nội dung job (Upwork, Contra, Fiverr, LinkedIn…) gồm mô tả và ngân sách. Khoảng 1 phút sau sẽ có điểm, proposal và giá gợi ý. Nhắn gì khác thì mình trả lời như chat bình thường.';
+const HELP = 'Đại ca gửi em link job Freelancer, hoặc dán/chuyển tiếp nội dung job (Upwork, Contra, Fiverr, LinkedIn…) gồm mô tả và ngân sách. Khoảng 1 phút sau em gửi điểm, proposal và giá gợi ý. Đại ca nhắn gì khác thì em trả lời như chat bình thường.';
 
 /** A message from the owner goes to job mode: a Freelancer link as is, other text as paste:<key>. Others are ignored. */
 export async function onMessage(msg, env, fetchFn = fetch) {
@@ -102,7 +102,7 @@ export async function onMessage(msg, env, fetchFn = fetch) {
   if (!text || text.startsWith('/')) return reply(HELP);
 
   let job = findFreelancerLink(text);
-  const ack = job ? '⏳ Đang chấm và viết proposal, khoảng 1 phút…' : '⏳ Đang đọc tin, khoảng 1 phút…';
+  const ack = job ? '⏳ Đại ca chờ em chấm và viết proposal, khoảng 1 phút…' : '⏳ Đại ca chờ em đọc tin, khoảng 1 phút…';
   if (!job) {
     // Job post or chat: Claude decides in job mode.
     const key = crypto.randomUUID();
