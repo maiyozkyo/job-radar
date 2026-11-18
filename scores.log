@@ -130,3 +130,5 @@
 2026-11-18T12:36Z score 2 - freelancer:40824363 | Part-Time Virtual Assistant Needed | https://www.freelancer.com/projects/social-media-management/Part-Time-Virtual-Assistant-Needed
 2026-11-18T12:36Z run poll fresh=3 kept=1 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2
 2026-11-18T12:45Z run poll fresh=1 kept=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1
+2026-11-18T12:46Z score 4 - freelancer:40824375 | Automate WordPress Publishing via n8n | https://www.freelancer.com/projects/n8n/Automate-WordPress-Publishing-via
+2026-11-18T12:46Z run poll fresh=2 kept=1 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=1
