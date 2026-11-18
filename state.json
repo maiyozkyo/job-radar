@@ -2290,37 +2290,7 @@
   "freelancer:40823456": 1794964537,
   "freelancer:40822640": 1794964537
  },
- "pending": [
-  {
-   "url": "https://remoteOK.com/remote-jobs/remote-engineering-manager-network-engineering-patientpoint-1137797",
-   "title": "PatientPoint: Engineering Manager Network Engineering",
-   "description": "Join PatientPoint to be part of a dynamic team creating change in and around the doctorâs office. As a leading digital health company, we innovate to positively impact patient behaviors. Our purpose-driven approach offers an inspirational career opportunity where you can contribute to improving health outcomes for millions of patients nationwide.\nLocation: Remote (Must reside in the United States within the Eastern or Central Time Zone)\nTravel Required: 2-4 Times a Year\nJob Summary\nAs an Engineering Manager, Network Engineering, you will lead the team that designs and builds the network foundation behind PatientPoint products and the business. You are a technical team leader first: you stay hands-on in architecture, automation, and development, while your team serves as the Level 2 escalation point for complex network issues handed off by operations. You will partner closely with DevOps, Security, Cloud Platform, Product, and business teams to deliver a network that is reliable, secure, and built as code across AWS, data center, and corporate environments.\nIn this role, you will demonstrate technical leader-level qualities, lead design conversations, and have an eye for clean, scalable architecture. You will write and review code alongside your team, set the engineering standards for how network changes are designed, tested, and released, and articulate the total value of each technical solution. You thrive where network engineering and software engineering meet, and you have a knack for moving projects from concept to production and for turning recurring escalations into lasting design improvements. You want to build things that matter, and you want to improve every doctor-patient engagement that depends on a network that just works.\nPlease mention the word **CONTINUITY** and tag ROS4yMzQuMjMuNTQ= when applying to show you read the job post completely (#ROS4yMzQuMjMuNTQ=). This is a beta feature to avoid spam applicants. Companies can search these words to find applicants that read this and see they're human.",
-   "budgetType": "salary",
-   "budgetMinUsd": null,
-   "budgetMaxUsd": null,
-   "bidCount": null,
-   "location": "Remote",
-   "employmentType": null,
-   "postedAt": 1794873617,
-   "tags": [
-    "exec",
-    "design",
-    "infosec",
-    "technical",
-    "dev",
-    "travel",
-    "devops",
-    "cloud",
-    "ops",
-    "medical",
-    "engineer",
-    "digital nomad"
-   ],
-   "source": "remoteok",
-   "id": "1137797",
-   "key": "remoteok:1137797"
-  }
- ],
+ "pending": [],
  "lastFetch": {
   "remotive": 1794956448,
   "jobicy": 1794958230
