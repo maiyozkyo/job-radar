@@ -9,3 +9,5 @@
 2026-11-18T04:30Z run poll fresh=25 kept=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=15, location=6, block keyword=2, too many bids=1, budget below floor=1
 2026-11-18T04:45Z score 1 - freelancer:40823690 | ISO 9001 Certification Preparation | https://www.freelancer.com/projects/documentation/ISO-Certification-Preparation
 2026-11-18T04:45Z run poll fresh=6 kept=1 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2, block keyword=2, budget below floor=1
+2026-11-18T05:00Z score 2 - freelancer:40823706 | Café Website With Online Ordering | https://www.freelancer.com/projects/html/Caf-Website-With-Online-Ordering
+2026-11-18T05:00Z run poll fresh=24 kept=1 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=11, block keyword=6, location=4, budget below floor=1, full-time only=1
