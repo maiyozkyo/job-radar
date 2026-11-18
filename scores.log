@@ -127,3 +127,5 @@
 2026-11-18T12:15Z run poll fresh=5 kept=1 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=4
 2026-11-18T12:16Z run poll fresh=0 kept=0 scored=0 unscored=0 alerts=0 sent=0
 2026-11-18T12:30Z run poll fresh=3 kept=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=3
+2026-11-18T12:36Z score 2 - freelancer:40824363 | Part-Time Virtual Assistant Needed | https://www.freelancer.com/projects/social-media-management/Part-Time-Virtual-Assistant-Needed
+2026-11-18T12:36Z run poll fresh=3 kept=1 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2
