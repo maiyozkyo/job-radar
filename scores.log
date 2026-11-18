@@ -303,3 +303,5 @@
 2026-11-18T22:45Z run poll fresh=0 kept=0 scored=0 unscored=0 alerts=0 sent=0
 2026-11-18T22:49Z score 2 - freelancer:40825083 | TikTok & Meta Shop Setup | https://www.freelancer.com/projects/content-creation/TikTok-Meta-Shop-Setup
 2026-11-18T22:49Z run poll fresh=2 kept=1 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1
+2026-11-18T22:57Z score 6 - freelancer:40825097 | Agentes IA para Automatización Interna | https://www.freelancer.com/projects/ai-chatbot-development/Agentes-para-Automatizaci-Interna
+2026-11-18T22:57Z run poll fresh=4 kept=1 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=2, no stack keyword=1
