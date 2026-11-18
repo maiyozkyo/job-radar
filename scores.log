@@ -307,3 +307,4 @@
 2026-11-18T22:57Z run poll fresh=4 kept=1 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=2, no stack keyword=1
 2026-11-18T23:00Z run poll fresh=0 kept=0 scored=0 unscored=0 alerts=0 sent=0
 2026-11-18T23:15Z run poll fresh=4 kept=0 scored=0 unscored=0 alerts=0 sent=0 dropped: budget below floor=2, no stack keyword=1, block keyword=1
+2026-11-18T23:30Z run poll fresh=2 kept=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2
