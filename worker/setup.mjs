@@ -74,7 +74,7 @@ function askHidden(question) {
       stdin.setRawMode(false);
       stdin.pause();
       if (r.cancel) { stdout.write('\n'); process.exit(130); }
-      stdout.write(` [đã nhận ${value.trim().length} ký tự]\n`);
+      stdout.write('\n');
       resolve(value.trim());
     };
     stdin.setRawMode(true);
@@ -84,8 +84,46 @@ function askHidden(question) {
   });
 }
 
+const run = (cmd, args) => new Promise((resolve, reject) => {
+  const child = spawn(cmd, args, { stdio: ['ignore', 'pipe', 'ignore'] });
+  let out = '';
+  child.stdout.on('data', (d) => { out += d; });
+  child.on('error', reject);
+  child.on('close', (code) => (code === 0 ? resolve(out) : reject(new Error(`${cmd} exited ${code}`))));
+});
+
+/** Reads the clipboard, then empties it so the secret does not linger. */
+async function takeClipboard() {
+  if (process.platform === 'win32') {
+    const text = await run('powershell', ['-NoProfile', '-Command', 'Get-Clipboard -Raw']);
+    await run('powershell', ['-NoProfile', '-Command', 'Set-Clipboard -Value " "']).catch(() => {});
+    return text.trim();
+  }
+  if (process.platform === 'darwin') {
+    const text = await run('pbpaste', []);
+    await new Promise((r) => { const c = spawn('pbcopy'); c.on('close', r); c.stdin.end(''); });
+    return text.trim();
+  }
+  return '';
+}
+
+/** Shows only the start and length, enough to spot a wrong token type. */
+export const masked = (s) => `${s.slice(0, 6)}… (${s.length} ký tự)`;
+
+/**
+ * Secrets: copy the value and press Enter (read from the clipboard, never
+ * shown), or type it blind. Pasting shows it on some Windows terminals.
+ */
+async function askSecret(question) {
+  const typed = await askHidden(`${question}\n   → copy giá trị rồi CHỈ bấm Enter (đừng dán): `);
+  const value = typed || await takeClipboard().catch(() => '');
+  if (!value) throw new Error('không có giá trị (clipboard trống)');
+  console.log(`   nhận: ${masked(value)}`);
+  return value;
+}
+
 function ask(question, { hidden = false } = {}) {
-  if (hidden) return askHidden(question);
+  if (hidden) return askSecret(question);
   return new Promise((resolve) => {
     const r = rl();
     r.question(question, (answer) => { r.close(); resolve(answer.trim()); });

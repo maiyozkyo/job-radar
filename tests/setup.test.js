@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { applyKeys, authorizeUrl, chatIdFrom, codeFrom, kvIdFrom, workerUrlFrom } from '../worker/setup.mjs';
+import { applyKeys, masked, authorizeUrl, chatIdFrom, codeFrom, kvIdFrom, workerUrlFrom } from '../worker/setup.mjs';
 
 test('reads the KV id from wrangler output (toml or json style)', () => {
   const id = 'a'.repeat(32);
@@ -48,4 +48,8 @@ test('hidden input: typing, paste markers, backspace, enter and Ctrl+C', () => {
   assert.deepEqual(applyKeys('abc', '\b'), { value: 'ab', done: false });
   assert.equal(applyKeys('x', '\u0003').cancel, true);
   assert.deepEqual(applyKeys('', 'tok\nextra'), { value: 'tok', done: true });
+});
+
+test('masked shows only the start and the length', () => {
+  assert.equal(masked('github_pat_ABCDEFGHIJ'), 'github… (21 ký tự)');
 });
