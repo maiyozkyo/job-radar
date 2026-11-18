@@ -15,17 +15,20 @@ export function netUsd(job) {
  * A bid for a Freelancer job from Claude's hours estimate: hours × rate (fixed)
  * or the rate (hourly), kept inside the client's range. `days` assumes evening
  * work at `hoursPerDay` plus one day of slack. `underpaid` means the work is
- * worth more than the client's maximum.
- * @param {{ rate: number, hoursPerDay: number }} opts
+ * worth more than the client's maximum. `discount` (e.g. 0.75) lowers the bid
+ * below the rate to win the first reviews; `wantUsd` stays at the full rate.
+ * @param {{ rate: number, hoursPerDay: number, discount?: number }} opts
  */
-export function suggestBid(job, hours, { rate, hoursPerDay }) {
+export function suggestBid(job, hours, { rate, hoursPerDay, discount = 1 }) {
   if (job.source !== 'freelancer' || job.budgetMaxUsd == null || !(hours > 0)) return null;
   const min = job.budgetMinUsd ?? 0;
   const max = job.budgetMaxUsd;
   const hourly = job.budgetType === 'hourly';
   const wantUsd = hourly ? rate : Math.round(hours * rate * 100) / 100;
-  const target = hourly ? rate : Math.round(wantUsd / 5) * 5;
-  const amountUsd = Math.min(Math.max(target, min), max);
+  const off = discount > 0 && discount < 1 ? discount : 1;
+  const clamp = (n) => Math.min(Math.max(n, min), max);
+  const atRate = (k) => clamp(hourly ? Math.round(rate * k * 100) / 100 : Math.round((wantUsd * k) / 5) * 5);
+  const amountUsd = atRate(off);
   return {
     amountUsd,
     unit: hourly ? '/h' : '',
@@ -34,6 +37,7 @@ export function suggestBid(job, hours, { rate, hoursPerDay }) {
     netUsd: afterFees(amountUsd, job.budgetType),
     wantUsd,
     underpaid: wantUsd > max,
+    discounted: amountUsd < atRate(1),
   };
 }
 

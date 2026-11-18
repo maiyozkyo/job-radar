@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { formatAlert, formatAlertHtml, formatDigest, formatUnscored, sendMessage, splitMessage } from '../src/telegram.js';
+import { competitionLine, formatAlert, formatAlertHtml, formatDigest, formatUnscored, sendMessage, splitMessage } from '../src/telegram.js';
 import { makeJob } from '../src/job.js';
 
 const job = makeJob({
@@ -155,4 +155,13 @@ test('local bid stays inside the client budget and is null for USD jobs', () => 
   assert.equal(localBid(inr, bid).amount, 12500); // $40 ≈ ₹3,700, raised to the client minimum
   assert.equal(localBid(inr, { amountUsd: 900, unit: '' }).amount, 37500);
   assert.equal(localBid(job, bid), null);
+});
+
+test('competition line: few fresh bids say bid early, many bids say hold', () => {
+  const now = 1_800_000_000;
+  const fl = (bidCount, minsAgo) => ({ source: 'freelancer', bidCount, postedAt: now - minsAgo * 60 });
+  assert.equal(competitionLine(fl(3, 12), now), '👥 3 bid · đăng 12 phút trước · 🔥 ít đối thủ, bid sớm');
+  assert.equal(competitionLine(fl(3, 180), now), '👥 3 bid · đăng 3 giờ trước');
+  assert.equal(competitionLine(fl(20, 30), now), '👥 20 bid · đăng 30 phút trước · ⏳ đông người bid, cân nhắc giữ lượt');
+  assert.equal(competitionLine({ source: 'remoteok', bidCount: null, postedAt: now }, now), null);
 });

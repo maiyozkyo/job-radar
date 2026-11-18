@@ -36,7 +36,7 @@ const job = (budgetType, budgetMinUsd, budgetMaxUsd, source = 'freelancer') => (
 
 test('fixed bid = hours × rate inside the client range, with net and evening days', () => {
   assert.deepEqual(suggestBid(job('fixed', 30, 150), 6, opts),
-    { amountUsd: 120, unit: '', hours: 6, days: 4, netUsd: 108, wantUsd: 120, underpaid: false });
+    { amountUsd: 120, unit: '', hours: 6, days: 4, netUsd: 108, wantUsd: 120, underpaid: false, discounted: false });
 });
 
 test('fixed bid is capped at the budget and flagged when the work is worth more', () => {
@@ -82,4 +82,20 @@ test('one milestone takes the whole bid; hourly or no names give none', () => {
   assert.deepEqual(splitMilestones(suggestBid(job('hourly', 15, 25), 10, opts), ['x']), []);
   assert.deepEqual(splitMilestones(bid, []), []);
   assert.deepEqual(splitMilestones(null, ['x']), []);
+});
+
+test('first-job discount lowers the bid, keeps the full value, stays in budget', () => {
+  const d = { ...opts, discount: 0.75 };
+  const b = suggestBid(job('fixed', 30, 400), 10, d);
+  assert.equal(b.amountUsd, 150);
+  assert.equal(b.wantUsd, 200);
+  assert.equal(b.discounted, true);
+  assert.equal(suggestBid(job('fixed', 30, 400), 10, opts).discounted, false);
+  // the client's minimum wins over the discount
+  assert.equal(suggestBid(job('fixed', 200, 400), 10, d).discounted, false);
+  assert.equal(suggestBid(job('hourly', 10, 25), 10, d).amountUsd, 15);
+});
+
+test('config starts with the first-job discount on', () => {
+  assert.equal(loadConfig().firstJobDiscount, 0.75);
 });

@@ -51,8 +51,27 @@ function bidLines(job, bid) {
     : `${money(bid.amountUsd)}${bid.unit}`;
   return [
     `💵 Gợi ý bid: ${price} · ~${bid.hours} giờ · giao ${bid.days} ngày (≈ nhận ${money(bid.netUsd)}${bid.unit})`,
+    bid.discounted ? `🎯 Giá lấy review đầu (đủ giá: ${money(bid.wantUsd)}${bid.unit})` : null,
     bid.underpaid ? `⚠️ Việc ~${bid.hours} giờ đáng ~${money(bid.wantUsd)}${bid.unit}, ngân sách khách thấp hơn` : null,
   ].filter(Boolean).join('\n');
+}
+
+const FEW_BIDS = 5;
+const MANY_BIDS = 15;
+const FRESH_MIN = 60;
+
+/**
+ * Freelancer only: bid count and age, since the first few bids are the ones a
+ * client reads. With only a few bids a month, this says which alerts to spend
+ * them on.
+ */
+export function competitionLine(job, now = Date.now() / 1000) {
+  if (job.source !== 'freelancer' || job.bidCount == null) return null;
+  const mins = job.postedAt > 0 ? Math.max(0, Math.round((now - job.postedAt) / 60)) : null;
+  const age = mins == null ? '' : mins < 60 ? ` · đăng ${mins} phút trước` : ` · đăng ${Math.round(mins / 60)} giờ trước`;
+  const hint = job.bidCount <= FEW_BIDS && mins != null && mins <= FRESH_MIN ? ' · 🔥 ít đối thủ, bid sớm'
+    : job.bidCount > MANY_BIDS ? ' · ⏳ đông người bid, cân nhắc giữ lượt' : '';
+  return `👥 ${job.bidCount} bid${age}${hint}`;
 }
 
 function riskLines(job) {
@@ -64,10 +83,11 @@ function riskLines(job) {
   ].join('\n');
 }
 
-function jobBlock(job, scored) {
+function jobBlock(job, scored, now) {
   return [
     `[${job.source}] ${job.title}`,
     budgetLine(job),
+    competitionLine(job, now),
     scored ? `⭐ ${scored.score}/10 – ${scored.reasonVi}` : null,
     bidLines(job, scored?.bid),
     riskLines(job),
@@ -77,8 +97,8 @@ function jobBlock(job, scored) {
 }
 
 /** One job alert, plain text. */
-export function formatAlert(job, scored, warning) {
-  return [jobBlock(job, scored), warning ? `\n⚠️ ${warning}` : null].filter(Boolean).join('\n');
+export function formatAlert(job, scored, warning, now) {
+  return [jobBlock(job, scored, now), warning ? `\n⚠️ ${warning}` : null].filter(Boolean).join('\n');
 }
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -93,10 +113,11 @@ const plainAmount = (n) => (Number.isInteger(n) ? String(n) : n.toFixed(2));
  * each milestone. `plain` is the fallback when the HTML would be too long.
  * @returns {{ text: string, html: true, plain: string, buttons: object[][] }}
  */
-export function formatAlertHtml(job, scored, warning) {
+export function formatAlertHtml(job, scored, warning, now) {
   const head = [
     `[${job.source}] ${job.title}`,
     budgetLine(job),
+    competitionLine(job, now),
     scored ? `⭐ ${scored.score}/10 – ${scored.reasonVi}` : null,
     bidLines(job, scored?.bid),
     riskLines(job),
@@ -124,7 +145,7 @@ export function formatAlertHtml(job, scored, warning) {
       copyButton(`💲 Mốc ${i + 1}: ${fmt(msAmount(m, i))}`, plainAmount(msAmount(m, i))),
     ]),
   ];
-  return { text, html: true, plain: formatAlert(job, scored, warning), buttons };
+  return { text, html: true, plain: formatAlert(job, scored, warning, now), buttons };
 }
 
 /** The twice-daily remote-board digest; null when there is nothing to send. */

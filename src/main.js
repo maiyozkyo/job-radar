@@ -12,7 +12,7 @@ const MAX_PENDING = 200;
 
 const claudeWarning = (err) => `Claude lỗi: ${err.message.slice(0, 120)}, chưa chấm điểm`;
 const newestFirst = (a, b) => b.postedAt - a.postedAt;
-const bidOpts = (config) => ({ rate: config.hourlyRateUsd ?? 20, hoursPerDay: config.hoursPerDay ?? 2 });
+const bidOpts = (config) => ({ rate: config.hourlyRateUsd ?? 20, hoursPerDay: config.hoursPerDay ?? 2, discount: config.firstJobDiscount ?? 1 });
 
 /**
  * One line per scored job in the Actions log, so thresholds can be tuned from
@@ -55,7 +55,7 @@ async function poll(state, deps) {
   }
 
   const messages = [
-    ...alerts.map((a) => formatAlertHtml(a.job, a.scored)),
+    ...alerts.map((a) => formatAlertHtml(a.job, a.scored, undefined, now)),
     ...(unscored.length ? [formatUnscored(unscored, unscoredWarning)] : []),
   ];
   if (messages.length && errors.length) messages[0] += `\n\n⚠️ Nguồn lỗi: ${errors.join('; ')}`;

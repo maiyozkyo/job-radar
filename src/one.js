@@ -28,7 +28,7 @@ export async function alertOne(input, { config, scoreJobs: score, sendMessage: s
   const [job] = parseFreelancer(await getJson(api, fetchFn));
   if (!job) throw new Error('project not found');
   const rate = config.hourlyRateUsd ?? 20;
-  const [scored] = await score([job], { draftMin: 1, rate, hoursPerDay: config.hoursPerDay ?? 2 });
+  const [scored] = await score([job], { draftMin: 1, rate, hoursPerDay: config.hoursPerDay ?? 2, discount: config.firstJobDiscount ?? 1 });
   await send(formatAlertHtml(job, scored, scored ? null : 'Claude bỏ sót, chưa chấm điểm'));
   return { job, scored };
 }

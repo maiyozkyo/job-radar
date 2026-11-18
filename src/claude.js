@@ -129,7 +129,7 @@ export function defaultRunClaude(prompt) {
  * Scores jobs and drafts proposals for those scoring at least `draftMin`.
  * @returns {Promise<(Scored|null)[]>} in the same order as `jobs`; null when Claude skipped a job
  */
-export async function scoreJobs(jobs, { draftMin, rate = 20, hoursPerDay = 2 }, runClaude = defaultRunClaude) {
+export async function scoreJobs(jobs, { draftMin, rate = 20, hoursPerDay = 2, discount = 1 }, runClaude = defaultRunClaude) {
   if (!jobs.length) return [];
-  return parseScores(await runClaude(buildPrompt(jobs, draftMin)), jobs, { rate, hoursPerDay });
+  return parseScores(await runClaude(buildPrompt(jobs, draftMin)), jobs, { rate, hoursPerDay, discount });
 }

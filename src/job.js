@@ -35,6 +35,7 @@ import { readFileSync } from 'node:fs';
  * @property {string[]} allowedLocations
  * @property {number} [hourlyRateUsd]   bid suggestion rate
  * @property {number} [hoursPerDay]     evening hours, for delivery days
+ * @property {number} [firstJobDiscount] bid multiplier until the first reviews (e.g. 0.75); 1 = off
  */
 
 /** @returns {Config} */
