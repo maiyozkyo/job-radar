@@ -2,11 +2,11 @@
 
 Finds freelance and remote jobs that fit my stack, has Claude score them and draft a proposal, and sends them to my Telegram.
 
-**It never applies, bids or messages anyone.** I read each alert and decide myself.
+**It never applies, bids or messages anyone on its own.** I read each alert and decide myself. A Freelancer alert can carry a ✅ button: the bid goes out only when I tap it (see [One-tap bid](#one-tap-bid)).
 
 ## How it works
 
-Every 30 minutes (at :07 and :37), GitHub Actions:
+On each run (every 15 minutes from cron-job.org, and within about a minute of a new matching Freelancer project via the [Worker](#one-tap-bid)), GitHub Actions:
 
 1. Reads public job sources: Freelancer.com API, the HN "Freelancer? Seeking freelancer?" thread, We Work Remotely RSS, [RemoteOK](https://remoteok.com) API, Himalayas API, [Remotive](https://remotive.com) API (at most every 6 hours, per its terms) and [Jobicy](https://jobicy.com) API (at most every 2 hours; its terms say no more than hourly). Alerts name the source and link to its listing, as Remotive and Jobicy require. Reddit `[Hiring]` posts in r/forhire, r/freelance_forhire and r/jobbit are read through the official API with app-only OAuth, only when the Reddit secrets are set; Reddit blocks anonymous requests from GitHub's runners. No logged-in access to any platform.
    Beyond the code stack, it also looks for work an AI assistant can do with the freelancer reviewing it: English ↔ Vietnamese translation, Excel/Google Sheets, data cleaning and extraction, web scraping, technical writing (see `profile.md` "Other work").
@@ -52,6 +52,36 @@ Actions secrets:
 Manual run: `gh workflow run radar.yml -f mode=poll` (or `mode=digest`). Check Claude and the token without sending anything: `mode=selftest`. Full alert (score, bid, milestones, proposal) for one Freelancer job, whatever its score: `gh workflow run radar.yml -f mode=job -f job=<project link>`.
 
 Tests: `npm test`.
+
+## One-tap bid
+
+`worker/` is a Cloudflare Worker (free plan) that does two things:
+
+1. **Every minute** it checks Freelancer (10 newest per search term, short descriptions) and, when a new project passes the filters, starts `radar.yml` at once. New Freelancer jobs reach Telegram in about 1–1.5 minutes instead of up to 15.
+2. **Telegram webhook.** A Freelancer alert with a drafted proposal and a bid suggestion gets two more buttons above the copy buttons: **✅ Bid** and **❌ Bỏ**. Tapping ✅ places exactly the suggested bid (amount in the project's currency, delivery days, first milestone as the upfront %) through the official Freelancer API, with the proposal from the message. The buttons are swapped out before the bid goes out, so a double tap cannot bid twice. Only taps from `TELEGRAM_CHAT_ID` count. To change the price or text, open the job and bid by hand.
+
+Setup, once (from `worker/`):
+
+```
+npx wrangler login
+npx wrangler kv namespace create RADAR_KV        # put the id in wrangler.toml
+npx wrangler secret put TELEGRAM_BOT_TOKEN       # same as the Actions secret
+npx wrangler secret put TELEGRAM_CHAT_ID         # same as the Actions secret
+npx wrangler secret put TG_WEBHOOK_SECRET        # any long random string (A-Z, a-z, 0-9, _ -)
+npx wrangler secret put FREELANCER_TOKEN         # Freelancer OAuth token that may place bids
+npx wrangler secret put GH_DISPATCH_TOKEN        # the fine-grained token from "Backup trigger" below
+npx wrangler deploy
+```
+
+Then point the bot's button taps at the Worker (once):
+
+```
+curl "https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/setWebhook"   -d url=https://job-radar.<your-subdomain>.workers.dev/telegram   -d secret_token=<TG_WEBHOOK_SECRET>   -d 'allowed_updates=["callback_query"]'
+```
+
+After that, `getUpdates` no longer works for this bot (Telegram allows a webhook or polling, not both), so do not share this bot with anything that polls.
+
+Freelancer token: create an app at https://accounts.freelancer.com/settings/develop and generate a token for your own account with the scope that allows bidding. It can bid as you: keep it only in the Worker secret.
 
 ## Backup trigger (if GitHub's schedule stops firing)
 

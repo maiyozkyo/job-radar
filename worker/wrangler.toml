@@ -1,0 +1,21 @@
+# Deploy from this folder: npx wrangler deploy (setup steps in README.md, "One-tap bid").
+name = "job-radar"
+main = "index.js"
+compatibility_date = "2025-09-01"
+compatibility_flags = ["nodejs_compat"]
+
+[triggers]
+crons = ["* * * * *"]
+
+[[kv_namespaces]]
+binding = "RADAR_KV"
+id = "REPLACE_WITH_KV_ID"   # from: npx wrangler kv namespace create RADAR_KV
+
+[vars]
+GH_REPO = "maiyozkyo/job-radar"
+
+# Secrets (npx wrangler secret put <NAME>):
+#   TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID   same as the Actions secrets
+#   TG_WEBHOOK_SECRET                      any random string, also given to setWebhook
+#   FREELANCER_TOKEN                       Freelancer OAuth token that may place bids
+#   GH_DISPATCH_TOKEN                      fine-grained token, job-radar only, Actions: read and write

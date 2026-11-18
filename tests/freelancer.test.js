@@ -57,3 +57,9 @@ test('requests send a User-Agent and a timeout', async () => {
   assert.match(init.headers['User-Agent'], /job-radar/);
   assert.ok(init.signal);
 });
+
+test('the Worker can ask for fewer, shorter projects', async () => {
+  let url;
+  await fetchFreelancer({ freelancerQueries: ['angular'] }, async (u) => { url = u; return okResponse(fixture); }, { limit: 10, full: false });
+  assert.match(url, /limit=10&full_description=false/);
+});

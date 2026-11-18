@@ -1,5 +1,6 @@
 import { netUsd } from './fees.js';
 import { riskFlags } from './risk.js';
+import { bidCallback, skipCallback } from './bid.js';
 
 const LIMIT = 4096;
 const money = (n) => `$${Number.isInteger(n) ? n : n.toFixed(2)}`;
@@ -138,7 +139,15 @@ export function formatAlertHtml(job, scored, warning, now) {
     scored?.proposalEn ? `\n✍️ Proposal (bấm vào khung để copy):\n<pre>${esc(scored.proposalEn)}</pre>` : null,
     warning ? `\n⚠️ ${esc(warning)}` : null,
   ].filter(Boolean).join('\n');
+  // One-tap bid: the Worker places exactly this bid, with the proposal from
+  // the <pre> block, only when the user taps ✅.
+  const tapBid = job.source === 'freelancer' && bid && scored?.proposalEn;
+  const firstPct = milestones.length >= 2 ? Math.round((msAmount(milestones[0], 0) / bidAmount) * 100) : 100;
   const buttons = [
+    ...(tapBid ? [[
+      { text: `✅ Bid ${fmt(bidAmount)}${bid.unit} · ${bid.days} ngày`, callback_data: bidCallback(job.id, { amount: plainAmount(bidAmount), days: bid.days, milestonePct: firstPct }) },
+      { text: '❌ Bỏ', callback_data: skipCallback(job.id) },
+    ]] : []),
     ...(bid ? [[copyButton(`💲 Copy giá ${fmt(bidAmount)}`, plainAmount(bidAmount)), copyButton(`📅 Copy ${bid.days} ngày`, bid.days)]] : []),
     ...milestones.map((m, i) => [
       copyButton(`📋 Mốc ${i + 1}: mô tả`, m.name),

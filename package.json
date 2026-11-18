@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Finds freelance jobs, scores them with Claude and sends them to Telegram. Never applies.",
+  "description": "Finds freelance jobs, scores them with Claude and sends them to Telegram. Bids only when the user taps the button.",
   "scripts": {
     "test": "node --test",
     "poll": "node src/main.js poll",

@@ -33,14 +33,16 @@ export function parseFreelancer(body) {
 /**
  * One request per query term; a failing query is skipped. Rejects only when
  * every query fails, so the run can report the source as down.
+ * The minute-by-minute Worker asks for fewer, shorter projects (`full: false`)
+ * to stay inside its CPU limit.
  * @param {import('../job.js').Config} config
  */
-export async function fetchFreelancer(config, fetchFn = fetch) {
+export async function fetchFreelancer(config, fetchFn = fetch, { limit = 30, full = true } = {}) {
   const byId = new Map();
   let lastError = null;
   let okCount = 0;
   for (const q of config.freelancerQueries) {
-    const url = `${API}?query=${encodeURIComponent(q)}&limit=30&full_description=true&job_details=true&sort_field=time_updated`;
+    const url = `${API}?query=${encodeURIComponent(q)}&limit=${limit}&full_description=${full}&job_details=true&sort_field=time_updated`;
     try {
       for (const job of parseFreelancer(await getJson(url, fetchFn))) byId.set(job.id, job);
       okCount++;

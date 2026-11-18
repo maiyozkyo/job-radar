@@ -110,9 +110,11 @@ test('HTML alert: proposal in a code block, milestones listed, copy buttons, tex
   assert.match(m.text, /Fix &lt;b&gt;/);
   assert.match(m.text, /<pre>Use a &lt; b &amp; c<\/pre>/);
   assert.match(m.text, /1\. Demo &lt;inbox&gt; &amp; review — \$112/);
-  assert.deepEqual(m.buttons[0].map((b) => b.copy_text.text), ['280', '5']);
-  assert.deepEqual(m.buttons[1].map((b) => b.copy_text.text), ['Demo <inbox> & review', '112']);
-  assert.deepEqual(m.buttons[2].map((b) => b.copy_text.text), ['Hand-over', '168']);
+  assert.deepEqual(m.buttons[0].map((b) => b.callback_data), ['b:1:280:5:40', 'x:1']); // 112 / 280 = 40% upfront
+  assert.equal(m.buttons[0][0].text, '✅ Bid $280 · 5 ngày');
+  assert.deepEqual(m.buttons[1].map((b) => b.copy_text.text), ['280', '5']);
+  assert.deepEqual(m.buttons[2].map((b) => b.copy_text.text), ['Demo <inbox> & review', '112']);
+  assert.deepEqual(m.buttons[3].map((b) => b.copy_text.text), ['Hand-over', '168']);
   assert.match(m.plain, /Use a < b & c/);
 });
 
@@ -145,9 +147,24 @@ test('non-USD job: bid, milestones and copied amounts are in the project currenc
   assert.match(m.text, /💰 ₹12,500–₹37,500 \(≈ \$133\.80–\$401\.40 · nhận ≈ \$361\.26\)/);
   assert.match(m.text, /💵 Gợi ý bid: ₹14,000 \(≈ \$150\)/);
   assert.match(m.text, /1\. Demo — ₹5,600\n2\. Rest — ₹8,400/);
-  assert.deepEqual(m.buttons[0].map((b) => b.copy_text.text), ['14000', '3']);
-  assert.deepEqual(m.buttons[1].map((b) => b.copy_text.text), ['Demo', '5600']);
-  assert.deepEqual(m.buttons[2].map((b) => b.copy_text.text), ['Rest', '8400']);
+  assert.equal(m.buttons[0][0].callback_data, 'b:9:14000:3:40'); // the bid API takes the project currency
+  assert.equal(m.buttons[0][0].text, '✅ Bid ₹14,000 · 3 ngày');
+  assert.deepEqual(m.buttons[1].map((b) => b.copy_text.text), ['14000', '3']);
+  assert.deepEqual(m.buttons[2].map((b) => b.copy_text.text), ['Demo', '5600']);
+  assert.deepEqual(m.buttons[3].map((b) => b.copy_text.text), ['Rest', '8400']);
+});
+
+test('one-tap bid: one milestone asks 100% upfront; no button without a proposal, a bid, or off Freelancer', () => {
+  const bid = { amountUsd: 45, unit: '', hours: 2, days: 1, netUsd: 40, wantUsd: 45, underpaid: false };
+  const one = formatAlertHtml(job, { ...scored, bid, milestones: [{ name: 'Fix', amountUsd: 45 }] });
+  assert.equal(one.buttons[0][0].callback_data, 'b:1:45:1:100');
+  const hourly = formatAlertHtml({ ...job, budgetType: 'hourly' }, { ...scored, bid: { ...bid, amountUsd: 22.5, unit: '/h' }, milestones: [] });
+  assert.equal(hourly.buttons[0][0].callback_data, 'b:1:22.50:1:100');
+  assert.equal(hourly.buttons[0][0].text, '✅ Bid $22.50/h · 1 ngày');
+  const noTap = (m) => !m.buttons.flat().some((b) => b.callback_data);
+  assert.ok(noTap(formatAlertHtml(job, { ...scored, proposalEn: null, bid, milestones: [] })));
+  assert.ok(noTap(formatAlertHtml(job, { ...scored, bid: null, milestones: [] })));
+  assert.ok(noTap(formatAlertHtml({ ...job, source: 'hn' }, { ...scored, bid, milestones: [] })));
 });
 
 test('local bid stays inside the client budget and is null for USD jobs', () => {
