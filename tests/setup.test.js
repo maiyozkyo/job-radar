@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { authorizeUrl, chatIdFrom, codeFrom, kvIdFrom, workerUrlFrom } from '../worker/setup.mjs';
+import { applyKeys, authorizeUrl, chatIdFrom, codeFrom, kvIdFrom, workerUrlFrom } from '../worker/setup.mjs';
 
 test('reads the KV id from wrangler output (toml or json style)', () => {
   const id = 'a'.repeat(32);
@@ -39,4 +39,13 @@ test('chat id is the latest private chat in getUpdates', () => {
   ] };
   assert.equal(chatIdFrom(updates), '42');
   assert.equal(chatIdFrom({ result: [] }), null);
+});
+
+test('hidden input: typing, paste markers, backspace, enter and Ctrl+C', () => {
+  assert.deepEqual(applyKeys('', 'ab'), { value: 'ab', done: false });
+  assert.deepEqual(applyKeys('ab', '\x1b[200~ghp_X1\x1b[201~'), { value: 'abghp_X1', done: false });
+  assert.deepEqual(applyKeys('abc', '\u007f\r'), { value: 'ab', done: true });
+  assert.deepEqual(applyKeys('abc', '\b'), { value: 'ab', done: false });
+  assert.equal(applyKeys('x', '\u0003').cancel, true);
+  assert.deepEqual(applyKeys('', 'tok\nextra'), { value: 'tok', done: true });
 });

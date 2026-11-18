@@ -42,11 +42,53 @@ export function chatIdFrom(updates) {
 
 const rl = () => createInterface({ input: process.stdin, output: process.stdout, terminal: true });
 
+/** Keys typed or pasted while reading a hidden value; exported for tests. */
+export function applyKeys(value, chunk) {
+  let v = value;
+  for (const ch of chunk.replace(/\x1b\[20[01]~/g, '')) {
+    if (ch === '\r' || ch === '\n') return { value: v, done: true };
+    if (ch === '\u0003') return { value: v, cancel: true };
+    if (ch === '\u007f' || ch === '\b') v = v.slice(0, -1);
+    else if (ch >= ' ') v += ch;
+  }
+  return { value: v, done: false };
+}
+
+/**
+ * Hidden input reads raw keys and echoes nothing; readline would redraw the
+ * line (prompt + text) and show the secret.
+ */
+function askHidden(question) {
+  const { stdin, stdout } = process;
+  stdout.write(question);
+  if (!stdin.isTTY) {
+    return new Promise((resolve) => { const r = createInterface({ input: stdin }); r.once('line', (l) => { r.close(); stdout.write('\n'); resolve(l.trim()); }); });
+  }
+  return new Promise((resolve) => {
+    let value = '';
+    const onData = (chunk) => {
+      const r = applyKeys(value, chunk);
+      value = r.value;
+      if (!r.done && !r.cancel) return;
+      stdin.off('data', onData);
+      stdin.setRawMode(false);
+      stdin.pause();
+      if (r.cancel) { stdout.write('\n'); process.exit(130); }
+      stdout.write(` [đã nhận ${value.trim().length} ký tự]\n`);
+      resolve(value.trim());
+    };
+    stdin.setRawMode(true);
+    stdin.setEncoding('utf8');
+    stdin.resume();
+    stdin.on('data', onData);
+  });
+}
+
 function ask(question, { hidden = false } = {}) {
+  if (hidden) return askHidden(question);
   return new Promise((resolve) => {
     const r = rl();
-    if (hidden) r._writeToOutput = (s) => { if (s.includes(question)) r.output.write(s); };
-    r.question(question, (answer) => { r.close(); if (hidden) process.stdout.write('\n'); resolve(answer.trim()); });
+    r.question(question, (answer) => { r.close(); resolve(answer.trim()); });
   });
 }
 
