@@ -12,6 +12,7 @@ test('reads the KV id from wrangler output (toml or json style)', () => {
 test('reads the workers.dev URL from deploy output', () => {
   assert.equal(workerUrlFrom('Deployed job-radar triggers\n  https://job-radar.buu.workers.dev\n  schedule: * * * * *'), 'https://job-radar.buu.workers.dev');
   assert.equal(workerUrlFrom('no url'), null);
+  assert.equal(workerUrlFrom('Version Preview URL: https://3f2a9c1e-job-radar.buu.workers.dev\nDeployed job-radar triggers\n  https://job-radar.buu.workers.dev'), 'https://job-radar.buu.workers.dev');
 });
 
 test('authorize URL asks for the bid and profile scopes with the localhost redirect', () => {

@@ -17,7 +17,10 @@ const REDIRECT_URI = 'https://localhost/callback';
 const ADVANCED_SCOPES = '2 6';
 
 export const kvIdFrom = (out) => out.match(/id\s*=\s*"([0-9a-f]{32})"/)?.[1] ?? out.match(/"id":\s*"([0-9a-f]{32})"/)?.[1] ?? null;
-export const workerUrlFrom = (out) => out.match(/https:\/\/[\w.-]+\.workers\.dev/)?.[0] ?? null;
+// Deploy output can also list a per-version preview URL (<hash>-job-radar.…),
+// which Telegram may not resolve yet; the webhook needs the main one.
+export const workerUrlFrom = (out, name = 'job-radar') =>
+  out.match(new RegExp(`https://${name}\\.[\\w-]+\\.workers\\.dev`))?.[0] ?? null;
 
 export function authorizeUrl(clientId, scopes = ADVANCED_SCOPES) {
   const q = new URLSearchParams({
