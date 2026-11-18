@@ -242,3 +242,4 @@
 2026-11-18T19:10Z run poll fresh=25 kept=2 scored=1 unscored=0 alerts=1 sent=1 dropped: no stack keyword=13, location=9, block keyword=1
 2026-11-18T19:14Z score 1 - freelancer:40824881 | كتابة مقالات عربية احترافية | https://www.freelancer.com/projects/content-writing/project-40824881
 2026-11-18T19:14Z run poll fresh=3 kept=1 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1, too many bids=1
+2026-11-18T19:15Z run poll fresh=1 kept=0 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=1
