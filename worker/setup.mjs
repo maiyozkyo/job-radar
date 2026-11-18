@@ -239,6 +239,10 @@ const ghSecret = (name, value) => new Promise((resolve, reject) => {
  * PASTE_TOKEN shared by the Worker and Actions (pasted jobs are read with it).
  */
 async function connectTelegram(botToken, url) {
+  // Check the token before changing any secret, so a wrong paste leaves the bot as it was.
+  const me = await fetch(`https://api.telegram.org/bot${botToken}/getMe`).then((r) => r.json()).catch(() => ({}));
+  if (!me.ok) throw new Error('Telegram không nhận token bot này (copy lại từ @BotFather → /mybots → bot job-radar → API Token). Chưa đổi gì.');
+  console.log(`   bot: @${me.result.username}`);
   const webhookSecret = randomBytes(24).toString('hex');
   const pasteToken = randomBytes(24).toString('hex');
   await putSecret('TG_WEBHOOK_SECRET', webhookSecret);
