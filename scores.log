@@ -228,3 +228,4 @@
 2026-11-18T18:00Z run poll fresh=6 kept=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=4, block keyword=1, risk=1
 2026-11-18T18:13Z score 2 - freelancer:40824806 | Saudi Research Survey Analysis | https://www.freelancer.com/projects/business-analysis/Saudi-Research-Survey-Analysis
 2026-11-18T18:13Z run poll fresh=4 kept=1 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=3
+2026-11-18T18:15Z run poll fresh=2 kept=0 scored=0 unscored=0 alerts=0 sent=0 dropped: hourly below floor=1, no stack keyword=1
