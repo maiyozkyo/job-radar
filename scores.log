@@ -267,3 +267,4 @@
 2026-11-18T20:19Z run poll fresh=5 kept=4 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1
 2026-11-18T20:27Z score 7 16h freelancer:40824954 | n8n + Claude/Gemini Automation | https://www.freelancer.com/projects/n8n/Claude-Gemini-Automation
 2026-11-18T20:27Z run poll fresh=2 kept=1 scored=1 unscored=0 alerts=1 sent=1 dropped: block keyword=1
+2026-11-18T20:30Z run poll fresh=2 kept=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2
