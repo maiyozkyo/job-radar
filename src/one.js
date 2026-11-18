@@ -1,7 +1,8 @@
 // Scores one job on request and sends the full alert (score, bid, milestones,
 // proposal) whatever the score. No state is read or written.
-// Input: a Freelancer project URL or id, or `paste:<key>` for a job the user
-// pasted to the bot (any platform; text read from the Worker).
+// Input: a Freelancer project URL or id, or `paste:<key>` for a message the
+// user sent the bot (text read from the Worker). A pasted job post (any
+// platform) is scored; any other message gets a plain chat reply from Claude.
 // Usage: node src/one.js <input>   (Actions: mode=job, job=<input>)
 import { pathToFileURL } from 'node:url';
 import { loadConfig } from './job.js';
@@ -10,6 +11,7 @@ import { getJson } from './sources/http.js';
 import { scoreJobs } from './claude.js';
 import { formatAlertHtml, sendMessage } from './telegram.js';
 import { bidFromHours, fetchPaste, pastedJob } from './paste.js';
+import { chatOrJob } from './chat.js';
 
 const API = 'https://www.freelancer.com/api/projects/0.1/projects/';
 const DETAILS = 'full_description=true&job_details=true';
@@ -27,9 +29,14 @@ export function projectApiUrl(input) {
 
 const PASTE = /^paste:([0-9a-f-]{36})$/;
 
-async function loadJob(input, env, fetchFn) {
+/** The job to score, or `{ reply }` when a pasted message is chat, not a job. */
+async function loadJob(input, env, fetchFn, chat) {
   const paste = String(input ?? '').trim().match(PASTE);
-  if (paste) return pastedJob(paste[1], await fetchPaste(paste[1], env, fetchFn));
+  if (paste) {
+    const text = await fetchPaste(paste[1], env, fetchFn);
+    const res = await chat(text);
+    return res.job ? pastedJob(paste[1], text) : { reply: res.reply };
+  }
   const api = projectApiUrl(input);
   if (!api) throw new Error('not a freelancer.com project link or id');
   const [job] = parseFreelancer(await getJson(api, fetchFn));
@@ -37,8 +44,12 @@ async function loadJob(input, env, fetchFn) {
   return job;
 }
 
-export async function alertOne(input, { config, env = {}, scoreJobs: score, sendMessage: send, fetchFn = fetch }) {
-  const job = await loadJob(input, env, fetchFn);
+export async function alertOne(input, { config, env = {}, scoreJobs: score, sendMessage: send, fetchFn = fetch, chat = chatOrJob }) {
+  const job = await loadJob(input, env, fetchFn, chat);
+  if (job.reply) {
+    await send(job.reply);
+    return { chat: true };
+  }
   const opts = { rate: config.hourlyRateUsd ?? 20, hoursPerDay: config.hoursPerDay ?? 2 };
   let [scored] = await score([job], { draftMin: 1, ...opts, discount: config.firstJobDiscount ?? 1 });
   // A pasted job has no known budget: price it from Claude's hours at the full rate.
@@ -55,7 +66,8 @@ if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
   alertOne(process.argv[2] ?? env.JOB, {
     config: loadConfig(), env, scoreJobs, sendMessage: (m) => sendMessage(m, env),
   }).then(
-    ({ job, scored }) => console.log(`job: ${job.key} score ${scored?.score ?? '-'}`),
+    // Never log a chat reply: the Actions log is public.
+    ({ chat, job, scored }) => console.log(chat ? 'chat: replied' : `job: ${job.key} score ${scored?.score ?? '-'}`),
     (err) => { console.error(`job failed: ${err.message}`); process.exit(1); },
   );
 }

@@ -1,12 +1,15 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { bidFromHours, fetchPaste, isFreelancerLink, pastedJob } from '../src/paste.js';
+import { bidFromHours, fetchPaste, findFreelancerLink, pastedJob } from '../src/paste.js';
 
-test('only a bare freelancer.com project link counts as a link', () => {
-  assert.ok(isFreelancerLink('https://www.freelancer.com/projects/excel-vba/Excel-Cleanup-Sheet-Organization'));
-  assert.ok(isFreelancerLink(' https://freelancer.com/projects/a/b-1?frm=x '));
-  assert.equal(isFreelancerLink('https://www.upwork.com/jobs/~01abc'), false);
-  assert.equal(isFreelancerLink('Need help https://www.freelancer.com/projects/a/b'), false);
+test('a freelancer.com project link is found alone or inside a note', () => {
+  const link = 'https://www.freelancer.com/projects/excel-vba/Excel-Cleanup-Sheet-Organization';
+  assert.equal(findFreelancerLink(link), link);
+  assert.equal(findFreelancerLink(' https://freelancer.com/projects/a/b-1?frm=x '), 'https://freelancer.com/projects/a/b-1?frm=x');
+  assert.equal(findFreelancerLink(`Job này ổn không? ${link}.`), link);
+  assert.equal(findFreelancerLink('https://www.upwork.com/jobs/~01abc'), null);
+  assert.equal(findFreelancerLink('https://www.freelancer.com/u/someone'), null);
+  assert.equal(findFreelancerLink('chào bot'), null);
 });
 
 test('pasted text becomes a job titled by its first line', () => {

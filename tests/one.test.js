@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { alertOne, projectApiUrl } from '../src/one.js';
+import { chatOrJob, chatPrompt } from '../src/chat.js';
 
 test('project links and ids become API URLs; other input is refused', () => {
   assert.match(projectApiUrl('https://www.freelancer.com/projects/microsoft-word/PDF-Word-Conversion-40822297?frm=x&sb=t'),
@@ -46,6 +47,7 @@ test('alertOne scores a pasted job and prices it from the hours', async () => {
     config: { hourlyRateUsd: 20, hoursPerDay: 5 },
     env: { WORKER_URL: 'https://w.example', PASTE_TOKEN: 'P' },
     fetchFn: async () => ({ ok: true, status: 200, text: async () => 'Upwork: Fix Angular charts\nBudget $150, 2 days.' }),
+    chat: async () => ({ job: true }),
     scoreJobs: async (jobs) => [{ key: jobs[0].key, score: 8, reasonVi: 'ok', proposalEn: 'Hi', hours: 6, bid: null, milestones: [] }],
     sendMessage: async (m) => { sent.push(m); },
   });
@@ -54,4 +56,32 @@ test('alertOne scores a pasted job and prices it from the hours', async () => {
   assert.match(sent[0].text, /\[paste\] Upwork: Fix Angular charts/);
   assert.match(sent[0].text, /💵 Gợi ý bid: \$120 · ~6 giờ · giao 3 ngày/);
   assert.ok(!sent[0].buttons.flat().some((b) => b.callback_data), 'no one-tap bid off Freelancer');
+});
+
+test('a pasted message that is chat gets the Claude reply and is not scored', async () => {
+  const sent = [];
+  let asked;
+  const res = await alertOne('paste:0f8fad5b-d9cb-469f-a165-70867728950e', {
+    config: {},
+    env: { WORKER_URL: 'https://w.example', PASTE_TOKEN: 'P' },
+    fetchFn: async () => ({ ok: true, status: 200, text: async () => 'chào bot' }),
+    chat: async (text) => { asked = text; return { reply: 'Chào bạn!' }; },
+    scoreJobs: async () => { throw new Error('should not score chat'); },
+    sendMessage: async (m) => { sent.push(m); },
+  });
+  assert.equal(asked, 'chào bot');
+  assert.deepEqual(res, { chat: true });
+  assert.deepEqual(sent, ['Chào bạn!']);
+});
+
+test('chatOrJob: [[JOB]] means score it, anything else is the reply', async () => {
+  assert.deepEqual(await chatOrJob('Need an Angular dev, $200', async () => ' [[JOB]]\n'), { job: true });
+  assert.deepEqual(await chatOrJob('chào', async () => 'Chào bạn! '), { reply: 'Chào bạn!' });
+  await assert.rejects(chatOrJob('chào', async () => '  '), /empty chat reply/);
+});
+
+test('chatPrompt keeps the message as typed, $ patterns included', () => {
+  const p = chatPrompt('giá $& và $1 nhé');
+  assert.match(p, /<message>\r?\ngiá \$& và \$1 nhé\r?\n<\/message>/);
+  assert.doesNotMatch(p, /\{\{(PROFILE|MESSAGE)\}\}/);
 });

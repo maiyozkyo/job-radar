@@ -3,15 +3,16 @@
 //    start the radar workflow at once (it scores and alerts as usual).
 // 2. Telegram webhook, taps: when the user taps ✅ on an alert, place that
 //    bid through the official Freelancer API. Nothing is bid without a tap.
-// 3. Telegram webhook, messages: a job the user pastes or forwards (any
-//    platform) or a Freelancer link is scored and drafted by the workflow in
-//    job mode. Pasted text waits in KV for a day and is read back through
+// 3. Telegram webhook, messages: a Freelancer link is scored and drafted by
+//    the workflow in job mode. Any other text goes to job mode too, where
+//    Claude scores it if it is a job post (any platform) or answers it as
+//    chat. The text waits in KV for a day and is read back through
 //    /paste/<key> with PASTE_TOKEN, so it never shows in the public Actions log.
 import config from '../config.json' with { type: 'json' };
 import { fetchFreelancer } from '../src/sources/freelancer.js';
 import { pickFresh } from '../src/fastpoll.js';
 import { extractProposal, parseCallback, placeBid } from '../src/bid.js';
-import { isFreelancerLink, MAX_PASTE, MIN_PASTE } from '../src/paste.js';
+import { findFreelancerLink, MAX_PASTE } from '../src/paste.js';
 
 const nowSec = () => Math.floor(Date.now() / 1000);
 
@@ -90,9 +91,9 @@ export async function onTap(cq, env, fetchFn = fetch) {
   }
 }
 
-const HELP = 'Gửi cho mình link job Freelancer, hoặc dán/chuyển tiếp nội dung job (Upwork, Contra, Fiverr, LinkedIn…) gồm mô tả và ngân sách. Khoảng 1 phút sau sẽ có điểm, proposal và giá gợi ý.';
+const HELP = 'Gửi cho mình link job Freelancer, hoặc dán/chuyển tiếp nội dung job (Upwork, Contra, Fiverr, LinkedIn…) gồm mô tả và ngân sách. Khoảng 1 phút sau sẽ có điểm, proposal và giá gợi ý. Nhắn gì khác thì mình trả lời như chat bình thường.';
 
-/** A message from the owner: a Freelancer link or a pasted job goes to job mode. Others are ignored. */
+/** A message from the owner goes to job mode: a Freelancer link as is, other text as paste:<key>. Others are ignored. */
 export async function onMessage(msg, env, fetchFn = fetch) {
   if (String(msg.chat?.id) !== String(env.TELEGRAM_CHAT_ID) || String(msg.from?.id) !== String(env.TELEGRAM_CHAT_ID)) return;
   const tg = telegram(env, fetchFn);
@@ -100,17 +101,17 @@ export async function onMessage(msg, env, fetchFn = fetch) {
   const text = String(msg.text ?? msg.caption ?? '').trim();
   if (!text || text.startsWith('/')) return reply(HELP);
 
-  let job;
-  if (isFreelancerLink(text)) job = text;
-  else if (text.length < MIN_PASTE) return reply(`Ngắn quá để chấm. ${HELP}`);
-  else {
+  let job = findFreelancerLink(text);
+  const ack = job ? '⏳ Đang chấm và viết proposal, khoảng 1 phút…' : '⏳ Đang đọc tin, khoảng 1 phút…';
+  if (!job) {
+    // Job post or chat: Claude decides in job mode.
     const key = crypto.randomUUID();
     await env.RADAR_KV.put(`paste:${key}`, text.slice(0, MAX_PASTE), { expirationTtl: 86400 });
     job = `paste:${key}`;
   }
   try {
     await dispatch(env, { mode: 'job', job }, fetchFn);
-    await reply('⏳ Đang chấm và viết proposal, khoảng 1 phút…');
+    await reply(ack);
   } catch (err) {
     await reply(`⚠️ Không chạy được: ${String(err.message).slice(0, 200)}`);
   }

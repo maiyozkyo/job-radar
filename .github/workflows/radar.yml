@@ -13,7 +13,7 @@ on:
         options: [poll, digest, selftest, job]
         default: poll
       job:
-        description: Freelancer project link or id, or paste:<key> (mode job only)
+        description: Freelancer project link or id, or paste:<key> for a message sent to the bot (mode job only)
         type: string
         required: false
 
@@ -77,8 +77,8 @@ jobs:
           CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
           REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
-          # Passed as data, never pasted into the script. For a pasted job it
-          # is only "paste:<key>"; the text is read from the Worker.
+          # Passed as data, never pasted into the script. For a message sent
+          # to the bot it is only "paste:<key>"; the text is read from the Worker.
           JOB: ${{ inputs.job }}
           WORKER_URL: https://job-radar.hoangbuu313.workers.dev
           PASTE_TOKEN: ${{ secrets.PASTE_TOKEN }}

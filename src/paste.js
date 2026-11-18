@@ -1,12 +1,14 @@
-// Jobs the user pastes or forwards to the bot, from any platform. The Worker
-// keeps the text in KV; job mode reads it back with PASTE_TOKEN.
+// Messages the user sends the bot: a job pasted or forwarded from any
+// platform, or plain chat. The Worker keeps the text in KV; job mode reads it
+// back with PASTE_TOKEN and lets Claude tell a job post from chat.
 import { makeJob } from './job.js';
 
-export const MIN_PASTE = 80;     // shorter than this is not a job post
 export const MAX_PASTE = 8000;   // enough for any post; keeps the prompt small
 
-/** A freelancer.com project link on its own (no other text). */
-export const isFreelancerLink = (text) => /^https?:\/\/(www\.)?freelancer\.com\/projects\/[\w-]+\/[\w-]+\/?(\?\S*)?$/i.test(String(text).trim());
+const FREELANCER_LINK = /https?:\/\/(?:www\.)?freelancer\.com\/projects\/[\w-]+\/[\w-]+\/?(?:\?[^\s<>"']*)?/i;
+
+/** The first freelancer.com project link in a message, e.g. one forwarded with a note; null if none. */
+export const findFreelancerLink = (text) => FREELANCER_LINK.exec(String(text ?? ''))?.[0].replace(/[.,;:!?)]+$/, '') ?? null;
 
 /** The pasted text as a job: first line as the title, all of it as the description. */
 export function pastedJob(key, text) {

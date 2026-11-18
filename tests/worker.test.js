@@ -144,7 +144,7 @@ test('the webhook accepts a secret saved with a trailing newline', async () => {
   assert.equal((await worker.fetch(req, { TG_WEBHOOK_SECRET: 's\n' })).status, 200);
 });
 
-// --- pasted jobs ---
+// --- messages: links, pasted jobs, chat ---
 
 const owner = { id: 42 };
 const msgEnv = () => ({ TELEGRAM_CHAT_ID: '42', TELEGRAM_BOT_TOKEN: 'TG', GH_REPO: 'me/job-radar', GH_DISPATCH_TOKEN: 'GH', PASTE_TOKEN: 'P', RADAR_KV: kv() });
@@ -168,7 +168,7 @@ test('a pasted job is kept in KV and job mode gets only its key', async () => {
   assert.equal(dispatched[0].mode, 'job');
   const [, key] = dispatched[0].job.match(/^paste:([0-9a-f-]{36})$/);
   assert.equal(env.RADAR_KV.data[`paste:${key}`], post);
-  assert.match(sent[0], /Đang chấm/);
+  assert.match(sent[0], /Đang đọc tin/);
 });
 
 test('a Freelancer link goes to job mode as is', async () => {
@@ -178,14 +178,31 @@ test('a Freelancer link goes to job mode as is', async () => {
   assert.deepEqual(dispatched, [{ mode: 'job', job: link }]);
 });
 
-test('short text and commands get help; strangers are ignored', async () => {
+test('a Freelancer link with a note around it still goes to job mode as a link', async () => {
   const { sent, dispatched, fetchFn } = msgFetch();
-  await onMessage({ message_id: 1, chat: { id: 42 }, from: owner, text: 'hi' }, msgEnv(), fetchFn);
+  const link = 'https://www.freelancer.com/projects/excel-vba/Excel-Cleanup';
+  await onMessage({ message_id: 1, chat: { id: 42 }, from: owner, text: `Job này ổn không?
+${link}` }, msgEnv(), fetchFn);
+  assert.deepEqual(dispatched, [{ mode: 'job', job: link }]);
+  assert.match(sent[0], /Đang chấm/);
+});
+
+test('short chat goes to job mode as a paste for Claude to answer', async () => {
+  const env = msgEnv();
+  const { sent, dispatched, fetchFn } = msgFetch();
+  await onMessage({ message_id: 1, chat: { id: 42 }, from: owner, text: 'hi, hôm nay có job nào hay không?' }, env, fetchFn);
+  const [, key] = dispatched[0].job.match(/^paste:([0-9a-f-]{36})$/);
+  assert.equal(env.RADAR_KV.data[`paste:${key}`], 'hi, hôm nay có job nào hay không?');
+  assert.match(sent[0], /Đang đọc tin/);
+});
+
+test('commands get help; strangers are ignored', async () => {
+  const { sent, dispatched, fetchFn } = msgFetch();
   await onMessage({ message_id: 2, chat: { id: 42 }, from: owner, text: '/start' }, msgEnv(), fetchFn);
   await onMessage({ message_id: 3, chat: { id: 7 }, from: { id: 7 }, text: post }, msgEnv(), fetchFn);
   assert.equal(dispatched.length, 0);
-  assert.equal(sent.length, 2);
-  assert.match(sent[0], /Ngắn quá/);
+  assert.equal(sent.length, 1);
+  assert.match(sent[0], /link job Freelancer/);
 });
 
 test('/paste/<key> returns the text only with the token', async () => {
