@@ -9,7 +9,7 @@ crons = ["* * * * *"]
 
 [[kv_namespaces]]
 binding = "RADAR_KV"
-id = "REPLACE_WITH_KV_ID"   # from: npx wrangler kv namespace create RADAR_KV
+id = "599f81e8305945e3bc00825c0590af65"   # from: npx wrangler kv namespace create RADAR_KV
 
 [vars]
 GH_REPO = "maiyozkyo/job-radar"

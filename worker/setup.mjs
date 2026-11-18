@@ -195,7 +195,7 @@ async function freelancerToken() {
   console.log(`   Mở trang cấp quyền… nếu không tự mở, dán link này vào trình duyệt:\n   ${url}`);
   openBrowser(url);
   console.log('   Bấm Allow. Trình duyệt sẽ chuyển tới https://localhost/callback?code=… (trang báo lỗi là bình thường).');
-  const code = codeFrom(await ask('   Dán cả địa chỉ trên thanh URL vào đây: ', { hidden: true }));
+  const code = codeFrom(await ask('   Địa chỉ trên thanh URL (localhost/callback?code=…):', { hidden: true }));
   if (!code) throw new Error('không thấy code trong địa chỉ đã dán');
 
   const res = await fetch('https://accounts.freelancer.com/oauth/token', {
