@@ -247,3 +247,5 @@
 2026-11-18T19:28Z run poll fresh=4 kept=1 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=1, hourly below floor=1, no stack keyword=1
 2026-11-18T19:29Z run poll fresh=1 kept=0 scored=0 unscored=0 alerts=0 sent=0 dropped: too many bids=1
 2026-11-18T19:30Z run poll fresh=0 kept=0 scored=0 unscored=0 alerts=0 sent=0
+2026-11-18T19:36Z score 2 - freelancer:40824902 | Proven AI Agents for Agency Growth | https://www.freelancer.com/projects/ai-agents/Proven-Agents-for-Agency-Growth
+2026-11-18T19:36Z run poll fresh=2 kept=1 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=1
