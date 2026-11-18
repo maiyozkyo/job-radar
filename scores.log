@@ -251,3 +251,5 @@
 2026-11-18T19:36Z run poll fresh=2 kept=1 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=1
 2026-11-18T19:37Z score 3 - freelancer:40824904 | Highly Skilled Software Developer for Social Media Automation | https://www.freelancer.com/projects/software-development/Highly-Skilled-Software-Developer-for
 2026-11-18T19:37Z run poll fresh=1 kept=1 scored=1 unscored=0 alerts=0 sent=0
+2026-11-18T19:41Z score 1 - freelancer:40824909 | Foreign-Owned LLC Tax Compliance Review | https://www.freelancer.com/projects/tax-compliance/Foreign-Owned-LLC-Tax-Compliance
+2026-11-18T19:41Z run poll fresh=6 kept=2 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=3, block keyword=1
