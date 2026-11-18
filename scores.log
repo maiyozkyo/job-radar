@@ -160,3 +160,4 @@
 2026-11-18T14:01Z run poll fresh=3 kept=0 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=2, no stack keyword=1
 2026-11-18T14:08Z score 3 - freelancer:40824491 | Pricing Test Analysis & Template | https://www.freelancer.com/projects/ab-testing/Pricing-Test-Analysis-Template
 2026-11-18T14:08Z run poll fresh=3 kept=1 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=1, no stack keyword=1
+2026-11-18T14:13Z run poll fresh=4 kept=0 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=2, too many bids=1, no stack keyword=1
