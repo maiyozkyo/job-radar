@@ -88,6 +88,7 @@ jobs:
         run: |
           [ -f state.json ] || exit 0
           git add state.json
+          [ -f scores.log ] && git add scores.log
           git diff --cached --quiet && exit 0
           git commit -m "state: $MODE $(date -u +%Y-%m-%dT%H:%MZ)"
           remote="https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git"

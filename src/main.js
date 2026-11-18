@@ -2,7 +2,7 @@ import { pathToFileURL } from 'node:url';
 import { loadConfig } from './job.js';
 import { fetchAll } from './sources/index.js';
 import { filterJob, isUrgent } from './filter.js';
-import { loadState, saveState, takeNew, prune } from './state.js';
+import { appendLog, loadState, saveState, takeNew, prune } from './state.js';
 import { scoreJobs } from './claude.js';
 import { formatAlertHtml, formatDigest, formatUnscored, sendMessage } from './telegram.js';
 
@@ -14,18 +14,34 @@ const claudeWarning = (err) => `Claude lỗi: ${err.message.slice(0, 120)}, chư
 const newestFirst = (a, b) => b.postedAt - a.postedAt;
 const bidOpts = (config) => ({ rate: config.hourlyRateUsd ?? 20, hoursPerDay: config.hoursPerDay ?? 2, discount: config.firstJobDiscount ?? 1 });
 
+const stamp = (now) => new Date(now * 1000).toISOString().slice(0, 16) + 'Z';
+
 /**
- * One line per scored job in the Actions log, so thresholds can be tuned from
- * real scores. Job titles and URLs are public; proposals are never logged.
+ * One line per scored job, so thresholds can be tuned from real scores: in the
+ * Actions log and in `log` (saved to scores.log). Job titles and URLs are
+ * public; proposals are never logged.
  */
-function logScores(jobs, scored) {
+function logScores(jobs, scored, log, now) {
   jobs.forEach((job, i) => {
     const s = scored[i];
-    console.log(`score ${s ? s.score : '-'} ${s?.hours != null ? `${s.hours}h` : '-'} ${job.key} | ${job.title.slice(0, 80)} | ${job.url}`);
+    const line = `score ${s ? s.score : '-'} ${s?.hours != null ? `${s.hours}h` : '-'} ${job.key} | ${job.title.slice(0, 80)} | ${job.url}`;
+    console.log(line);
+    log.push(`${stamp(now)} ${line}`);
   });
 }
 
-async function poll(state, deps) {
+/** Counts of why fresh jobs were dropped, most common first, e.g. "no stack keyword=12". */
+function dropSummary(results) {
+  const counts = {};
+  for (const r of results) {
+    if (r.keep) continue;
+    const why = r.reason.split(':')[0];
+    counts[why] = (counts[why] ?? 0) + 1;
+  }
+  return Object.entries(counts).sort((a, b) => b[1] - a[1]).map(([k, n]) => `${k}=${n}`).join(', ');
+}
+
+async function poll(state, deps, log) {
   const { config, now } = deps;
   state.lastFetch ??= {};
   const { jobs, errors, okSources } = await deps.fetchAll(config, undefined, now, state.lastFetch);
@@ -35,7 +51,8 @@ async function poll(state, deps) {
     return 1;
   }
 
-  const kept = fresh.filter((j) => filterJob(j, config).keep);
+  const results = fresh.map((j) => filterJob(j, config));
+  const kept = fresh.filter((_, i) => results[i].keep);
   const urgent = kept.filter(isUrgent);
   state.pending = [...state.pending, ...kept.filter((j) => !isUrgent(j))].sort(newestFirst).slice(0, MAX_PENDING);
 
@@ -44,7 +61,7 @@ async function poll(state, deps) {
   let unscoredWarning = 'Claude bỏ sót, chưa chấm điểm';
   try {
     const scored = await deps.scoreJobs(urgent, { draftMin: config.alertScore, ...bidOpts(config) });
-    logScores(urgent, scored);
+    logScores(urgent, scored, log, now);
     urgent.forEach((job, i) => {
       if (!scored[i]) unscored.push(job);
       else if (scored[i].score >= config.alertScore) alerts.push({ job, scored: scored[i] });
@@ -60,21 +77,24 @@ async function poll(state, deps) {
   ];
   if (messages.length && errors.length) messages[0] += `\n\n⚠️ Nguồn lỗi: ${errors.join('; ')}`;
   for (const text of messages) await deps.sendMessage(text);
+  log.push(`${stamp(now)} run poll fresh=${fresh.length} kept=${kept.length} scored=${urgent.length - unscored.length} unscored=${unscored.length} alerts=${alerts.length} sent=${messages.length}`
+    + `${errors.length ? ` errors=${errors.join('; ')}` : ''}${results.length > kept.length ? ` dropped: ${dropSummary(results)}` : ''}`);
   return messages.length;
 }
 
-async function digest(state, deps) {
-  const { config } = deps;
-  if (!state.pending.length) return 0;
+async function digest(state, deps, log) {
+  const { config, now } = deps;
+  if (!state.pending.length) { log.push(`${stamp(now)} run digest pending=0 sent=0`); return 0; }
   const pending = [...state.pending].sort(newestFirst).slice(0, MAX_DIGEST_SCORING);
 
   let scored;
   try {
     scored = await deps.scoreJobs(pending, { draftMin: config.digestDraftScore, ...bidOpts(config) });
-    logScores(pending, scored);
+    logScores(pending, scored, log, now);
   } catch (err) {
     // Keep the queue: the next digest retries instead of dropping the jobs.
     await deps.sendMessage(`⚠️ ${claudeWarning(err)}. ${state.pending.length} job remote để lại cho lần tổng hợp sau.`);
+    log.push(`${stamp(now)} run digest pending=${pending.length} claude error, kept for next digest`);
     return 1;
   }
 
@@ -84,6 +104,7 @@ async function digest(state, deps) {
     .sort((a, b) => b.scored.score - a.scored.score);
   const text = formatDigest(items.slice(0, MAX_DIGEST));
   if (text) await deps.sendMessage(text);
+  log.push(`${stamp(now)} run digest pending=${pending.length} alerts=${items.length} sent=${text ? 1 : 0}`);
   state.pending = [];
   return text ? 1 : 0;
 }
@@ -95,9 +116,11 @@ async function digest(state, deps) {
  */
 export async function run(mode, deps) {
   const state = loadState(deps.stateDir);
-  const sent = mode === 'digest' ? await digest(state, deps) : await poll(state, deps);
+  const log = [];
+  const sent = mode === 'digest' ? await digest(state, deps, log) : await poll(state, deps, log);
   prune(state, deps.now);
   saveState(deps.stateDir, state);
+  appendLog(deps.stateDir, log);
   return { sent };
 }
 

@@ -1,8 +1,8 @@
-import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
+import { appendFileSync, existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 /**
- * Lives on the `state` branch. Holds job data only, never scores or proposals.
+ * Lives on the `state` branch. Holds job data only; scores go to scores.log.
  * `seeded` records which sources have answered at least once: a source's first
  * batch is only recorded, so a source that was down at the start (or is added
  * later) does not flood the user with every open job.
@@ -59,4 +59,20 @@ export function prune(state, now) {
   for (const [key, at] of Object.entries(state.seen)) {
     if (now - at > KEEP_SEEN) delete state.seen[key];
   }
+}
+
+const KEEP_LOG_LINES = 20000; // about two weeks at a run every 15 minutes
+const logFile = (dir) => join(dir, 'scores.log');
+
+/**
+ * Appends lines to scores.log on the `state` branch, so scores can be checked
+ * from one small file instead of every Actions log. Same public data as the
+ * Actions log (titles, URLs, scores); never proposals. Keeps the newest lines.
+ */
+export function appendLog(dir, lines) {
+  if (!lines.length) return;
+  mkdirSync(dir, { recursive: true });
+  appendFileSync(logFile(dir), lines.map((l) => l.replace(/[\r\n]+/g, ' ')).join('\n') + '\n');
+  const all = readFileSync(logFile(dir), 'utf8').split('\n').filter(Boolean);
+  if (all.length > KEEP_LOG_LINES) writeFileSync(logFile(dir), all.slice(-KEEP_LOG_LINES).join('\n') + '\n');
 }

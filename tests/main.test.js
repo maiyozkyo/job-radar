@@ -1,11 +1,11 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync } from 'node:fs';
+import { mkdtempSync, readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { run } from '../src/main.js';
 import { loadConfig, makeJob } from '../src/job.js';
-import { loadState, saveState } from '../src/state.js';
+import { appendLog, loadState, saveState } from '../src/state.js';
 
 const config = loadConfig();
 const NOW = 1794300000;
@@ -134,4 +134,24 @@ test('scores are logged with key and title, proposals are not', async () => {
   const line = lines.find((l) => l.startsWith('score '));
   assert.match(line, /^score 8 - freelancer:1 \| Angular fix \| https:\/\/f\/1$/);
   assert.ok(!lines.some((l) => l.includes('Hi')), 'proposal text leaked into the log');
+});
+
+test('poll writes each score and a run summary with drop reasons to scores.log', async () => {
+  const offStack = makeJob({ source: 'freelancer', id: 9, title: 'Logo design', url: 'https://f/9', budgetType: 'fixed', budgetMaxUsd: 50, bidCount: 1 });
+  const { deps, stateDir } = setup({ jobs: [urgent(1), urgent(2), offStack], scores: { 'freelancer:2': 6 } });
+  await run('poll', deps);
+  const lines = readFileSync(join(stateDir, 'scores.log'), 'utf8').trim().split('\n');
+  assert.equal(lines.length, 3);
+  assert.match(lines[0], /^2026-\d\d-\d\dT\d\d:\d\dZ score 8 - freelancer:1 \| Angular fix \| https:\/\/f\/1$/);
+  assert.match(lines[1], /score 6 - freelancer:2/);
+  assert.match(lines[2], /run poll fresh=3 kept=2 scored=2 unscored=0 alerts=1 sent=1 dropped: no stack keyword=1$/);
+  assert.doesNotMatch(lines.join('\n'), /Hi/); // no proposals
+});
+
+test('scores.log appends across runs, keeps the newest lines and stays one line per entry', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'radar-'));
+  appendLog(dir, ['a', 'b\nc']);
+  appendLog(dir, []);
+  appendLog(dir, ['d']);
+  assert.equal(readFileSync(join(dir, 'scores.log'), 'utf8'), 'a\nb c\nd\n');
 });
