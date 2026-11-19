@@ -674,3 +674,5 @@
 2026-11-19T19:36Z run poll fresh=5 kept=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=5
 2026-11-19T19:42Z score 1 - freelancer:40826601 | US Screening Call Agents Needed | https://www.freelancer.com/projects/customer-service/Screening-Call-Agents-Needed
 2026-11-19T19:42Z run poll fresh=3 kept=1 scored=1 unscored=0 alerts=0 sent=0 dropped: unknown budget=1, no stack keyword=1
+2026-11-19T19:45Z score 1 - freelancer:40826608 | Hardware/PCB Engineer Needed – ESP32 Startup & W5500 Ethernet Reliability (EasyE | https://www.freelancer.com/projects/circuit-design/Hardware-PCB-Engineer-Needed-ESP
+2026-11-19T19:45Z run poll fresh=1 kept=1 scored=1 unscored=0 alerts=0 sent=0
