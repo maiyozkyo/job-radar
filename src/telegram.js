@@ -50,10 +50,13 @@ function bidLines(job, bid) {
   const price = local
     ? `${localMoney(job.currency)(local.amount)}${bid.unit} (≈ ${money(bid.amountUsd)}${bid.unit})`
     : `${money(bid.amountUsd)}${bid.unit}`;
+  // An hourly job can come with no hour estimate (desk alerts): leave those parts out.
+  const hours = bid.hours > 0 ? ` · ~${bid.hours} giờ` : '';
+  const days = bid.days > 0 ? ` · giao ${bid.days} ngày` : '';
   return [
-    `💵 Gợi ý bid: ${price} · ~${bid.hours} giờ · giao ${bid.days} ngày (≈ nhận ${money(bid.netUsd)}${bid.unit})`,
+    `💵 Gợi ý bid: ${price}${hours}${days} (≈ nhận ${money(bid.netUsd)}${bid.unit})`,
     bid.discounted ? `🎯 Giá lấy review đầu (đủ giá: ${money(bid.wantUsd)}${bid.unit})` : null,
-    bid.underpaid ? `⚠️ Việc ~${bid.hours} giờ đáng ~${money(bid.wantUsd)}${bid.unit}, ngân sách khách thấp hơn` : null,
+    bid.underpaid ? `⚠️ Việc${hours ? ` ~${bid.hours} giờ` : ''} đáng ~${money(bid.wantUsd)}${bid.unit}, ngân sách khách thấp hơn` : null,
   ].filter(Boolean).join('\n');
 }
 

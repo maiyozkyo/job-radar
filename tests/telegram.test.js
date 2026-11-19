@@ -199,3 +199,10 @@ test('the HTML alert links the job under "🔗 Mở job" instead of printing the
   assert.doesNotMatch(m.text.replace(/<a href="[^"]*">/g, ''), /upwork\.com/);
   assert.match(m.plain, /https:\/\/www\.upwork\.com\/jobs\/~01/); // the plain fallback keeps the URL
 });
+
+test('an hourly bid with no hour estimate leaves out the hours and days instead of printing null', () => {
+  const bid = { amountUsd: 15, unit: '/h', hours: null, days: null, netUsd: 13.5, wantUsd: 15, underpaid: false };
+  const m = formatAlertHtml({ ...job, budgetType: 'hourly' }, { ...scored, bid, milestones: [] });
+  assert.match(m.text, /💵 Gợi ý bid: \$15\/h \(≈ nhận \$13\.50\/h\)/);
+  assert.doesNotMatch(m.text + m.plain, /null/);
+});
