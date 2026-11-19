@@ -123,6 +123,24 @@ test('❌ on an alert Telegram will not delete (older than 48 h) falls back to r
   assert.equal(lastButton(tg).text, '❌ Đã bỏ qua');
 });
 
+test('the job link is read from the hyperlink when the alert shows "🔗 Mở job"', async () => {
+  const { tg, fetchFn } = tapFetch();
+  const text = `[freelancer] x
+🔗 Mở job
+
+✍️ Proposal:
+${proposal}`;
+  const linked = {
+    message_id: 5, chat: { id: 42 }, text,
+    entities: [
+      { type: 'text_link', offset: text.indexOf('🔗'), length: 9, url: 'https://www.freelancer.com/projects/angular/fix-1' },
+      { type: 'pre', offset: text.length - proposal.length, length: proposal.length },
+    ],
+  };
+  await onTap({ id: 'cq1', from: { id: 42 }, data: 'b:1:45:2:100', message: linked }, tapEnv, fetchFn);
+  assert.equal(lastButton(tg).url, 'https://www.freelancer.com/projects/angular/fix-1');
+});
+
 test('a tap from anyone else bids nothing', async () => {
   const { tg, bids, fetchFn } = tapFetch();
   await onTap(tap('b:1:45:2:100', 999), tapEnv, fetchFn);

@@ -111,7 +111,8 @@ const copyButton = (text, copy) => ({ text, copy_text: { text: String(copy).slic
 const plainAmount = (n) => (Number.isInteger(n) ? String(n) : n.toFixed(2));
 
 /**
- * One job alert in Telegram HTML: the proposal sits in a code block, which
+ * One job alert in Telegram HTML: the job is a "🔗 Mở job" link (a long URL
+ * wraps over lines and is easy to tap by mistake), the proposal sits in a code block, which
  * Telegram copies in one tap, and buttons copy the bid amount, the days and
  * each milestone. `plain` is the fallback when the HTML would be too long.
  * @returns {{ text: string, html: true, plain: string, buttons: object[][] }}
@@ -124,8 +125,9 @@ export function formatAlertHtml(job, scored, warning, now) {
     scored ? `⭐ ${scored.score}/10 – ${scored.reasonVi}` : null,
     bidLines(job, scored?.bid),
     riskLines(job),
-    job.url,
-  ].filter(Boolean).map(esc).join('\n');
+  ].filter(Boolean).map(esc)
+    .concat(job.url ? [`<a href="${esc(job.url).replace(/"/g, '&quot;')}">🔗 Mở job</a>`] : [])
+    .join('\n');
   const milestones = scored?.milestones ?? [];
   const bid = scored?.bid;
   // Copied amounts must be in the currency the bid form uses.

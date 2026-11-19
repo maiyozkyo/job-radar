@@ -66,7 +66,9 @@ export async function onTap(cq, env, fetchFn = fetch) {
   const msg = cq.message;
   if (!action || !msg) return answer('');
 
-  const url = msg.text?.match(JOB_URL)?.[0];
+  // Alerts link the job under "🔗 Mở job"; older ones print the URL.
+  const linked = (msg.entities ?? []).find((e) => e.type === 'text_link' && JOB_URL.test(e.url))?.url;
+  const url = linked ?? msg.text?.match(JOB_URL)?.[0];
   const status = (text) => tg('editMessageReplyMarkup', {
     chat_id: msg.chat.id,
     message_id: msg.message_id,

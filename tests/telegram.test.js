@@ -192,3 +192,10 @@ test('competition line: few fresh bids say bid early, many bids say hold', () =>
   assert.equal(competitionLine(fl(20, 30), now), '👥 20 bid · đăng 30 phút trước · ⏳ đông người bid, cân nhắc giữ lượt');
   assert.equal(competitionLine({ source: 'remoteok', bidCount: null, postedAt: now }, now), null);
 });
+
+test('the HTML alert links the job under "🔗 Mở job" instead of printing the long URL', () => {
+  const m = formatAlertHtml({ ...job, url: 'https://www.upwork.com/jobs/~01?a=1&b=2' }, null);
+  assert.match(m.text, /<a href="https:\/\/www\.upwork\.com\/jobs\/~01\?a=1&amp;b=2">🔗 Mở job<\/a>/);
+  assert.doesNotMatch(m.text.replace(/<a href="[^"]*">/g, ''), /upwork\.com/);
+  assert.match(m.plain, /https:\/\/www\.upwork\.com\/jobs\/~01/); // the plain fallback keeps the URL
+});
