@@ -566,3 +566,5 @@
 2026-11-19T15:46Z run poll fresh=1 kept=1 scored=1 unscored=0 alerts=0 sent=0
 2026-11-19T15:54Z score 1 - freelancer:40826313 | Strategi Promosi Instagram & TikTok -- 2 | https://www.freelancer.com/projects/social-media-marketing/Strategi-Promosi-Instagram-TikTok
 2026-11-19T15:54Z run poll fresh=5 kept=1 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=2, too many bids=1, no stack keyword=1
+2026-11-19T15:58Z score 8 8h freelancer:40826321 | Apparel Data Migration Project -- 2 | https://www.freelancer.com/projects/visual-basic/Apparel-Data-Migration-Project
+2026-11-19T15:58Z run poll fresh=3 kept=1 scored=1 unscored=0 alerts=1 sent=1 dropped: no stack keyword=1, block keyword=1
