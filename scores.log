@@ -548,3 +548,5 @@
 2026-11-19T15:00Z run poll fresh=39 kept=0 scored=0 unscored=0 alerts=0 sent=0 dropped: location=19, no stack keyword=11, block keyword=9
 2026-11-19T15:03Z score 1 - freelancer:40826243 | Penerjemah Inggris-Indonesia | https://www.freelancer.com/projects/translation/Penerjemah-Inggris-Indonesia
 2026-11-19T15:03Z run poll fresh=3 kept=1 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2
+2026-11-19T15:08Z score 3 - freelancer:40826238 | Asisten Input Data & Copywriting | https://www.freelancer.com/projects/administrative-support/Asisten-Input-Data-Copywriting
+2026-11-19T15:08Z run poll fresh=24 kept=1 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=11, location=10, block keyword=2
