@@ -101,10 +101,25 @@ test('the buttons are swapped out before the bid goes out', async () => {
 test('a failed bid says so and keeps a link to bid by hand', async () => {
   const { tg, fetchFn } = tapFetch({ bidStatus: 409, bidBody: { status: 'error', message: 'You have already bid' } });
   await onTap(tap('b:1:45:2:100'), tapEnv, fetchFn);
-  assert.equal(lastButton(tg).text, '⚠️ Bid lỗi · mở job để bid tay');
+  const rows = tg.filter((c) => c.method === 'editMessageReplyMarkup').at(-1).body.reply_markup.inline_keyboard;
+  assert.equal(rows[1][0].text, '⚠️ Bid lỗi · mở job để bid tay');
+  assert.equal(rows[1][0].url, 'https://www.freelancer.com/projects/angular/fix-1');
   const reply = tg.find((c) => c.method === 'sendMessage');
   assert.match(reply.body.text, /already bid/);
   assert.doesNotMatch(reply.body.text, /FL/);
+});
+
+test('a failed bid offers 🔄 with the same bid and ❌, and tapping 🔄 bids again', async () => {
+  const failed = tapFetch({ bidStatus: 500, bidBody: { status: 'error', message: 'Internal error' } });
+  await onTap(tap('b:1:45:2:100'), tapEnv, failed.fetchFn);
+  const [retry, skip] = failed.tg.filter((c) => c.method === 'editMessageReplyMarkup').at(-1).body.reply_markup.inline_keyboard[0];
+  assert.deepEqual(retry, { text: '🔄 Thử lại', callback_data: 'b:1:45:2:100' });
+  assert.deepEqual(skip, { text: '❌ Bỏ', callback_data: 'x:1' });
+
+  const ok = tapFetch();
+  await onTap(tap(retry.callback_data), tapEnv, ok.fetchFn);
+  assert.equal(ok.bids.length, 1);
+  assert.equal(lastButton(ok.tg).text, '✅ Đã bid #999 · mở job');
 });
 
 test('❌ deletes the alert and bids nothing', async () => {
