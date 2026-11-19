@@ -679,3 +679,4 @@
 2026-11-19T19:45Z run poll fresh=0 kept=0 scored=0 unscored=0 alerts=0 sent=0
 2026-11-19T19:51Z score 2 - freelancer:40826614 | Business Analyst Needed (3–8 Years Experience) – Long-Term Freelance Opportunity | https://www.freelancer.com/projects/business-analysis/Business-Analyst-Needed-Years-Experience
 2026-11-19T19:51Z run poll fresh=5 kept=1 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2, risk=1, block keyword=1
+2026-11-19T20:00Z run poll fresh=7 kept=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=4, block keyword=3
