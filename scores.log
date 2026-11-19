@@ -694,3 +694,4 @@
 2026-11-19T20:42Z score 2 - wwr:https://weworkremotely.com/remote-jobs/dropbox-backend-product-software-engineer-1 | Dropbox: Backend Product Software Engineer | https://weworkremotely.com/remote-jobs/dropbox-backend-product-software-engineer-1
 2026-11-19T20:42Z score 1 - wwr:https://weworkremotely.com/remote-jobs/dropbox-backend-product-software-engineer | Dropbox: Backend Product Software Engineer | https://weworkremotely.com/remote-jobs/dropbox-backend-product-software-engineer
 2026-11-19T20:42Z run digest pending=4 alerts=0 sent=0
+2026-11-19T20:45Z run poll fresh=10 kept=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=5, block keyword=4, hourly below floor=1
