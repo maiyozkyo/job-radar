@@ -3,6 +3,7 @@
 //    start the radar workflow at once (it scores and alerts as usual).
 // 2. Telegram webhook, taps: when the user taps ✅ on an alert, place that
 //    bid through the official Freelancer API. Nothing is bid without a tap.
+//    ❌ deletes the alert.
 // 3. Telegram webhook, messages: a Freelancer link is scored and drafted by
 //    the workflow in job mode. Any other text goes to job mode too, where
 //    Claude scores it if it is a job post (any platform) or answers it as
@@ -51,6 +52,7 @@ const telegram = (env, fetchFn) => async (method, body) => {
   });
   // Never log the URL: it contains the bot token.
   if (!res.ok) console.warn(`telegram ${method}: HTTP ${res.status}`);
+  return res.ok;
 };
 
 const JOB_URL = /https:\/\/www\.freelancer\.com\/projects\/\S+/;
@@ -73,6 +75,9 @@ export async function onTap(cq, env, fetchFn = fetch) {
 
   if (action.action === 'skip') {
     await answer('Đã bỏ qua');
+    // Gone from the chat; Telegram refuses to delete bot messages older than
+    // 48 h, and then only the buttons are swapped.
+    if (await tg('deleteMessage', { chat_id: msg.chat.id, message_id: msg.message_id })) return;
     return status('❌ Đã bỏ qua');
   }
 
@@ -97,7 +102,9 @@ const HELP = 'Đại ca gửi em link job Freelancer, hoặc dán/chuyển tiế
 export async function onMessage(msg, env, fetchFn = fetch) {
   if (String(msg.chat?.id) !== String(env.TELEGRAM_CHAT_ID) || String(msg.from?.id) !== String(env.TELEGRAM_CHAT_ID)) return;
   const tg = telegram(env, fetchFn);
-  const reply = (text) => tg('sendMessage', { chat_id: msg.chat.id, reply_to_message_id: msg.message_id, text });
+  // remove_keyboard: the desk bot once shared this token and left a reply
+  // keyboard (📝 Xem đơn / ❌ Bỏ) in this chat; this bot never uses one.
+  const reply = (text) => tg('sendMessage', { chat_id: msg.chat.id, reply_to_message_id: msg.message_id, text, reply_markup: { remove_keyboard: true } });
   const text = String(msg.text ?? msg.caption ?? '').trim();
   if (!text || text.startsWith('/')) return reply(HELP);
 

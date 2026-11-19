@@ -63,7 +63,7 @@ message.entities = [{ type: 'pre', offset: message.text.length - proposal.length
 const tap = (data, from = 42) => ({ id: 'cq1', from: { id: from }, data, message });
 const tapEnv = { TELEGRAM_CHAT_ID: '42', TELEGRAM_BOT_TOKEN: 'TG', FREELANCER_TOKEN: 'FL' };
 
-function tapFetch({ bidStatus = 200, bidBody = { status: 'success', result: { id: 999 } } } = {}) {
+function tapFetch({ bidStatus = 200, bidBody = { status: 'success', result: { id: 999 } }, deleteOk = true } = {}) {
   const tg = [];
   const bids = [];
   const order = [];
@@ -72,6 +72,7 @@ function tapFetch({ bidStatus = 200, bidBody = { status: 'success', result: { id
       const method = url.split('/').pop();
       order.push(method);
       tg.push({ method, body: JSON.parse(init.body) });
+      if (method === 'deleteMessage' && !deleteOk) return { ok: false, status: 400 };
       return { ok: true, status: 200 };
     }
     if (url.endsWith('/users/0.1/self/')) return { ok: true, status: 200, json: async () => ({ result: { id: 77 } }) };
@@ -106,8 +107,17 @@ test('a failed bid says so and keeps a link to bid by hand', async () => {
   assert.doesNotMatch(reply.body.text, /FL/);
 });
 
-test('❌ removes the buttons and bids nothing', async () => {
+test('❌ deletes the alert and bids nothing', async () => {
   const { tg, bids, fetchFn } = tapFetch();
+  await onTap(tap('x:1'), tapEnv, fetchFn);
+  assert.equal(bids.length, 0);
+  const del = tg.find((c) => c.method === 'deleteMessage');
+  assert.deepEqual(del.body, { chat_id: 42, message_id: 5 });
+  assert.equal(tg.some((c) => c.method === 'editMessageReplyMarkup'), false);
+});
+
+test('❌ on an alert Telegram will not delete (older than 48 h) falls back to removing the buttons', async () => {
+  const { tg, bids, fetchFn } = tapFetch({ deleteOk: false });
   await onTap(tap('x:1'), tapEnv, fetchFn);
   assert.equal(bids.length, 0);
   assert.equal(lastButton(tg).text, '❌ Đã bỏ qua');
@@ -149,14 +159,17 @@ test('the webhook accepts a secret saved with a trailing newline', async () => {
 const owner = { id: 42 };
 const msgEnv = () => ({ TELEGRAM_CHAT_ID: '42', TELEGRAM_BOT_TOKEN: 'TG', GH_REPO: 'me/job-radar', GH_DISPATCH_TOKEN: 'GH', PASTE_TOKEN: 'P', RADAR_KV: kv() });
 function msgFetch() {
+  const markups = [];
   const sent = [];
   const dispatched = [];
   const fetchFn = async (url, init = {}) => {
     if (url.includes('api.github.com')) { dispatched.push(JSON.parse(init.body).inputs); return { ok: true, status: 204 }; }
-    sent.push(JSON.parse(init.body).text);
+    const body = JSON.parse(init.body);
+    sent.push(body.text);
+    markups.push(body.reply_markup);
     return { ok: true, status: 200 };
   };
-  return { sent, dispatched, fetchFn };
+  return { sent, dispatched, markups, fetchFn };
 }
 const post = 'Upwork job: Fix our Angular 17 dashboard charts. They break after the last update. Budget $150, need it in 2 days.';
 
@@ -169,6 +182,13 @@ test('a pasted job is kept in KV and job mode gets only its key', async () => {
   const [, key] = dispatched[0].job.match(/^paste:([0-9a-f-]{36})$/);
   assert.equal(env.RADAR_KV.data[`paste:${key}`], post);
   assert.match(sent[0], /Đại ca chờ em/);
+});
+
+test('replies remove a leftover reply keyboard (the desk bot once shared this token)', async () => {
+  const { markups, fetchFn } = msgFetch();
+  await onMessage({ message_id: 1, chat: { id: 42 }, from: owner, text: post }, msgEnv(), fetchFn);
+  await onMessage({ message_id: 2, chat: { id: 42 }, from: owner, text: '/start' }, msgEnv(), fetchFn);
+  assert.deepEqual(markups, [{ remove_keyboard: true }, { remove_keyboard: true }]);
 });
 
 test('a Freelancer link goes to job mode as is', async () => {
