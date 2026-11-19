@@ -702,3 +702,5 @@
 2026-11-19T21:45Z run poll fresh=2 kept=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2
 2026-11-19T21:47Z score 1 - freelancer:40826720 | Arduino Soap Dispenser Assembly Guidance | https://www.freelancer.com/projects/soldering/Arduino-Soap-Dispenser-Assembly-Guidance
 2026-11-19T21:47Z run poll fresh=1 kept=1 scored=1 unscored=0 alerts=0 sent=0
+2026-11-19T21:55Z score 6 8h freelancer:40826733 | AI Facebook News Publisher Workflow | https://www.freelancer.com/projects/automation/Facebook-News-Publisher-Workflow
+2026-11-19T21:55Z run poll fresh=6 kept=1 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=4, too many bids=1
