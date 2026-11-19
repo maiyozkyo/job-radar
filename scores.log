@@ -603,3 +603,5 @@
 2026-11-19T16:57Z score 4 - freelancer:40826406 | QA Engineer: Email Parsing API | https://www.freelancer.com/projects/api-testing/Engineer-Email-Parsing-API
 2026-11-19T16:57Z run poll fresh=2 kept=1 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1
 2026-11-19T17:00Z run poll fresh=2 kept=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2
+2026-11-19T17:03Z score 7 3h freelancer:40826411 | PDF-to-Word Merge | https://www.freelancer.com/projects/microsoft-office/PDF-Word-Merge
+2026-11-19T17:03Z run poll fresh=11 kept=1 scored=1 unscored=0 alerts=1 sent=1 dropped: location=5, block keyword=3, no stack keyword=2
