@@ -431,3 +431,5 @@
 2026-11-19T08:45Z run poll fresh=3 kept=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2, risk=1
 2026-11-19T08:48Z score 1 - freelancer:40825753 | FDA Food Safety Mock Inspection Auditor | https://www.freelancer.com/projects/food-safety/FDA-Food-Safety-Mock-Inspection
 2026-11-19T08:48Z run poll fresh=4 kept=1 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=3
+2026-11-19T08:52Z score 1 - wwr:https://weworkremotely.com/remote-jobs/jumio-principal-enterprise-architect | Jumio: Principal Enterprise Architect | https://weworkremotely.com/remote-jobs/jumio-principal-enterprise-architect
+2026-11-19T08:52Z run digest pending=1 alerts=0 sent=0
