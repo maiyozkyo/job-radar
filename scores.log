@@ -356,3 +356,4 @@
 2026-11-19T03:45Z run poll fresh=6 kept=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=6
 2026-11-19T03:47Z score 4 - freelancer:40825353 | Business Docs Filing Specialist -- 2 | https://www.freelancer.com/projects/documentation/Business-Docs-Filing-Specialist
 2026-11-19T03:47Z run poll fresh=21 kept=1 scored=1 unscored=0 alerts=0 sent=0 dropped: location=9, no stack keyword=7, block keyword=3, risk=1
+2026-11-19T03:56Z run poll fresh=5 kept=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=5
