@@ -272,3 +272,28 @@ test('/paste/<key> returns the text only with the token', async () => {
   assert.equal((await worker.fetch(new Request(`https://w.example/paste/${key}`), { RADAR_KV: env.RADAR_KV })).status, 403);
 });
 
+
+// --- query slices ---
+
+import { querySlice } from '../src/fastpoll.js';
+
+test('querySlice: short lists are checked whole every minute', () => {
+  const q = ['a', 'b', 'c'];
+  assert.deepEqual(querySlice(q, NOW, 5), q);
+});
+
+test('querySlice: long lists rotate in even slices that cover every term', () => {
+  const q = Array.from({ length: 51 }, (_, i) => `q${i}`);
+  const minute = Math.floor(NOW / 60) * 60;
+  const slices = [0, 1, 2, 3].map((m) => querySlice(q, minute + m * 60, 28));
+  assert.ok(slices.every((s) => s.length <= 28));
+  assert.deepEqual([...slices[0], ...slices[1]].sort(), [...q].sort());
+  assert.deepEqual(slices[2], slices[0]);
+});
+
+test('fastPoll stays under the free-plan subrequest limit with the real config', async () => {
+  const e = env();
+  const { calls, fetchFn } = pollFetch([project(1, 3600)]);
+  await fastPoll(e, fetchFn, NOW);
+  assert.ok(calls.length <= 45, `${calls.length} requests`);
+});

@@ -19,3 +19,17 @@ export function pickFresh(jobs, seen, now, config) {
   for (const j of fresh) next[j.id] = now;
   return { fresh, seen: next };
 }
+
+// Cloudflare's free plan allows 50 subrequests per Worker run. With more query
+// terms than that, the Worker takes a different slice each minute, so every
+// term is still checked every couple of minutes.
+export const WORKER_MAX_QUERIES = 28; // the load the Worker already ran at, inside its CPU limit
+
+/** The query terms the Worker checks in the minute that contains `now`. */
+export function querySlice(queries, now, size = WORKER_MAX_QUERIES) {
+  if (queries.length <= size) return queries;
+  const parts = Math.ceil(queries.length / size);
+  const per = Math.ceil(queries.length / parts);
+  const i = Math.floor(now / 60) % parts;
+  return queries.slice(i * per, (i + 1) * per);
+}
