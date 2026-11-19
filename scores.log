@@ -564,3 +564,5 @@
 2026-11-19T15:45Z run poll fresh=0 kept=0 scored=0 unscored=0 alerts=0 sent=0
 2026-11-19T15:46Z score 1 - freelancer:40826306 | Native English Speaking Tutor | https://www.freelancer.com/projects/english-tutoring/Native-English-Speaking-Tutor
 2026-11-19T15:46Z run poll fresh=1 kept=1 scored=1 unscored=0 alerts=0 sent=0
+2026-11-19T15:54Z score 1 - freelancer:40826313 | Strategi Promosi Instagram & TikTok -- 2 | https://www.freelancer.com/projects/social-media-marketing/Strategi-Promosi-Instagram-TikTok
+2026-11-19T15:54Z run poll fresh=5 kept=1 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=2, too many bids=1, no stack keyword=1
