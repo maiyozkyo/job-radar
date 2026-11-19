@@ -400,3 +400,5 @@
 2026-11-19T07:00Z run poll fresh=2 kept=0 scored=0 unscored=0 alerts=0 sent=0 errors=wwr: The operation was aborted due to timeout dropped: budget below floor=1, block keyword=1
 2026-11-19T07:04Z score 2 - freelancer:40825593 | Handwritten Form Data to Excel | https://www.freelancer.com/projects/transcription/Handwritten-Form-Data-Excel
 2026-11-19T07:04Z run poll fresh=2 kept=1 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1
+2026-11-19T07:11Z score 2 - freelancer:40825607 | Academic Research Expert in Artificial Intelligence (AI) – Manuscript Review, Ed | https://www.freelancer.com/projects/academic-writing/Academic-Research-Expert-Artificial
+2026-11-19T07:11Z run poll fresh=4 kept=1 scored=1 unscored=0 alerts=0 sent=0 dropped: hourly below floor=1, block keyword=1, no stack keyword=1
