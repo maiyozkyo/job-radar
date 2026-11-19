@@ -625,3 +625,4 @@
 2026-11-19T17:45Z run poll fresh=5 kept=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=4, budget below floor=1
 2026-11-19T17:47Z score 1 - freelancer:40826466 | Traduction Anglais-Français | https://www.freelancer.com/projects/english-translation/Traduction-Anglais-Fran-ais
 2026-11-19T17:47Z run poll fresh=1 kept=1 scored=1 unscored=0 alerts=0 sent=0
+2026-11-19T18:00Z run poll fresh=10 kept=1 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=5, block keyword=2, too many bids=1, hourly below floor=1
