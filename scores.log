@@ -364,3 +364,4 @@
 2026-11-19T04:16Z run poll fresh=2 kept=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1, too many bids=1
 2026-11-19T04:18Z score 1 - freelancer:40825399 | White-Label Diamond Betting Site Build | https://www.freelancer.com/projects/web-development/White-Label-Diamond-Betting-Site
 2026-11-19T04:18Z run poll fresh=2 kept=1 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1
+2026-11-19T04:30Z run poll fresh=21 kept=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=11, block keyword=5, location=5
