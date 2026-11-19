@@ -493,3 +493,5 @@
 2026-11-19T12:00Z run poll fresh=2 kept=1 scored=1 unscored=0 alerts=1 sent=1 dropped: block keyword=1
 2026-11-19T12:01Z run poll fresh=0 kept=0 scored=0 unscored=0 alerts=0 sent=0
 2026-11-19T12:12Z run poll fresh=4 kept=0 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=2, no stack keyword=1, too many bids=1
+2026-11-19T12:13Z score 5 - freelancer:40826023 | Archive Public Facebook Media Library | https://www.freelancer.com/projects/data-extraction/Archive-Public-Facebook-Media-Library
+2026-11-19T12:13Z run poll fresh=3 kept=1 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=1, no stack keyword=1
