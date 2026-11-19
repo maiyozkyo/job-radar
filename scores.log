@@ -314,3 +314,5 @@
 2026-11-18T23:52Z run poll fresh=22 kept=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=11, location=8, too many bids=1, risk=1, block keyword=1
 2026-11-19T00:00Z run poll fresh=0 kept=0 scored=0 unscored=0 alerts=0 sent=0
 2026-11-19T00:15Z run poll fresh=25 kept=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=14, location=7, block keyword=3, too many bids=1
+2026-11-19T00:30Z score 1 - freelancer:40825173 | Unity Environment Artist — Build a London Map + Two DLC Expansions | https://www.freelancer.com/projects/unity/Unity-Environment-Artist-Build-London
+2026-11-19T00:30Z run poll fresh=2 kept=1 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1
