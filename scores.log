@@ -665,3 +665,7 @@
 2026-11-19T19:15Z run poll fresh=1 kept=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1
 2026-11-19T19:19Z score 2 - freelancer:40826567 | Audio & Sensor Pattern Detection | https://www.freelancer.com/projects/audio-processing/Audio-Sensor-Pattern-Detection
 2026-11-19T19:19Z run poll fresh=3 kept=1 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=1, no stack keyword=1
+2026-11-19T19:30Z score 7 4h freelancer:40826586 | n8n Telegram AI Chatbot Build | https://www.freelancer.com/projects/n8n/Telegram-Chatbot-Build
+2026-11-19T19:30Z score 1 - freelancer:40826587 | Recruit 20 Guaranteed Affiliates Fast | https://www.freelancer.com/projects/affiliate-marketing/Recruit-Guaranteed-Affiliates-Fast
+2026-11-19T19:30Z score 1 - freelancer:40825623 | Collect Indonesian Traditional Alcohol Samples | https://www.freelancer.com/projects/photography/Collect-Indonesian-Traditional-Alcohol
+2026-11-19T19:30Z run poll fresh=7 kept=3 scored=3 unscored=0 alerts=1 sent=1 dropped: no stack keyword=2, budget below floor=1, block keyword=1
