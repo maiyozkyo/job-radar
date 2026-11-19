@@ -12,7 +12,7 @@
 import config from '../config.json' with { type: 'json' };
 import { fetchFreelancer } from '../src/sources/freelancer.js';
 import { pickFresh } from '../src/fastpoll.js';
-import { extractProposal, parseCallback, placeBid } from '../src/bid.js';
+import { extractProposal, parseCallback, placeBid, skipCallback } from '../src/bid.js';
 import { findFreelancerLink, MAX_PASTE } from '../src/paste.js';
 
 const nowSec = () => Math.floor(Date.now() / 1000);
@@ -93,7 +93,18 @@ export async function onTap(cq, env, fetchFn = fetch) {
     const { bidId } = await placeBid({ ...action, description }, env.FREELANCER_TOKEN, fetchFn);
     await status(`✅ Đã bid${bidId ? ` #${bidId}` : ''} · mở job`);
   } catch (err) {
-    await status('⚠️ Bid lỗi · mở job để bid tay');
+    // 🔄 sends the same bid again, still only on the owner's tap. Freelancer
+    // refuses a second bid on one project, so a retry cannot double-bid.
+    await tg('editMessageReplyMarkup', {
+      chat_id: msg.chat.id,
+      message_id: msg.message_id,
+      reply_markup: {
+        inline_keyboard: [
+          [{ text: '🔄 Thử lại', callback_data: cq.data }, { text: '❌ Bỏ', callback_data: skipCallback(action.projectId) }],
+          [url ? { text: '⚠️ Bid lỗi · mở job để bid tay', url } : { text: '⚠️ Bid lỗi', callback_data: 'noop' }],
+        ],
+      },
+    });
     await tg('sendMessage', { chat_id: msg.chat.id, reply_to_message_id: msg.message_id, text: `⚠️ Bid lỗi: ${String(err.message).slice(0, 300)}` });
   }
 }
