@@ -500,3 +500,4 @@
 2026-11-19T12:15Z run digest pending=1 alerts=0 sent=0
 2026-11-19T12:18Z score 1 - freelancer:40826030 | Historic Building Structural Assessment | https://www.freelancer.com/projects/structural-engineering/Historic-Building-Structural-Assessment
 2026-11-19T12:18Z run poll fresh=1 kept=1 scored=1 unscored=0 alerts=0 sent=0
+2026-11-19T12:26Z run poll fresh=2 kept=0 scored=0 unscored=0 alerts=0 sent=0 dropped: too many bids=1, block keyword=1
