@@ -11,7 +11,7 @@
 //    /paste/<key> with PASTE_TOKEN, so it never shows in the public Actions log.
 import config from '../config.json' with { type: 'json' };
 import { fetchFreelancer } from '../src/sources/freelancer.js';
-import { pickFresh } from '../src/fastpoll.js';
+import { pickFresh, querySlice } from '../src/fastpoll.js';
 import { extractProposal, parseCallback, placeBid, skipCallback } from '../src/bid.js';
 import { findFreelancerLink, MAX_PASTE } from '../src/paste.js';
 
@@ -19,7 +19,8 @@ const nowSec = () => Math.floor(Date.now() / 1000);
 
 /** Starts radar.yml in poll mode when a new matching project appears. KV is written only then (free plan: 1,000 writes a day). */
 export async function fastPoll(env, fetchFn = fetch, now = nowSec()) {
-  const jobs = await fetchFreelancer(config, fetchFn, { limit: 10, full: false });
+  const queries = querySlice(config.freelancerQueries, now);
+  const jobs = await fetchFreelancer({ ...config, freelancerQueries: queries }, fetchFn, { limit: 10, full: false });
   const seen = JSON.parse((await env.RADAR_KV.get('seen')) ?? '{}');
   const { fresh, seen: next } = pickFresh(jobs, seen, now, config);
   if (!fresh.length) return 0;
