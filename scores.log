@@ -489,3 +489,5 @@
 2026-11-19T11:50Z run poll fresh=21 kept=1 scored=1 unscored=0 alerts=1 sent=1 dropped: no stack keyword=11, location=6, block keyword=3
 2026-11-19T11:59Z score 3 - freelancer:40826000 | Next.js Pocketsflow Billing Integration | https://www.freelancer.com/projects/nextjs/Next-Pocketsflow-Billing-Integration
 2026-11-19T11:59Z run poll fresh=5 kept=1 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2, block keyword=1, too many bids=1
+2026-11-19T12:00Z score 7 28h freelancer:40826002 | Multi-Channel n8n Chatbot Automation | https://www.freelancer.com/projects/ai-chatbot/Multi-Channel-Chatbot-Automation
+2026-11-19T12:00Z run poll fresh=2 kept=1 scored=1 unscored=0 alerts=1 sent=1 dropped: block keyword=1
