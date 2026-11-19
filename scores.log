@@ -366,3 +366,5 @@
 2026-11-19T04:18Z run poll fresh=2 kept=1 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1
 2026-11-19T04:30Z run poll fresh=21 kept=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=11, block keyword=5, location=5
 2026-11-19T04:45Z run poll fresh=1 kept=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1
+2026-11-19T04:55Z score 1 - freelancer:40825431 | Senior AI Developer for Benchmarking | https://www.freelancer.com/projects/artificial-intelligence/Senior-Developer-for-Benchmarking
+2026-11-19T04:55Z run poll fresh=9 kept=1 scored=1 unscored=0 alerts=0 sent=0 dropped: budget below floor=3, no stack keyword=2, block keyword=2, hourly below floor=1
