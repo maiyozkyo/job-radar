@@ -415,3 +415,5 @@
 2026-11-19T07:32Z run poll fresh=1 kept=1 scored=1 unscored=0 alerts=0 sent=0
 2026-11-19T07:35Z score 1 - freelancer:40825639 | Senior Robotics Engineer (Open-RMF) *Freelancer based in Malaysia | https://www.freelancer.com/projects/robotics/Senior-Robotics-Engineer-Open-RMF
 2026-11-19T07:35Z run poll fresh=3 kept=1 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1, block keyword=1
+2026-11-19T07:37Z score 3 - freelancer:40825644 | PhD Research on Asian Productivity | https://www.freelancer.com/projects/academic-writing/PhD-Research-Asian-Productivity
+2026-11-19T07:37Z run poll fresh=1 kept=1 scored=1 unscored=0 alerts=0 sent=0
