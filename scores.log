@@ -525,3 +525,4 @@
 2026-11-19T14:00Z run poll fresh=0 kept=0 scored=0 unscored=0 alerts=0 sent=0
 2026-11-19T14:14Z run poll fresh=9 kept=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=7, too many bids=2
 2026-11-19T14:15Z run poll fresh=0 kept=0 scored=0 unscored=0 alerts=0 sent=0
+2026-11-19T14:16Z run poll fresh=3 kept=0 scored=0 unscored=0 alerts=0 sent=0 dropped: too many bids=1, block keyword=1, no stack keyword=1
