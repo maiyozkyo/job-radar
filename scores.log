@@ -993,3 +993,6 @@
 2026-11-20T12:07Z run poll fresh=1 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: too many bids=1
 2026-11-20T12:10Z run poll fresh=2 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=1, too many bids=1
 2026-11-20T12:16Z run poll fresh=1 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: location=1
+2026-11-20T12:16Z score 2 - remoteok:1137815 | GitLab: Customer Success Engineer, India | https://remoteOK.com/remote-jobs/remote-customer-success-engineer-india-gitlab-1137815
+2026-11-20T12:16Z score 2 - remoteok:1137814 | GitLab: Customer Success Engineer, Singapore | https://remoteOK.com/remote-jobs/remote-customer-success-engineer-singapore-gitlab-1137814
+2026-11-20T12:16Z run digest pending=2 alerts=0 sent=0
