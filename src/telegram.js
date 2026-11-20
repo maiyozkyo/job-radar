@@ -91,7 +91,7 @@ function riskLines(job) {
 }
 
 /** Freelancer: who the client is, and red flags with reasons. */
-const clientBlock = (job, now) => (job.client ? clientLines(job.client, now).join('\n') : null);
+const clientBlock = (job, now) => (job.source === 'freelancer' && job.client ? clientLines(job.client, now).join('\n') : null);
 
 function jobBlock(job, scored, now) {
   return [
