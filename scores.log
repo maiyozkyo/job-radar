@@ -786,3 +786,7 @@
 2026-11-20T03:00Z run poll fresh=2 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1, block keyword=1
 2026-11-20T03:12Z score 5 8h freelancer:40827017 | n8n Telegram AI Chatbot Build | https://www.freelancer.com/projects/c-programming/Telegram-Chatbot-Build
 2026-11-20T03:12Z run poll fresh=25 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: location=10, block keyword=7, no stack keyword=5, risk=1, full-time only=1
+2026-11-20T03:14Z score 2 - freelancer:40827019 | Convert Education Web App To iOS | https://www.freelancer.com/projects/ios-development/Convert-Education-Web-App-iOS
+2026-11-20T03:14Z score 3 - freelancer:40827018 | Professional Business Letter Creation | https://www.freelancer.com/projects/microsoft-word/Professional-Business-Letter-Creation
+2026-11-20T03:14Z score 2 - freelancer:40826867 | Saisie produits Excel Sheets | https://www.freelancer.com/projects/google-sheets/Saisie-produits-Excel-Sheets
+2026-11-20T03:14Z run poll fresh=3 kept=3 night=0 scored=3 unscored=0 alerts=0 sent=0
