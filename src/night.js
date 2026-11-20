@@ -12,3 +12,6 @@ export function isQuiet(config, now) {
   const h = hourGmt7(now);
   return from > to ? h >= from || h < to : h >= from && h < to;
 }
+
+/** The date in Vietnam, e.g. "2026-11-20". */
+export const dayGmt7 = (now) => new Date((now + 7 * 3600) * 1000).toISOString().slice(0, 10);

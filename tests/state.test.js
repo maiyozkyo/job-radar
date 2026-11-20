@@ -12,7 +12,7 @@ const jobs = (...ids) => ids.map((id) => makeJob({ source: 'freelancer', id }));
 
 test('missing state.json gives an empty, uninitialized state', () => {
   const dir = mkdtempSync(join(tmpdir(), 'radar-'));
-  assert.deepEqual(loadState(dir), { initialized: false, seeded: {}, seen: {}, pending: [], night: [], lastFetch: {} });
+  assert.deepEqual(loadState(dir), { initialized: false, seeded: {}, seen: {}, pending: [], night: [], clientDrops: { day: null, reasons: {} }, lastFetch: {} });
 });
 
 test('first run marks everything seen and returns nothing', () => {
@@ -46,7 +46,7 @@ test('prune drops ids older than 60 days', () => {
 
 test('save then load round-trips', () => {
   const dir = mkdtempSync(join(tmpdir(), 'radar-'));
-  const state = { initialized: true, seeded: { freelancer: true }, seen: { a: 1 }, pending: jobs(9), night: jobs(2), lastFetch: { remotive: 5 } };
+  const state = { initialized: true, seeded: { freelancer: true }, seen: { a: 1 }, pending: jobs(9), night: jobs(2), clientDrops: { day: '2026-11-20', reasons: { 'payment not verified': 3 } }, lastFetch: { remotive: 5 } };
   saveState(dir, state);
   assert.deepEqual(loadState(dir), state);
 });

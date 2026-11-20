@@ -6,7 +6,8 @@ import { appendLog, loadState, saveState, takeNew, prune } from './state.js';
 import { scoreJobs } from './claude.js';
 import { formatAlertHtml, formatDigest, formatUnscored, sendMessage } from './telegram.js';
 import { fetchFreelancerStatus } from './sources/freelancer.js';
-import { isQuiet } from './night.js';
+import { dayGmt7, isQuiet } from './night.js';
+import { clientDropReport } from './client.js';
 
 const MAX_DIGEST = 10;
 const MAX_DIGEST_SCORING = 40;
@@ -83,8 +84,8 @@ async function morningBatch(state, deps, log) {
       jobs = jobs.flatMap((j) => {
         if (j.source !== 'freelancer') return [j];
         const st = status.get(String(j.id));
-        return st?.open ? [{ ...j, bidCount: st.bidCount ?? j.bidCount }] : [];
-      }).filter((j) => filterJob(j, config).keep);
+        return st?.open ? [{ ...j, bidCount: st.bidCount ?? j.bidCount, client: st.client ?? j.client }] : [];
+      }).filter((j) => filterJob(j, config, now).keep);
     } catch {
       note = '\n⚠️ Không kiểm tra được job nào còn mở.';
     }
@@ -102,6 +103,26 @@ async function morningBatch(state, deps, log) {
   ];
 }
 
+/**
+ * Counts today's client drops by reason. On the first run of a new day
+ * (GMT+7) outside quiet hours returns the report for the day before, so it
+ * goes out once a morning; drops at night count toward the day before.
+ */
+function countClientDrops(state, results, now, quiet) {
+  const today = dayGmt7(now);
+  let report = null;
+  if (!state.clientDrops.day || (!quiet && state.clientDrops.day !== today)) {
+    report = state.clientDrops.day ? clientDropReport(state.clientDrops) : null;
+    state.clientDrops = { day: today, reasons: {} };
+  }
+  for (const r of results) {
+    if (r.keep || !r.reason.startsWith('client: ')) continue;
+    const why = r.reason.slice('client: '.length);
+    state.clientDrops.reasons[why] = (state.clientDrops.reasons[why] ?? 0) + 1;
+  }
+  return report;
+}
+
 async function poll(state, deps, log) {
   const { config, now } = deps;
   state.lastFetch ??= {};
@@ -112,18 +133,20 @@ async function poll(state, deps, log) {
     return 1;
   }
 
-  const results = fresh.map((j) => filterJob(j, config));
+  const results = fresh.map((j) => filterJob(j, config, now));
   const kept = fresh.filter((_, i) => results[i].keep);
   const urgent = kept.filter(isUrgent);
   state.pending = [...state.pending, ...kept.filter((j) => !isUrgent(j))].sort(newestFirst).slice(0, MAX_PENDING);
 
   // Quiet hours: keep urgent jobs for the morning batch instead of alerting.
   const quiet = isQuiet(config, now);
+  const report = countClientDrops(state, results, now, quiet);
   if (quiet) state.night = [...state.night, ...urgent].slice(-MAX_NIGHT);
   const morning = !quiet && state.night.length ? await morningBatch(state, deps, log) : [];
   const { alerts, unscored, warning: unscoredWarning } = await scoreUrgent(quiet ? [] : urgent, deps, log);
 
   const messages = [
+    ...(report ? [report] : []),
     ...morning,
     ...alerts.map((a) => formatAlertHtml(a.job, a.scored, undefined, now)),
     ...(unscored.length ? [formatUnscored(unscored, unscoredWarning)] : []),

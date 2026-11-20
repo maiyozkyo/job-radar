@@ -214,3 +214,8 @@ test('a Freelancer alert shows the client and red flags with reasons', () => {
   }
   assert.doesNotMatch(formatAlert(job, scored), /👤/, 'no record, no line');
 });
+
+test('a non-Freelancer job never gets the Freelancer client line (the desk adds its own)', () => {
+  const upwork = { ...job, source: 'upwork', client: { verified: true, hires: 3, reviews: 0, rating: null, spentUsd: 100, country: 'US' } };
+  assert.doesNotMatch(formatAlertHtml(upwork, scored).text, /👤/);
+});
