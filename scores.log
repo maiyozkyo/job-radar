@@ -970,3 +970,4 @@
 2026-11-20T11:00Z run poll fresh=7 kept=1 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=4, no stack keyword=2
 2026-11-20T11:08Z score 5 50h freelancer:40827580 | Clinic Queue and WhatsApp Feedback | https://www.freelancer.com/projects/web-development/Clinic-Queue-WhatsApp-Feedback
 2026-11-20T11:08Z run poll fresh=7 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=3, no stack keyword=3
+2026-11-20T11:15Z run poll fresh=25 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: location=12, no stack keyword=8, block keyword=4, budget below floor=1
