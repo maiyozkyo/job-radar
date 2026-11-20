@@ -1050,3 +1050,5 @@
 2026-11-20T16:00Z run poll fresh=14 kept=3 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=6, client=3, block keyword=2
 2026-11-20T16:05Z score 1 - freelancer:40827890 | Project 533: Wake word audio recording | https://www.freelancer.com/projects/voice-acting/Project-Wake-word-audio-recording
 2026-11-20T16:05Z run poll fresh=6 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=3, block keyword=2
+2026-11-20T16:07Z score 3 - freelancer:40827889 | SMHUB Zigbee2MQTT IR Setup | https://www.freelancer.com/projects/automation/SMHUB-Zigbee-MQTT-Setup
+2026-11-20T16:07Z run poll fresh=5 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=3, no stack keyword=1
