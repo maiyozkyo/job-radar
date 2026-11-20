@@ -918,3 +918,5 @@
 2026-11-20T08:45Z run poll fresh=4 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2, block keyword=2
 2026-11-20T08:49Z score 6 - freelancer:40827422 | PDFs to Editable Word | https://www.freelancer.com/projects/data-entry/PDFs-Editable-Word
 2026-11-20T08:49Z run poll fresh=2 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1
+2026-11-20T08:59Z score 8 9h freelancer:40827426 | Migrate Contacts & Auto-Fill PDFs | https://www.freelancer.com/projects/data-extraction/Migrate-Contacts-Auto-Fill-PDFs
+2026-11-20T08:59Z run poll fresh=4 kept=1 night=0 scored=1 unscored=0 alerts=1 sent=1 dropped: no stack keyword=2, block keyword=1
