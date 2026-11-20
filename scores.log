@@ -971,3 +971,5 @@
 2026-11-20T11:08Z score 5 50h freelancer:40827580 | Clinic Queue and WhatsApp Feedback | https://www.freelancer.com/projects/web-development/Clinic-Queue-WhatsApp-Feedback
 2026-11-20T11:08Z run poll fresh=7 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=3, no stack keyword=3
 2026-11-20T11:15Z run poll fresh=25 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: location=12, no stack keyword=8, block keyword=4, budget below floor=1
+2026-11-20T11:17Z score 7 16h freelancer:40827593 | AI Insights for Ringba Calls | https://www.freelancer.com/projects/ai-model-development/Insights-for-Ringba-Calls
+2026-11-20T11:17Z run poll fresh=4 kept=1 night=0 scored=1 unscored=0 alerts=1 sent=1 dropped: hourly below floor=1, no stack keyword=1, block keyword=1
