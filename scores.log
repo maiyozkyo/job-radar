@@ -1084,3 +1084,9 @@
 2026-11-20T19:45Z run poll quiet fresh=4 kept=0 night=7 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=3, no stack keyword=1
 2026-11-20T20:00Z run poll quiet fresh=7 kept=0 night=7 scored=0 unscored=0 alerts=0 sent=0 errors=wwr: The operation was aborted due to timeout dropped: no stack keyword=3, location=2, too many bids=1, block keyword=1
 2026-11-20T20:15Z run poll quiet fresh=17 kept=0 night=7 scored=0 unscored=0 alerts=0 sent=0 dropped: location=7, no stack keyword=6, client=2, block keyword=2
+2026-11-20T20:27Z score 3 - himalayas:https://himalayas.app/companies/transperfect/jobs/freelance-linguist-english-into-vietnamese-patent-linguists | TransPerfect: Freelance Linguist | English into VIetnamese | Patent Linguists | https://himalayas.app/companies/transperfect/jobs/freelance-linguist-english-into-vietnamese-patent-linguists?utm_source=api
+2026-11-20T20:27Z score 1 - remoteok:1137844 | Netlify: Staff Software Engineer (Interfaces) | https://remoteOK.com/remote-jobs/remote-staff-software-engineer-interfaces-netlify-1137844
+2026-11-20T20:27Z score 1 - remoteok:1137839 | NIKI Digital Engineering: Engineer Software Defined Vehicle Simulation and Devel | https://remoteOK.com/remote-jobs/remote-engineer-software-defined-vehicle-simulation-and-development-niki-digital-engineering-1137839
+2026-11-20T20:27Z score 1 - remoteok:1137837 | NIKI Digital Engineering: Postdoc PhD PhD cand. Physics Computer Science | https://remoteOK.com/remote-jobs/remote-postdoc-phd-phd-cand-physics-computer-science-niki-digital-engineering-1137837
+2026-11-20T20:27Z score 1 - remoteok:1137835 | Norm: Technical Lead Norm Compliance | https://remoteOK.com/remote-jobs/remote-technical-lead-norm-compliance-norm-1137835
+2026-11-20T20:27Z run digest pending=5 alerts=0 sent=0
