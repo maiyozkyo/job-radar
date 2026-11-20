@@ -1001,3 +1001,5 @@
 2026-11-20T12:31Z run poll fresh=0 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0
 2026-11-20T12:32Z score 4 - freelancer:40827659 | Full PDF Translation to English | https://www.freelancer.com/projects/adobe-acrobat/Full-PDF-Translation-English
 2026-11-20T12:32Z run poll fresh=2 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1
+2026-11-20T12:41Z score 1 - freelancer:40827673 | Virtual Assistant (Account Management, Recruiting & People Ops) | https://www.freelancer.com/projects/account-management/Virtual-Assistant-Account-Management-40827673
+2026-11-20T12:41Z run poll fresh=1 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0
