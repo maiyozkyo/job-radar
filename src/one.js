@@ -51,7 +51,7 @@ export async function alertOne(input, { config, env = {}, scoreJobs: score, send
     return { chat: true };
   }
   const opts = { rate: config.hourlyRateUsd ?? 20, hoursPerDay: config.hoursPerDay ?? 2 };
-  let [scored] = await score([job], { draftMin: 1, ...opts, discount: config.firstJobDiscount ?? 1 });
+  let [scored] = await score([job], { draftMin: 1, ...opts, discount: config.firstJobDiscount ?? 1, redraftMin: config.opusRedraftScore ?? null });
   // A pasted job has no known budget: price it from Claude's hours at the full rate.
   if (scored && !scored.bid && job.source === 'paste') scored = { ...scored, bid: bidFromHours(scored.hours, opts) };
   await send(formatAlertHtml(job, scored, scored ? null : 'Claude bỏ sót, chưa chấm điểm'));

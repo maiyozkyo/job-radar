@@ -146,7 +146,7 @@ export function formatAlertHtml(job, scored, warning, now) {
     milestones.length
       ? `\n📌 Mốc thanh toán:\n${milestones.map((m, i) => `${i + 1}. ${esc(m.name)} — ${esc(fmt(msAmount(m, i)))}`).join('\n')}`
       : null,
-    scored?.proposalEn ? `\n✍️ Proposal (bấm vào khung để copy):\n<pre>${esc(scored.proposalEn)}</pre>` : null,
+    scored?.proposalEn ? `\n✍️ Proposal${scored.redrafted ? ' (Opus viết lại)' : ''} (bấm vào khung để copy):\n<pre>${esc(scored.proposalEn)}</pre>` : null,
     warning ? `\n⚠️ ${esc(warning)}` : null,
   ].filter(Boolean).join('\n');
   // One-tap bid: the Worker places exactly this bid, with the proposal from

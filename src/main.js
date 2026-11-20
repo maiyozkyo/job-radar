@@ -18,6 +18,8 @@ const MAX_MORNING = 8;
 const claudeWarning = (err) => `Claude lỗi: ${err.message.slice(0, 120)}, chưa chấm điểm`;
 const newestFirst = (a, b) => b.postedAt - a.postedAt;
 const bidOpts = (config) => ({ rate: config.hourlyRateUsd ?? 20, hoursPerDay: config.hoursPerDay ?? 2, discount: config.firstJobDiscount ?? 1 });
+// Urgent alerts only: their proposals go out on one tap.
+const redraftOpts = (config) => ({ redraftMin: config.opusRedraftScore ?? null });
 
 const stamp = (now) => new Date(now * 1000).toISOString().slice(0, 16) + 'Z';
 
@@ -54,7 +56,7 @@ async function scoreUrgent(jobs, deps, log) {
   let warning = 'Claude bỏ sót, chưa chấm điểm';
   if (!jobs.length) return { alerts, unscored, warning };
   try {
-    const scored = await deps.scoreJobs(jobs, { draftMin: config.alertScore, ...bidOpts(config) });
+    const scored = await deps.scoreJobs(jobs, { draftMin: config.alertScore, ...bidOpts(config), ...redraftOpts(config) });
     logScores(jobs, scored, log, now);
     jobs.forEach((job, i) => {
       if (!scored[i]) unscored.push(job);

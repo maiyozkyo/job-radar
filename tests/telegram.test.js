@@ -219,3 +219,8 @@ test('a non-Freelancer job never gets the Freelancer client line (the desk adds 
   const upwork = { ...job, source: 'upwork', client: { verified: true, hires: 3, reviews: 0, rating: null, spentUsd: 100, country: 'US' } };
   assert.doesNotMatch(formatAlertHtml(upwork, scored).text, /👤/);
 });
+
+test('a redrafted proposal is labelled Opus', () => {
+  assert.match(formatAlertHtml(job, { ...scored, redrafted: true }).text, /✍️ Proposal \(Opus viết lại\)/);
+  assert.doesNotMatch(formatAlertHtml(job, scored).text, /Opus/);
+});

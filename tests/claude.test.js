@@ -107,3 +107,35 @@ test('prompt asks for an hours estimate', async () => {
   await scoreJobs(jobs, { draftMin: 7 }, async (p) => { prompt = p; return JSON.stringify(good); });
   assert.match(prompt, /"hours"/);
 });
+
+test('jobs at or above redraftMin get an Opus rewrite in one extra call; others keep the first draft', async () => {
+  const both = [
+    { key: 'hn:2', score: 7, reasonVi: 'Ổn', proposalEn: 'Seven draft' },
+    { key: 'freelancer:1', score: 8, reasonVi: 'Hợp', proposalEn: 'Sonnet draft' },
+  ];
+  const calls = [];
+  const run = async (prompt, opts = {}) => {
+    calls.push({ prompt, model: opts.model ?? 'sonnet' });
+    return calls.length === 1 ? JSON.stringify(both) : JSON.stringify([{ key: 'freelancer:1', proposalEn: 'Opus draft, see www.evil.example' }]);
+  };
+  const out = await scoreJobs(jobs, { draftMin: 7, redraftMin: 8 }, run);
+  assert.deepEqual(calls.map((c) => c.model), ['sonnet', 'opus']);
+  assert.match(calls[1].prompt, /Sonnet draft/);
+  assert.doesNotMatch(calls[1].prompt, /Seven draft/, 'below redraftMin is not sent');
+  assert.equal(out[0].proposalEn, 'Opus draft, see [link bị xóa]');
+  assert.equal(out[0].redrafted, true);
+  assert.equal(out[0].score, 8, 'score and bid stay from the first call');
+  assert.equal(out[1].proposalEn, 'Seven draft');
+  assert.equal(out[1].redrafted, undefined);
+});
+
+test('an Opus failure keeps the first drafts; no redraftMin means no extra call', async () => {
+  let n = 0;
+  const run = async () => { n++; if (n === 2) throw new Error('opus not on this plan'); return JSON.stringify(good); };
+  const out = await scoreJobs(jobs, { draftMin: 7, redraftMin: 8 }, run);
+  assert.equal(n, 2);
+  assert.equal(out[0].proposalEn, 'Hi');
+  n = 0;
+  await scoreJobs(jobs, { draftMin: 7 }, run);
+  assert.equal(n, 1);
+});

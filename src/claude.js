@@ -108,9 +108,9 @@ function killTree(child) {
 const TIMEOUT_MS = 5 * 60_000;
 
 /** Runs Claude Code headless with no tools; the prompt goes in on stdin. */
-export function defaultRunClaude(prompt, { timeoutMs = TIMEOUT_MS, command = 'claude', args } = {}) {
+export function defaultRunClaude(prompt, { timeoutMs = TIMEOUT_MS, command = 'claude', args, model = 'sonnet' } = {}) {
   return new Promise((resolve, reject) => {
-    const child = spawn(command, args ?? ['-p', '--output-format', 'json', '--tools', '', '--model', 'sonnet', '--no-session-persistence'], {
+    const child = spawn(command, args ?? ['-p', '--output-format', 'json', '--tools', '', '--model', model, '--no-session-persistence'], {
       stdio: ['pipe', 'pipe', 'pipe'],
       shell: process.platform === 'win32',
       windowsHide: true,
@@ -144,7 +144,35 @@ export function defaultRunClaude(prompt, { timeoutMs = TIMEOUT_MS, command = 'cl
  * Scores jobs and drafts proposals for those scoring at least `draftMin`.
  * @returns {Promise<(Scored|null)[]>} in the same order as `jobs`; null when Claude skipped a job
  */
-export async function scoreJobs(jobs, { draftMin, rate = 20, hoursPerDay = 2, discount = 1 }, runClaude = defaultRunClaude) {
+export async function scoreJobs(jobs, { draftMin, rate = 20, hoursPerDay = 2, discount = 1, redraftMin = null }, runClaude = defaultRunClaude) {
   if (!jobs.length) return [];
-  return parseScores(await runClaude(buildPrompt(jobs, draftMin)), jobs, { rate, hoursPerDay, discount });
+  const scored = parseScores(await runClaude(buildPrompt(jobs, draftMin)), jobs, { rate, hoursPerDay, discount });
+  return redraftMin == null ? scored : redraft(jobs, scored, redraftMin, runClaude);
+}
+
+/**
+ * Jobs scoring at least `redraftMin` get their proposal rewritten by Opus in
+ * one extra call: these are the ones worth winning, and a Freelancer one-tap
+ * bid sends the proposal unread. Any failure keeps the first draft.
+ * Each rewritten proposal carries `redrafted: true`.
+ */
+export async function redraft(jobs, scored, redraftMin, runClaude = defaultRunClaude) {
+  const picks = jobs.map((job, i) => ({ job, s: scored[i] })).filter(({ s }) => s?.proposalEn && s.score >= redraftMin);
+  if (!picks.length) return scored;
+  const data = picks.map(({ job, s }) => ({
+    key: job.key, source: job.source, title: job.title, description: job.description.slice(0, MAX_DESCRIPTION),
+    budgetType: job.budgetType, budgetMinUsd: job.budgetMinUsd, budgetMaxUsd: job.budgetMaxUsd, tags: job.tags, draft: s.proposalEn,
+  }));
+  const prompt = read('prompts/redraft.md').replace('{{PROFILE}}', () => read('profile.md')).replace('{{JOBS}}', () => JSON.stringify(data, null, 1));
+  let byKey;
+  try {
+    byKey = new Map(parseArray(await runClaude(prompt, { model: 'opus' })).map((r) => [r?.key, r?.proposalEn]));
+  } catch (err) {
+    console.warn(`opus redraft failed, keeping the first drafts: ${String(err.message).slice(0, 120)}`);
+    return scored;
+  }
+  return scored.map((s) => {
+    const text = s && byKey.get(s.key);
+    return text && typeof text === 'string' && text.trim() ? { ...s, proposalEn: sanitizeProposal(text.trim()), redrafted: true } : s;
+  });
 }
