@@ -935,3 +935,4 @@
 2026-11-20T09:30Z run poll fresh=25 kept=2 night=0 scored=2 unscored=0 alerts=0 sent=0 dropped: location=11, block keyword=8, no stack keyword=4
 2026-11-20T09:31Z run poll fresh=3 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2, block keyword=1
 2026-11-20T09:31Z run poll fresh=0 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0
+2026-11-20T09:45Z run poll fresh=6 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=6
