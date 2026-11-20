@@ -1036,3 +1036,4 @@
 2026-11-20T14:03Z run poll fresh=2 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=1
 2026-11-20T14:05Z score 2 - freelancer:40827765 | Création appli Android complète | https://www.freelancer.com/projects/android-app-development/ation-appli-Android-compl
 2026-11-20T14:05Z run poll fresh=1 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0
+2026-11-20T14:15Z run poll fresh=3 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=2, no stack keyword=1
