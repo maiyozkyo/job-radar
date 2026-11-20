@@ -1021,3 +1021,5 @@
 2026-11-20T13:13Z run poll fresh=24 kept=2 night=0 scored=2 unscored=0 alerts=0 sent=0 dropped: location=10, no stack keyword=7, block keyword=4, hourly below floor=1
 2026-11-20T13:13Z run poll fresh=0 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0
 2026-11-20T13:15Z run poll fresh=1 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=1
+2026-11-20T13:25Z score 4 - freelancer:40827719 | Aplicación Fichaje Laboral con GPS | https://www.freelancer.com/projects/web-development/Aplicaci-Fichaje-Laboral-con-GPS
+2026-11-20T13:25Z run poll fresh=7 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=5, block keyword=1
