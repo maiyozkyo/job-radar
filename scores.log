@@ -810,3 +810,5 @@
 2026-11-20T04:34Z run poll fresh=5 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2, block keyword=2
 2026-11-20T04:38Z score 1 - freelancer:40827103 | Japanese Gmail Interaction Testers | https://www.freelancer.com/projects/user-experience-research/Japanese-Gmail-Interaction-Testers
 2026-11-20T04:38Z run poll fresh=7 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=3, block keyword=2, too many bids=1
+2026-11-20T04:40Z score 2 - freelancer:40827107 | Jalore Eye Surgery Information Assistance | https://www.freelancer.com/projects/software-architecture/Jalore-Eye-Surgery-Information
+2026-11-20T04:40Z run poll fresh=3 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1, block keyword=1
