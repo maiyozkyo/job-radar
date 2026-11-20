@@ -776,3 +776,5 @@
 2026-11-20T02:30Z run poll fresh=1 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1
 2026-11-20T02:34Z score 1 - freelancer:40826972 | Type 207-Page Book to Word | https://www.freelancer.com/projects/copy-typing/Type-Page-Book-Word
 2026-11-20T02:34Z run poll fresh=1 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0
+2026-11-20T02:42Z score 1 - freelancer:40826985 | SINP Hiring Assistance Needed | https://www.freelancer.com/projects/immigration/SINP-Hiring-Assistance-Needed
+2026-11-20T02:42Z run poll fresh=4 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: unknown budget=1, too many bids=1, block keyword=1
