@@ -85,7 +85,8 @@ export async function onTap(cq, env, fetchFn = fetch) {
     if (st?.open) {
       // The client's record goes in a reply: a popup holds only 200 characters.
       let lines = ['👤 Freelancer không cho xem tài khoản khách của job này'];
-      if (st.ownerId) {
+      if (st.client) lines = clientLines(st.client);
+      else if (st.ownerId) {
         try {
           const client = await fetchFreelancerClient(st.ownerId, fetchFn);
           if (client) lines = clientLines(client);

@@ -1,6 +1,7 @@
 import { netUsd } from './fees.js';
 import { riskFlags } from './risk.js';
 import { bidCallback, checkCallback, skipCallback } from './bid.js';
+import { clientLines } from './client.js';
 
 const LIMIT = 4096;
 const money = (n) => `$${Number.isInteger(n) ? n : n.toFixed(2)}`;
@@ -89,6 +90,9 @@ function riskLines(job) {
   return lines.length ? lines.join('\n') : null;
 }
 
+/** Freelancer: who the client is, and red flags with reasons. */
+const clientBlock = (job, now) => (job.client ? clientLines(job.client, now).join('\n') : null);
+
 function jobBlock(job, scored, now) {
   return [
     `[${job.source}] ${job.title}`,
@@ -96,6 +100,7 @@ function jobBlock(job, scored, now) {
     competitionLine(job, now),
     scored ? `⭐ ${scored.score}/10 – ${scored.reasonVi}` : null,
     bidLines(job, scored?.bid),
+    clientBlock(job, now),
     riskLines(job),
     job.url,
     scored?.proposalEn ? `\n✍️ Proposal:\n${scored.proposalEn}` : null,
@@ -124,6 +129,7 @@ export function formatAlertHtml(job, scored, warning, now) {
     competitionLine(job, now),
     scored ? `⭐ ${scored.score}/10 – ${scored.reasonVi}` : null,
     bidLines(job, scored?.bid),
+    clientBlock(job, now),
     riskLines(job),
   ].filter(Boolean).map(esc)
     .concat(job.url ? [`<a href="${esc(job.url).replace(/"/g, '&quot;')}">🔗 Mở job</a>`] : [])
