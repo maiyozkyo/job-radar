@@ -928,3 +928,5 @@
 2026-11-20T09:17Z run poll fresh=3 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: hourly below floor=1, block keyword=1
 2026-11-20T09:21Z score 1 - freelancer:40827450 | Experienced Software Engineer / Full-Stack Developer Needed PLEASE BID ONLY MUSL | https://www.freelancer.com/projects/full-stack-development/Experienced-Software-Engineer-Full-Stack
 2026-11-20T09:21Z run poll fresh=4 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=3
+2026-11-20T09:25Z score 2 - freelancer:40827455 | Experienced Software Engineer / Full-Stack Developer Needed, BID ONLY MUSLIMS | https://www.freelancer.com/projects/mobile-app-development/Experienced-Software-Engineer-Full-Stack
+2026-11-20T09:25Z run poll fresh=3 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=2
