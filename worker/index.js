@@ -10,7 +10,7 @@
 //    chat. The text waits in KV for a day and is read back through
 //    /paste/<key> with PASTE_TOKEN, so it never shows in the public Actions log.
 import config from '../config.json' with { type: 'json' };
-import { fetchFreelancer } from '../src/sources/freelancer.js';
+import { fetchFreelancer, fetchFreelancerStatus } from '../src/sources/freelancer.js';
 import { pickFresh, querySlice } from '../src/fastpoll.js';
 import { extractProposal, parseCallback, placeBid, skipCallback } from '../src/bid.js';
 import { findFreelancerLink, MAX_PASTE } from '../src/paste.js';
@@ -61,7 +61,7 @@ const JOB_URL = /https:\/\/www\.freelancer\.com\/projects\/\S+/;
 /** Handles one tap on an alert's buttons. Only the owner's taps count. */
 export async function onTap(cq, env, fetchFn = fetch) {
   const tg = telegram(env, fetchFn);
-  const answer = (text) => tg('answerCallbackQuery', { callback_query_id: cq.id, text });
+  const answer = (text, alert = false) => tg('answerCallbackQuery', { callback_query_id: cq.id, text, show_alert: alert });
   if (String(cq.from?.id) !== String(env.TELEGRAM_CHAT_ID)) return answer('Không có quyền');
   const action = parseCallback(cq.data);
   const msg = cq.message;
@@ -75,6 +75,17 @@ export async function onTap(cq, env, fetchFn = fetch) {
     message_id: msg.message_id,
     reply_markup: { inline_keyboard: [[url ? { text, url } : { text, callback_data: 'noop' }]] },
   });
+
+  if (action.action === 'check') {
+    let st;
+    try { st = (await fetchFreelancerStatus([action.projectId], fetchFn)).get(String(action.projectId)); } catch {
+      return answer('Không kiểm tra được, đại ca thử lại sau', true);
+    }
+    if (st?.open) return answer(`✅ Job còn mở · ${st.bidCount ?? '?'} bid`, true);
+    // Closed: drop ✅ so a bid is not tried on it; keep the link.
+    await answer('🔒 Job đã đóng, không bid được nữa', true);
+    return status('🔒 Job đã đóng · mở job');
+  }
 
   if (action.action === 'skip') {
     await answer('Đã bỏ qua');

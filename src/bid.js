@@ -10,10 +10,11 @@ export class BidError extends Error {}
 /** @param {{ amount: number, days: number, milestonePct: number }} bid */
 export const bidCallback = (projectId, { amount, days, milestonePct }) => `b:${projectId}:${amount}:${days}:${milestonePct}`;
 export const skipCallback = (projectId) => `x:${projectId}`;
+export const checkCallback = (projectId) => `c:${projectId}`;
 
 /**
  * @returns {{ action: 'bid', projectId: number, amount: number, days: number, milestonePct: number }
- *   | { action: 'skip', projectId: number } | null}
+ *   | { action: 'skip', projectId: number } | { action: 'check', projectId: number } | null}
  */
 export function parseCallback(data) {
   const bid = /^b:(\d+):(\d+(?:\.\d{1,2})?):(\d+):(\d{1,3})$/.exec(data ?? '');
@@ -24,6 +25,8 @@ export function parseCallback(data) {
   }
   const skip = /^x:(\d+)$/.exec(data ?? '');
   if (skip) return { action: 'skip', projectId: Number(skip[1]) };
+  const check = /^c:(\d+)$/.exec(data ?? '');
+  if (check) return { action: 'check', projectId: Number(check[1]) };
   return null;
 }
 

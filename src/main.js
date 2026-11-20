@@ -5,10 +5,14 @@ import { filterJob, isUrgent } from './filter.js';
 import { appendLog, loadState, saveState, takeNew, prune } from './state.js';
 import { scoreJobs } from './claude.js';
 import { formatAlertHtml, formatDigest, formatUnscored, sendMessage } from './telegram.js';
+import { fetchFreelancerStatus } from './sources/freelancer.js';
+import { isQuiet } from './night.js';
 
 const MAX_DIGEST = 10;
 const MAX_DIGEST_SCORING = 40;
 const MAX_PENDING = 200;
+const MAX_NIGHT = 150;
+const MAX_MORNING = 8;
 
 const claudeWarning = (err) => `Claude lỗi: ${err.message.slice(0, 120)}, chưa chấm điểm`;
 const newestFirst = (a, b) => b.postedAt - a.postedAt;
@@ -41,6 +45,63 @@ function dropSummary(results) {
   return Object.entries(counts).sort((a, b) => b[1] - a[1]).map(([k, n]) => `${k}=${n}`).join(', ');
 }
 
+/** Scores urgent jobs: alerts at >= alertScore, and the ones Claude skipped or could not score. */
+async function scoreUrgent(jobs, deps, log) {
+  const { config, now } = deps;
+  const alerts = [];
+  let unscored = [];
+  let warning = 'Claude bỏ sót, chưa chấm điểm';
+  if (!jobs.length) return { alerts, unscored, warning };
+  try {
+    const scored = await deps.scoreJobs(jobs, { draftMin: config.alertScore, ...bidOpts(config) });
+    logScores(jobs, scored, log, now);
+    jobs.forEach((job, i) => {
+      if (!scored[i]) unscored.push(job);
+      else if (scored[i].score >= config.alertScore) alerts.push({ job, scored: scored[i] });
+    });
+  } catch (err) {
+    unscored = jobs;
+    warning = claudeWarning(err);
+  }
+  return { alerts, unscored, warning };
+}
+
+/**
+ * The first poll after quiet hours: drops night jobs that closed or filled up
+ * with bids, scores the rest and sends a header plus the best few, each with
+ * its ✅ Bid button. Nothing is bid without the user's tap.
+ */
+async function morningBatch(state, deps, log) {
+  const { config, now } = deps;
+  const found = state.night.length;
+  let jobs = state.night;
+  let note = '';
+  const ids = jobs.filter((j) => j.source === 'freelancer').map((j) => j.id);
+  if (ids.length && deps.freelancerStatus) {
+    try {
+      const status = await deps.freelancerStatus(ids);
+      jobs = jobs.flatMap((j) => {
+        if (j.source !== 'freelancer') return [j];
+        const st = status.get(String(j.id));
+        return st?.open ? [{ ...j, bidCount: st.bidCount ?? j.bidCount }] : [];
+      }).filter((j) => filterJob(j, config).keep);
+    } catch {
+      note = '\n⚠️ Không kiểm tra được job nào còn mở.';
+    }
+  }
+  const { alerts, unscored, warning } = await scoreUrgent(jobs, deps, log);
+  alerts.sort((a, b) => b.scored.score - a.scored.score);
+  const top = alerts.slice(0, MAX_MORNING);
+  const more = alerts.length > top.length ? ` (gửi ${top.length} job tốt nhất)` : '';
+  log.push(`${stamp(now)} run morning night=${found} open=${jobs.length} alerts=${alerts.length} sent=${top.length}`);
+  state.night = [];
+  return [
+    `🌙 Job đêm qua: ${found} job, ${jobs.length} còn mở, ${alerts.length} job ≥ ${config.alertScore}${more}.${note}`,
+    ...top.map((a) => formatAlertHtml(a.job, a.scored, undefined, now)),
+    ...(unscored.length ? [formatUnscored(unscored.slice(0, 15), warning)] : []),
+  ];
+}
+
 async function poll(state, deps, log) {
   const { config, now } = deps;
   state.lastFetch ??= {};
@@ -56,28 +117,20 @@ async function poll(state, deps, log) {
   const urgent = kept.filter(isUrgent);
   state.pending = [...state.pending, ...kept.filter((j) => !isUrgent(j))].sort(newestFirst).slice(0, MAX_PENDING);
 
-  let alerts = [];
-  let unscored = [];
-  let unscoredWarning = 'Claude bỏ sót, chưa chấm điểm';
-  try {
-    const scored = await deps.scoreJobs(urgent, { draftMin: config.alertScore, ...bidOpts(config) });
-    logScores(urgent, scored, log, now);
-    urgent.forEach((job, i) => {
-      if (!scored[i]) unscored.push(job);
-      else if (scored[i].score >= config.alertScore) alerts.push({ job, scored: scored[i] });
-    });
-  } catch (err) {
-    unscored = urgent;
-    unscoredWarning = claudeWarning(err);
-  }
+  // Quiet hours: keep urgent jobs for the morning batch instead of alerting.
+  const quiet = isQuiet(config, now);
+  if (quiet) state.night = [...state.night, ...urgent].slice(-MAX_NIGHT);
+  const morning = !quiet && state.night.length ? await morningBatch(state, deps, log) : [];
+  const { alerts, unscored, warning: unscoredWarning } = await scoreUrgent(quiet ? [] : urgent, deps, log);
 
   const messages = [
+    ...morning,
     ...alerts.map((a) => formatAlertHtml(a.job, a.scored, undefined, now)),
     ...(unscored.length ? [formatUnscored(unscored, unscoredWarning)] : []),
   ];
   if (messages.length && errors.length) messages[0] += `\n\n⚠️ Nguồn lỗi: ${errors.join('; ')}`;
   for (const text of messages) await deps.sendMessage(text);
-  log.push(`${stamp(now)} run poll fresh=${fresh.length} kept=${kept.length} scored=${urgent.length - unscored.length} unscored=${unscored.length} alerts=${alerts.length} sent=${messages.length}`
+  log.push(`${stamp(now)} run poll${quiet ? ' quiet' : ''} fresh=${fresh.length} kept=${kept.length} night=${state.night.length} scored=${quiet ? 0 : urgent.length - unscored.length} unscored=${unscored.length} alerts=${alerts.length} sent=${messages.length}`
     + `${errors.length ? ` errors=${errors.join('; ')}` : ''}${results.length > kept.length ? ` dropped: ${dropSummary(results)}` : ''}`);
   return messages.length;
 }
@@ -137,6 +190,7 @@ if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
     now: Math.floor(Date.now() / 1000),
     fetchAll,
     scoreJobs,
+    freelancerStatus: (ids) => fetchFreelancerStatus(ids),
     sendMessage: (message) => sendMessage(message, env),
   }).then(
     ({ sent }) => console.log(`${mode}: sent ${sent} message(s)`),

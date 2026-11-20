@@ -144,7 +144,7 @@ test('poll writes each score and a run summary with drop reasons to scores.log',
   assert.equal(lines.length, 3);
   assert.match(lines[0], /^2026-\d\d-\d\dT\d\d:\d\dZ score 8 - freelancer:1 \| Angular fix \| https:\/\/f\/1$/);
   assert.match(lines[1], /score 6 - freelancer:2/);
-  assert.match(lines[2], /run poll fresh=3 kept=2 scored=2 unscored=0 alerts=1 sent=1 dropped: no stack keyword=1$/);
+  assert.match(lines[2], /run poll fresh=3 kept=2 night=0 scored=2 unscored=0 alerts=1 sent=1 dropped: no stack keyword=1$/);
   assert.doesNotMatch(lines.join('\n'), /Hi/); // no proposals
 });
 
@@ -154,4 +154,76 @@ test('scores.log appends across runs, keeps the newest lines and stays one line 
   appendLog(dir, []);
   appendLog(dir, ['d']);
   assert.equal(readFileSync(join(dir, 'scores.log'), 'utf8'), 'a\nb c\nd\n');
+});
+
+// 2026-11-20 00:30 and 07:10 GMT+7 (17:30 and 00:10 UTC).
+const NIGHT = Date.UTC(2026, 10, 19, 17, 30) / 1000;
+const MORNING = Date.UTC(2026, 10, 20, 0, 10) / 1000;
+
+test('quiet hours: urgent jobs wait in state.night, nothing is scored or sent', async () => {
+  const { deps, sent, stateDir } = setup({ jobs: [urgent(1), urgent(2)] });
+  let scoredCount = 0;
+  const score = deps.scoreJobs;
+  deps.scoreJobs = async (list) => { scoredCount += list.length; return score(list); };
+  deps.now = NIGHT;
+  await run('poll', deps);
+  assert.equal(sent.length, 0);
+  assert.equal(scoredCount, 0);
+  assert.deepEqual(loadState(stateDir).night.map((j) => j.key), ['freelancer:1', 'freelancer:2']);
+});
+
+test('first poll after quiet hours sends a header and the open night jobs, best first, then clears the queue', async () => {
+  const { deps, sent, stateDir } = setup({ jobs: [urgent(1), urgent(2), urgent(3), urgent(4)], scores: { 'freelancer:2': 9, 'freelancer:4': 5 } });
+  deps.now = NIGHT;
+  await run('poll', deps);
+  deps.now = MORNING;
+  deps.fetchAll = async () => ({ jobs: [], errors: [], okSources: ['freelancer'] });
+  // 1 and 2 open; 3 closed; 4 open but scores 5.
+  deps.freelancerStatus = async (ids) => {
+    assert.deepEqual(ids, ['1', '2', '3', '4']);
+    return new Map([['1', { open: true, bidCount: 3 }], ['2', { open: true, bidCount: 2 }], ['3', { open: false, bidCount: 9 }], ['4', { open: true, bidCount: 1 }]]);
+  };
+  await run('poll', deps);
+  assert.equal(sent.length, 3);
+  assert.match(sent[0], /🌙 Job đêm qua: 4 job, 3 còn mở, 2 job ≥ 7/);
+  assert.match(sent[1].text, /https:\/\/f\/2/);
+  assert.match(sent[2].text, /https:\/\/f\/1/);
+  assert.equal(loadState(stateDir).night.length, 0);
+  await run('poll', deps);
+  assert.equal(sent.length, 3, 'the batch goes out once');
+});
+
+test('morning batch drops night jobs that filled up with bids', async () => {
+  const { deps, sent } = setup({ jobs: [urgent(1)] });
+  deps.now = NIGHT;
+  await run('poll', deps);
+  deps.now = MORNING;
+  deps.fetchAll = async () => ({ jobs: [], errors: [], okSources: ['freelancer'] });
+  deps.freelancerStatus = async () => new Map([['1', { open: true, bidCount: config.maxBidCount + 1 }]]);
+  await run('poll', deps);
+  assert.equal(sent.length, 1);
+  assert.match(sent[0], /1 job, 0 còn mở, 0 job/);
+});
+
+test('morning batch still goes out when the status check fails', async () => {
+  const { deps, sent } = setup({ jobs: [urgent(1)] });
+  deps.now = NIGHT;
+  await run('poll', deps);
+  deps.now = MORNING;
+  deps.fetchAll = async () => ({ jobs: [], errors: [], okSources: ['freelancer'] });
+  deps.freelancerStatus = async () => { throw new Error('HTTP 503'); };
+  await run('poll', deps);
+  assert.equal(sent.length, 2);
+  assert.match(sent[0], /Không kiểm tra được/);
+});
+
+test('morning batch is kept when Telegram fails', async () => {
+  const { deps, stateDir } = setup({ jobs: [urgent(1)] });
+  deps.now = NIGHT;
+  await run('poll', deps);
+  deps.now = MORNING;
+  deps.fetchAll = async () => ({ jobs: [], errors: [], okSources: ['freelancer'] });
+  deps.sendMessage = async () => { throw new Error('telegram down'); };
+  await assert.rejects(run('poll', deps));
+  assert.equal(loadState(stateDir).night.length, 1);
 });

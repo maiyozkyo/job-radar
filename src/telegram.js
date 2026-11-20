@@ -1,6 +1,6 @@
 import { netUsd } from './fees.js';
 import { riskFlags } from './risk.js';
-import { bidCallback, skipCallback } from './bid.js';
+import { bidCallback, checkCallback, skipCallback } from './bid.js';
 
 const LIMIT = 4096;
 const money = (n) => `$${Number.isInteger(n) ? n : n.toFixed(2)}`;
@@ -108,16 +108,13 @@ export function formatAlert(job, scored, warning, now) {
 }
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-// Telegram's copy button holds at most 256 characters.
-const COPY_MAX = 256;
-const copyButton = (text, copy) => ({ text, copy_text: { text: String(copy).slice(0, COPY_MAX) } });
 const plainAmount = (n) => (Number.isInteger(n) ? String(n) : n.toFixed(2));
 
 /**
  * One job alert in Telegram HTML: the job is a "🔗 Mở job" link (a long URL
  * wraps over lines and is easy to tap by mistake), the proposal sits in a code block, which
- * Telegram copies in one tap, and buttons copy the bid amount, the days and
- * each milestone. `plain` is the fallback when the HTML would be too long.
+ * Telegram copies in one tap. Freelancer jobs get ✅ Bid / ❌ Bỏ and 🔄, which
+ * asks the Worker whether the job is still open and how many bids it has. `plain` is the fallback when the HTML would be too long.
  * @returns {{ text: string, html: true, plain: string, buttons: object[][] }}
  */
 export function formatAlertHtml(job, scored, warning, now) {
@@ -156,11 +153,7 @@ export function formatAlertHtml(job, scored, warning, now) {
       { text: `✅ Bid ${fmt(bidAmount)}${bid.unit} · ${bid.days} ngày`, callback_data: bidCallback(job.id, { amount: plainAmount(bidAmount), days: bid.days, milestonePct: firstPct }) },
       { text: '❌ Bỏ', callback_data: skipCallback(job.id) },
     ]] : []),
-    ...(bid ? [[copyButton(`💲 Copy giá ${fmt(bidAmount)}`, plainAmount(bidAmount)), copyButton(`📅 Copy ${bid.days} ngày`, bid.days)]] : []),
-    ...milestones.map((m, i) => [
-      copyButton(`📋 Mốc ${i + 1}: mô tả`, m.name),
-      copyButton(`💲 Mốc ${i + 1}: ${fmt(msAmount(m, i))}`, plainAmount(msAmount(m, i))),
-    ]),
+    ...(job.source === 'freelancer' ? [[{ text: '🔄 Kiểm tra lại job', callback_data: checkCallback(job.id) }]] : []),
   ];
   return { text, html: true, plain: formatAlert(job, scored, warning, now), buttons };
 }

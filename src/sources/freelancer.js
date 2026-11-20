@@ -56,3 +56,21 @@ export async function fetchFreelancer(config, fetchFn = fetch, { limit = 30, ful
   if (okCount === 0 && lastError) throw lastError;
   return [...byId.values()];
 }
+
+const BY_ID = 'https://www.freelancer.com/api/projects/0.1/projects/';
+
+/**
+ * Whether each project is still open for bids, and its bid count now, keyed
+ * by id as a string. Used for the morning batch of jobs found at night.
+ * @param {(string|number)[]} ids
+ * @returns {Promise<Map<string, { open: boolean, bidCount: number|null }>>}
+ */
+export async function fetchFreelancerStatus(ids, fetchFn = fetch) {
+  const out = new Map();
+  if (!ids.length) return out;
+  const url = `${BY_ID}?${ids.map((id) => `projects[]=${encodeURIComponent(id)}`).join('&')}&limit=${ids.length}`;
+  for (const p of (await getJson(url, fetchFn))?.result?.projects ?? []) {
+    out.set(String(p.id), { open: p.status === 'active' && (p.frontend_project_status ?? 'open') === 'open', bidCount: p.bid_stats?.bid_count ?? null });
+  }
+  return out;
+}
