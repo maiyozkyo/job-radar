@@ -750,3 +750,4 @@
 2026-11-20T00:45Z run poll fresh=1 kept=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1
 2026-11-20T00:52Z score 5 - freelancer:40826893 | Florida Industry Lead Database Research | https://www.freelancer.com/projects/data-collection/Florida-Industry-Lead-Database-Research
 2026-11-20T00:52Z run poll fresh=3 kept=1 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2
+2026-11-20T01:00Z run poll fresh=1 kept=0 scored=0 unscored=0 alerts=0 sent=0 dropped: hourly below floor=1
