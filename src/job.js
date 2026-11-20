@@ -20,6 +20,7 @@ import { readFileSync } from 'node:fs';
  * @property {boolean} [escrow]      Freelancer Escrow.com project: bidding needs a linked Escrow.com account
  * @property {{ code: string, sign: string, usdRate: number, min: number|null, max: number|null }|null} [currency]
  *           Freelancer jobs not in USD: the project currency, USD per unit, and the budget in that currency
+ * @property {import('./client.js').Client|null} [client] Freelancer: the client's account, for red flags on the alert
  */
 
 /**

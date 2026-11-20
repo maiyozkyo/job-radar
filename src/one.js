@@ -14,7 +14,7 @@ import { bidFromHours, fetchPaste, pastedJob } from './paste.js';
 import { chatOrJob } from './chat.js';
 
 const API = 'https://www.freelancer.com/api/projects/0.1/projects/';
-const DETAILS = 'full_description=true&job_details=true';
+const DETAILS = 'full_description=true&job_details=true&owner_info=true';
 
 /** API URL for a project id or a freelancer.com project link; null if neither. */
 export function projectApiUrl(input) {

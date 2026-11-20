@@ -203,3 +203,14 @@ test('an hourly bid with no hour estimate leaves out the hours and days instead 
   assert.match(m.text, /💵 Gợi ý bid: \$15\/h \(≈ nhận \$13\.50\/h\)/);
   assert.doesNotMatch(m.text + m.plain, /null/);
 });
+
+test('a Freelancer alert shows the client and red flags with reasons', () => {
+  const client = { paymentVerified: false, depositMade: false, identityVerified: false, registeredAt: 1000 - 2 * 86400, reviews: 0, rating: 0, completed: 0, country: 'India' };
+  const withClient = { ...job, client };
+  for (const text of [formatAlert(withClient, scored, null, 1000), formatAlertHtml(withClient, scored, null, 1000).text]) {
+    assert.match(text, /👤 Khách: tài khoản 2 ngày · India/);
+    assert.match(text, /🚩 Chưa xác minh thanh toán/);
+    assert.match(text, /🚩 Tài khoản mới tạo 2 ngày/);
+  }
+  assert.doesNotMatch(formatAlert(job, scored), /👤/, 'no record, no line');
+});

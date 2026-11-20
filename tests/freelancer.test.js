@@ -69,3 +69,13 @@ test('the Worker can ask for fewer, shorter projects', async () => {
   await fetchFreelancer({ freelancerQueries: ['angular'] }, async (u) => { url = u; return okResponse(fixture); }, { limit: 10, full: false });
   assert.match(url, /limit=10&full_description=false/);
 });
+
+test('owner_info becomes the client record; every query asks for it', async () => {
+  const { ownerClient } = await import('../src/sources/freelancer.js');
+  const p = { owner_info: { country: { name: 'India' }, registration_date: 100, status: { payment_verified: false, deposit_made: false, identity_verified: false }, reputation: { entire_history: { overall: 4.5, reviews: 3, complete: 4 } } } };
+  assert.deepEqual(ownerClient(p), { paymentVerified: false, depositMade: false, identityVerified: false, registeredAt: 100, reviews: 3, rating: 4.5, completed: 4, country: 'India' });
+  assert.equal(ownerClient({}), null);
+  let url;
+  await fetchFreelancer({ freelancerQueries: ['angular'] }, async (u) => { url = u; return okResponse(fixture); });
+  assert.match(url, /owner_info=true/);
+});

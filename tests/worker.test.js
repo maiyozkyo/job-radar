@@ -358,3 +358,13 @@ test('🔄 when Freelancer is down asks to try later and leaves the buttons', as
   assert.match(tg.find((c) => c.method === 'answerCallbackQuery').body.text, /thử lại sau/);
   assert.equal(tg.some((c) => c.method === 'editMessageReplyMarkup'), false);
 });
+
+test('🔄 reads the client from owner_info without a second call', async () => {
+  const owner_info = { country: { name: 'Canada' }, registration_date: 1, status: { payment_verified: true, deposit_made: true }, reputation: { entire_history: { overall: 5, reviews: 4, complete: 4 } } };
+  const { tg, urls, fetchFn } = checkFetch({ id: 1, status: 'active', frontend_project_status: 'open', bid_stats: { bid_count: 2 }, owner_info });
+  await onTap(tap('c:1'), tapEnv, fetchFn);
+  assert.equal(urls.length, 1);
+  assert.match(urls[0], /owner_info=true/);
+  assert.equal(tg.find((c) => c.method === 'answerCallbackQuery').body.text, '✅ Job còn mở · 2 bid');
+  assert.match(tg.find((c) => c.method === 'sendMessage').body.text, /👤 Khách: đã xác minh thanh toán · tài khoản \d+ năm · 5\.0★ \(4\) · xong 4 job · Canada/);
+});

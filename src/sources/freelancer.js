@@ -6,6 +6,28 @@ const API = 'https://www.freelancer.com/api/projects/0.1/projects/active/';
 const toUsd = (amount, rate) =>
   amount == null || rate == null ? null : Math.round(amount * rate * 100) / 100;
 
+/**
+ * The client's record from `owner_info` (asked for with owner_info=true):
+ * verification, account age, reviews and country. Anonymous calls get it even
+ * though they hide owner_id. Null when the project carries none.
+ * @returns {import('../client.js').Client|null}
+ */
+export function ownerClient(p) {
+  const o = p?.owner_info;
+  if (!o || typeof o !== 'object') return null;
+  const rep = o.reputation?.entire_history ?? {};
+  return {
+    paymentVerified: o.status?.payment_verified ?? null,
+    depositMade: o.status?.deposit_made ?? null,
+    identityVerified: o.status?.identity_verified ?? null,
+    registeredAt: o.registration_date ?? null,
+    reviews: rep.reviews ?? 0,
+    rating: rep.overall ?? null,
+    completed: rep.complete ?? 0,
+    country: o.country?.name ?? null,
+  };
+}
+
 /** @returns {import('../job.js').Job[]} */
 export function parseFreelancer(body) {
   return (body?.result?.projects ?? []).map((p) => {
@@ -28,6 +50,7 @@ export function parseFreelancer(body) {
       currency: p.currency?.code && p.currency.code !== 'USD' && rate
         ? { code: p.currency.code, sign: p.currency.sign ?? p.currency.code, usdRate: rate, min: p.budget?.minimum ?? null, max: p.budget?.maximum ?? null }
         : null,
+      client: ownerClient(p),
     });
   });
 }
@@ -44,7 +67,7 @@ export async function fetchFreelancer(config, fetchFn = fetch, { limit = 30, ful
   let lastError = null;
   let okCount = 0;
   for (const q of config.freelancerQueries) {
-    const url = `${API}?query=${encodeURIComponent(q)}&limit=${limit}&full_description=${full}&job_details=true&sort_field=time_updated`;
+    const url = `${API}?query=${encodeURIComponent(q)}&limit=${limit}&full_description=${full}&job_details=true&owner_info=true&sort_field=time_updated`;
     try {
       for (const job of parseFreelancer(await getJson(url, fetchFn))) byId.set(job.id, job);
       okCount++;
@@ -62,21 +85,22 @@ const BY_ID = 'https://www.freelancer.com/api/projects/0.1/projects/';
 /**
  * Whether each project is still open for bids, and its bid count now, keyed
  * by id as a string. Used for the morning batch of jobs found at night and
- * the 🔄 button. Freelancer hides the owner from anonymous calls; with the
- * user's OAuth `token` the result also carries `ownerId`.
+ * the 🔄 button, with the client's record from owner_info. Freelancer hides
+ * owner_id from anonymous calls; with the user's OAuth `token` it may carry `ownerId`.
  * @param {(string|number)[]} ids
- * @returns {Promise<Map<string, { open: boolean, bidCount: number|null, ownerId: number|null }>>}
+ * @returns {Promise<Map<string, { open: boolean, bidCount: number|null, ownerId: number|null, client: import('../client.js').Client|null }>>}
  */
 export async function fetchFreelancerStatus(ids, fetchFn = fetch, token = null) {
   const out = new Map();
   if (!ids.length) return out;
-  const url = `${BY_ID}?${ids.map((id) => `projects[]=${encodeURIComponent(id)}`).join('&')}&limit=${ids.length}`;
+  const url = `${BY_ID}?${ids.map((id) => `projects[]=${encodeURIComponent(id)}`).join('&')}&limit=${ids.length}&owner_info=true`;
   const headers = token ? { 'freelancer-oauth-v1': token } : undefined;
   for (const p of (await getJson(url, fetchFn, headers))?.result?.projects ?? []) {
     out.set(String(p.id), {
       open: p.status === 'active' && (p.frontend_project_status ?? 'open') === 'open',
       bidCount: p.bid_stats?.bid_count ?? null,
       ownerId: Number.isInteger(p.owner_id) ? p.owner_id : null,
+      client: ownerClient(p),
     });
   }
   return out;
