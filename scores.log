@@ -831,3 +831,5 @@
 2026-11-20T05:16Z run poll fresh=21 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: location=10, no stack keyword=7, block keyword=3
 2026-11-20T05:21Z score 7 6h freelancer:40827146 | PDF-to-Word Conversion | https://www.freelancer.com/projects/microsoft-word/PDF-Word-Conversion-40827146
 2026-11-20T05:21Z run poll fresh=2 kept=1 night=0 scored=1 unscored=0 alerts=1 sent=1 dropped: hourly below floor=1
+2026-11-20T05:27Z score 2 - freelancer:40827151 | Dedicated Email Support Assistants | https://www.freelancer.com/projects/customer-service/Dedicated-Email-Support-Assistants
+2026-11-20T05:27Z run poll fresh=1 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0
