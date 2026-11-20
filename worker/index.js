@@ -10,7 +10,8 @@
 //    chat. The text waits in KV for a day and is read back through
 //    /paste/<key> with PASTE_TOKEN, so it never shows in the public Actions log.
 import config from '../config.json' with { type: 'json' };
-import { fetchFreelancer, fetchFreelancerStatus } from '../src/sources/freelancer.js';
+import { fetchFreelancer, fetchFreelancerClient, fetchFreelancerStatus } from '../src/sources/freelancer.js';
+import { clientLines } from '../src/client.js';
 import { pickFresh, querySlice } from '../src/fastpoll.js';
 import { extractProposal, parseCallback, placeBid, skipCallback } from '../src/bid.js';
 import { findFreelancerLink, MAX_PASTE } from '../src/paste.js';
@@ -78,10 +79,23 @@ export async function onTap(cq, env, fetchFn = fetch) {
 
   if (action.action === 'check') {
     let st;
-    try { st = (await fetchFreelancerStatus([action.projectId], fetchFn)).get(String(action.projectId)); } catch {
+    try { st = (await fetchFreelancerStatus([action.projectId], fetchFn, env.FREELANCER_TOKEN)).get(String(action.projectId)); } catch {
       return answer('Không kiểm tra được, đại ca thử lại sau', true);
     }
-    if (st?.open) return answer(`✅ Job còn mở · ${st.bidCount ?? '?'} bid`, true);
+    if (st?.open) {
+      // The client's record goes in a reply: a popup holds only 200 characters.
+      let lines = ['👤 Freelancer không cho xem tài khoản khách của job này'];
+      if (st.ownerId) {
+        try {
+          const client = await fetchFreelancerClient(st.ownerId, fetchFn);
+          if (client) lines = clientLines(client);
+        } catch { /* keep the fallback line */ }
+      }
+      const red = lines.filter((l) => l.startsWith('🚩')).length;
+      await answer(`✅ Job còn mở · ${st.bidCount ?? '?'} bid${red ? `\n🚩 ${red} cờ đỏ về khách, xem tin trả lời` : ''}`, true);
+      await tg('sendMessage', { chat_id: msg.chat.id, reply_to_message_id: msg.message_id, text: lines.join('\n') });
+      return;
+    }
     // Closed: drop ✅ so a bid is not tried on it; keep the link.
     await answer('🔒 Job đã đóng, không bid được nữa', true);
     return status('🔒 Job đã đóng · mở job');

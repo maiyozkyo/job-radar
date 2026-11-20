@@ -1,12 +1,13 @@
 const HEADERS = { 'User-Agent': 'job-radar (github.com/maiyozkyo/job-radar)' };
 
-async function get(url, fetchFn) {
-  const res = await fetchFn(url, { headers: HEADERS, signal: AbortSignal.timeout(20_000) });
+async function get(url, fetchFn, extra = {}) {
+  const res = await fetchFn(url, { headers: { ...HEADERS, ...extra }, signal: AbortSignal.timeout(20_000) });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return res;
 }
 
-export const getJson = async (url, fetchFn) => (await get(url, fetchFn)).json();
+/** `extra` adds headers, e.g. a Freelancer OAuth token. */
+export const getJson = async (url, fetchFn, extra) => (await get(url, fetchFn, extra)).json();
 export const getText = async (url, fetchFn) => (await get(url, fetchFn)).text();
 
 const ENTITIES = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ' };
