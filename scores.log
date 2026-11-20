@@ -1004,3 +1004,5 @@
 2026-11-20T12:41Z score 1 - freelancer:40827673 | Virtual Assistant (Account Management, Recruiting & People Ops) | https://www.freelancer.com/projects/account-management/Virtual-Assistant-Account-Management-40827673
 2026-11-20T12:41Z run poll fresh=1 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0
 2026-11-20T12:45Z run poll fresh=3 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=3
+2026-11-20T12:47Z score 7 5h freelancer:40827679 | Native Freelance Proofreaders and Translators - English to Multiple Languages | https://www.freelancer.com/projects/language-tutoring/Native-Freelance-Proofreaders
+2026-11-20T12:47Z run poll fresh=1 kept=1 night=0 scored=1 unscored=0 alerts=1 sent=1
