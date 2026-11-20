@@ -815,3 +815,5 @@
 2026-11-20T04:45Z run poll fresh=1 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=1
 2026-11-20T04:46Z score 1 - freelancer:40827114 | Single-Family Home Plan & 3D | https://www.freelancer.com/projects/2d-drafting/Single-Family-Home-Plan
 2026-11-20T04:46Z run poll fresh=1 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0
+2026-11-20T04:48Z score 1 - freelancer:40827115 | Online product - Full-Service Marketing Boost | https://www.freelancer.com/projects/digital-marketing/Online-product-Full-Service-Marketing
+2026-11-20T04:48Z run poll fresh=2 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=1
