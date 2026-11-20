@@ -298,20 +298,40 @@ test('fastPoll stays under the free-plan subrequest limit with the real config',
   assert.ok(calls.length <= 45, `${calls.length} requests`);
 });
 
-function checkFetch(project) {
+function checkFetch(project, users = {}) {
   const tg = [];
   const urls = [];
+  const headers = [];
   const fetchFn = async (url, init = {}) => {
     if (url.startsWith('https://api.telegram.org/')) {
       tg.push({ method: url.split('/').pop(), body: JSON.parse(init.body) });
       return { ok: true, status: 200 };
     }
     urls.push(url);
+    headers.push(init.headers ?? {});
     if (project === 'down') return { ok: false, status: 503, json: async () => ({}), text: async () => '' };
+    if (url.includes('/users/0.1/users/')) return { ok: true, status: 200, json: async () => ({ result: { users } }) };
     return { ok: true, status: 200, json: async () => ({ result: { projects: project ? [project] : [] } }) };
   };
-  return { tg, urls, fetchFn };
+  return { tg, urls, headers, fetchFn };
 }
+
+test('🔄 with an owner: the project call carries the token, the client record comes as a reply with its red flags', async () => {
+  const now = Date.now() / 1000;
+  const users = { 7: { status: { payment_verified: false, deposit_made: true }, registration_date: now - 2 * 86400, employer_reputation: { entire_history: { overall: 0, reviews: 0, complete: 0 } }, location: { country: { name: 'India' } } } };
+  const { tg, urls, headers, fetchFn } = checkFetch({ id: 1, owner_id: 7, status: 'active', frontend_project_status: 'open', bid_stats: { bid_count: 3 } }, users);
+  await onTap(tap('c:1'), tapEnv, fetchFn);
+  assert.equal(headers[0]['freelancer-oauth-v1'], 'FL');
+  assert.match(urls[1], /users\[\]=7/);
+  assert.equal(headers[1]['freelancer-oauth-v1'], undefined, 'the users call needs no token');
+  assert.match(tg.find((c) => c.method === 'answerCallbackQuery').body.text, /✅ Job còn mở · 3 bid\n🚩 2 cờ đỏ/);
+  const reply = tg.find((c) => c.method === 'sendMessage').body;
+  assert.equal(reply.reply_to_message_id, 5);
+  assert.match(reply.text, /👤 Khách: tài khoản 2 ngày · India/);
+  assert.match(reply.text, /🚩 Chưa xác minh thanh toán/);
+  assert.match(reply.text, /🚩 Tài khoản mới tạo 2 ngày/);
+  assert.doesNotMatch(reply.text, /FL/);
+});
 
 test('🔄 on an open job shows its bid count and bids nothing', async () => {
   const { tg, urls, fetchFn } = checkFetch({ id: 1, status: 'active', frontend_project_status: 'open', bid_stats: { bid_count: 12 } });

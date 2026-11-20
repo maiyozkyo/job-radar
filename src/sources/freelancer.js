@@ -61,16 +61,47 @@ const BY_ID = 'https://www.freelancer.com/api/projects/0.1/projects/';
 
 /**
  * Whether each project is still open for bids, and its bid count now, keyed
- * by id as a string. Used for the morning batch of jobs found at night.
+ * by id as a string. Used for the morning batch of jobs found at night and
+ * the 🔄 button. Freelancer hides the owner from anonymous calls; with the
+ * user's OAuth `token` the result also carries `ownerId`.
  * @param {(string|number)[]} ids
- * @returns {Promise<Map<string, { open: boolean, bidCount: number|null }>>}
+ * @returns {Promise<Map<string, { open: boolean, bidCount: number|null, ownerId: number|null }>>}
  */
-export async function fetchFreelancerStatus(ids, fetchFn = fetch) {
+export async function fetchFreelancerStatus(ids, fetchFn = fetch, token = null) {
   const out = new Map();
   if (!ids.length) return out;
   const url = `${BY_ID}?${ids.map((id) => `projects[]=${encodeURIComponent(id)}`).join('&')}&limit=${ids.length}`;
-  for (const p of (await getJson(url, fetchFn))?.result?.projects ?? []) {
-    out.set(String(p.id), { open: p.status === 'active' && (p.frontend_project_status ?? 'open') === 'open', bidCount: p.bid_stats?.bid_count ?? null });
+  const headers = token ? { 'freelancer-oauth-v1': token } : undefined;
+  for (const p of (await getJson(url, fetchFn, headers))?.result?.projects ?? []) {
+    out.set(String(p.id), {
+      open: p.status === 'active' && (p.frontend_project_status ?? 'open') === 'open',
+      bidCount: p.bid_stats?.bid_count ?? null,
+      ownerId: Number.isInteger(p.owner_id) ? p.owner_id : null,
+    });
   }
   return out;
+}
+
+const USERS = 'https://www.freelancer.com/api/users/0.1/users/';
+
+/**
+ * A client's record as an employer: verification, account age, reviews and
+ * country. The users endpoint answers without a token.
+ * @returns {Promise<import('../client.js').Client|null>}
+ */
+export async function fetchFreelancerClient(ownerId, fetchFn = fetch) {
+  const url = `${USERS}?users[]=${encodeURIComponent(ownerId)}&employer_reputation=true&status=true&country_details=true`;
+  const u = (await getJson(url, fetchFn))?.result?.users?.[String(ownerId)];
+  if (!u) return null;
+  const rep = u.employer_reputation?.entire_history ?? {};
+  return {
+    paymentVerified: u.status?.payment_verified ?? null,
+    depositMade: u.status?.deposit_made ?? null,
+    identityVerified: u.status?.identity_verified ?? null,
+    registeredAt: u.registration_date ?? null,
+    reviews: rep.reviews ?? 0,
+    rating: rep.overall ?? null,
+    completed: rep.complete ?? 0,
+    country: u.location?.country?.name ?? null,
+  };
 }
