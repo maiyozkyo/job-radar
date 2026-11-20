@@ -161,5 +161,9 @@
   ],
   "hourlyRateUsd": 20,
   "hoursPerDay": 5,
-  "firstJobDiscount": 0.75
+  "firstJobDiscount": 0.75,
+  "quietHours": [
+    23.5,
+    7
+  ]
 }
