@@ -198,6 +198,7 @@ export function formatUnscored(jobs, warning) {
 }
 
 const GAP_MS = 1100; // Telegram allows about one message a second per chat.
+const RETRY_MS = 5000;
 const sleepReal = (ms) => new Promise((r) => setTimeout(r, ms));
 
 /**
@@ -215,10 +216,22 @@ export async function sendMessage(message, env, fetchFn = fetch, sleep = sleepRe
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ chat_id: env.TELEGRAM_CHAT_ID, text: part, disable_web_page_preview: true, ...extra }),
+    // Without a limit a hung Telegram gateway held a run for two minutes.
+    signal: AbortSignal.timeout(30_000),
   });
+  // Telegram's gateway sometimes answers 502/503/504 or hangs; one retry after a pause.
+  const postRetry = async (part) => {
+    let res;
+    try { res = await post(part); } catch { res = { status: 0 }; }
+    if (res.status === 0 || res.status >= 500) {
+      await sleep(RETRY_MS);
+      return post(part);
+    }
+    return res;
+  };
   const parts = rich ? [rich.text] : splitMessage(typeof message === 'object' ? message.plain : message);
   for (const part of parts) {
-    let res = await post(part);
+    let res = await postRetry(part);
     if (res.status === 429) {
       const body = await res.json().catch(() => ({}));
       await sleep((body?.parameters?.retry_after ?? 5) * 1000);

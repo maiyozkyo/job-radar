@@ -214,3 +214,18 @@ test('a Freelancer alert shows the client and red flags with reasons', () => {
   }
   assert.doesNotMatch(formatAlert(job, scored), /👤/, 'no record, no line');
 });
+
+test('sendMessage retries once after a 504 or a hung request, then gives up', async () => {
+  const env = { TELEGRAM_BOT_TOKEN: 't', TELEGRAM_CHAT_ID: '1' };
+  let n = 0;
+  const waits = [];
+  await sendMessage('hi', env, async () => (++n === 1 ? { ok: false, status: 504, text: async () => '' } : { ok: true, status: 200 }), async (ms) => { waits.push(ms); });
+  assert.equal(n, 2);
+  assert.equal(waits[0], 5000);
+  n = 0;
+  await sendMessage('hi', env, async () => { if (++n === 1) throw new Error('aborted'); return { ok: true, status: 200 }; }, async () => {});
+  assert.equal(n, 2, 'a timeout is retried too');
+  n = 0;
+  await assert.rejects(sendMessage('hi', env, async () => { n++; return { ok: false, status: 504, text: async () => 'Gateway Timeout' }; }, async () => {}), /HTTP 504/);
+  assert.equal(n, 2, 'only one retry');
+});
