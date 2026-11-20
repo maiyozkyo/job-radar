@@ -56,3 +56,10 @@ test('placeBid fails clearly on a bad token or no token', async () => {
   await assert.rejects(placeBid({ projectId: 1 }, 'T', async () => json(401, { message: 'Invalid token' })), /Invalid token/);
   await assert.rejects(placeBid({ projectId: 1 }, 'T', async () => json(200, { result: {} })), /ID tài khoản/);
 });
+
+import { checkCallback } from '../src/bid.js';
+
+test('the 🔄 recheck callback round-trips', () => {
+  assert.deepEqual(parseCallback(checkCallback(40816417)), { action: 'check', projectId: 40816417 });
+  assert.equal(parseCallback('c:abc'), null);
+});

@@ -102,7 +102,7 @@ test('alert shows the bid suggestion and warns when the budget is too low', () =
   assert.match(low, /⚠️ Việc ~6 giờ đáng ~\$160, ngân sách khách thấp hơn/);
 });
 
-test('HTML alert: proposal in a code block, milestones listed, copy buttons, text escaped', () => {
+test('HTML alert: proposal in a code block, milestones listed, ✅/❌ then 🔄, no copy buttons, text escaped', () => {
   const bid = { amountUsd: 280, unit: '', hours: 14, days: 5, netUsd: 252, wantUsd: 280, underpaid: false };
   const milestones = [{ name: 'Demo <inbox> & review', amountUsd: 112 }, { name: 'Hand-over', amountUsd: 168 }];
   const m = formatAlertHtml({ ...job, title: 'Fix <b>' }, { ...scored, proposalEn: 'Use a < b & c', bid, milestones });
@@ -112,9 +112,9 @@ test('HTML alert: proposal in a code block, milestones listed, copy buttons, tex
   assert.match(m.text, /1\. Demo &lt;inbox&gt; &amp; review — \$112/);
   assert.deepEqual(m.buttons[0].map((b) => b.callback_data), ['b:1:280:5:40', 'x:1']); // 112 / 280 = 40% upfront
   assert.equal(m.buttons[0][0].text, '✅ Bid $280 · 5 ngày');
-  assert.deepEqual(m.buttons[1].map((b) => b.copy_text.text), ['280', '5']);
-  assert.deepEqual(m.buttons[2].map((b) => b.copy_text.text), ['Demo <inbox> & review', '112']);
-  assert.deepEqual(m.buttons[3].map((b) => b.copy_text.text), ['Hand-over', '168']);
+  assert.deepEqual(m.buttons[1], [{ text: '🔄 Kiểm tra lại job', callback_data: 'c:1' }]);
+  assert.equal(m.buttons.length, 2);
+  assert.ok(!m.buttons.flat().some((b) => b.copy_text));
   assert.match(m.plain, /Use a < b & c/);
 });
 
@@ -140,7 +140,7 @@ const inr = makeJob({
   currency: { code: 'INR', sign: '₹', usdRate: 0.010704, min: 12500, max: 37500 },
 });
 
-test('non-USD job: bid, milestones and copied amounts are in the project currency', () => {
+test('non-USD job: bid and milestones are in the project currency', () => {
   const bid = { amountUsd: 150, unit: '', hours: 7, days: 3, netUsd: 135, wantUsd: 140, underpaid: false };
   const milestones = [{ name: 'Demo', amountUsd: 60 }, { name: 'Rest', amountUsd: 90 }];
   const m = formatAlertHtml(inr, { ...scored, key: inr.key, bid, milestones });
@@ -149,9 +149,7 @@ test('non-USD job: bid, milestones and copied amounts are in the project currenc
   assert.match(m.text, /1\. Demo — ₹5,600\n2\. Rest — ₹8,400/);
   assert.equal(m.buttons[0][0].callback_data, 'b:9:14000:3:40'); // the bid API takes the project currency
   assert.equal(m.buttons[0][0].text, '✅ Bid ₹14,000 · 3 ngày');
-  assert.deepEqual(m.buttons[1].map((b) => b.copy_text.text), ['14000', '3']);
-  assert.deepEqual(m.buttons[2].map((b) => b.copy_text.text), ['Demo', '5600']);
-  assert.deepEqual(m.buttons[3].map((b) => b.copy_text.text), ['Rest', '8400']);
+  assert.equal(m.buttons[1][0].callback_data, 'c:9');
 });
 
 test('one-tap bid: one milestone asks 100% upfront; no button without a proposal, a bid, or off Freelancer', () => {
@@ -161,17 +159,16 @@ test('one-tap bid: one milestone asks 100% upfront; no button without a proposal
   const hourly = formatAlertHtml({ ...job, budgetType: 'hourly' }, { ...scored, bid: { ...bid, amountUsd: 22.5, unit: '/h' }, milestones: [] });
   assert.equal(hourly.buttons[0][0].callback_data, 'b:1:22.50:1:100');
   assert.equal(hourly.buttons[0][0].text, '✅ Bid $22.50/h · 1 ngày');
-  const noTap = (m) => !m.buttons.flat().some((b) => b.callback_data);
+  const noTap = (m) => !m.buttons.flat().some((b) => b.callback_data?.startsWith('b:'));
   assert.ok(noTap(formatAlertHtml(job, { ...scored, proposalEn: null, bid, milestones: [] })));
   assert.ok(noTap(formatAlertHtml(job, { ...scored, bid: null, milestones: [] })));
   assert.ok(noTap(formatAlertHtml({ ...job, source: 'hn' }, { ...scored, bid, milestones: [] })));
 });
 
-test('an Escrow.com project says so and has no one-tap bid, only copy buttons', () => {
+test('an Escrow.com project says so and has no one-tap bid, only 🔄', () => {
   const bid = { amountUsd: 45, unit: '', hours: 2, days: 1, netUsd: 40, wantUsd: 45, underpaid: false };
   const m = formatAlertHtml({ ...job, escrow: true }, { ...scored, bid, milestones: [] });
-  assert.ok(!m.buttons.flat().some((b) => b.callback_data));
-  assert.ok(m.buttons.flat().some((b) => b.copy_text));
+  assert.deepEqual(m.buttons.flat().map((b) => b.callback_data), ['c:1']);
   assert.match(m.text, /Escrow\.com/);
   assert.match(formatAlert({ ...job, escrow: true }, scored), /Escrow\.com/);
   assert.doesNotMatch(formatAlertHtml(job, { ...scored, bid, milestones: [] }).text, /Escrow/);

@@ -297,3 +297,44 @@ test('fastPoll stays under the free-plan subrequest limit with the real config',
   await fastPoll(e, fetchFn, NOW);
   assert.ok(calls.length <= 45, `${calls.length} requests`);
 });
+
+function checkFetch(project) {
+  const tg = [];
+  const urls = [];
+  const fetchFn = async (url, init = {}) => {
+    if (url.startsWith('https://api.telegram.org/')) {
+      tg.push({ method: url.split('/').pop(), body: JSON.parse(init.body) });
+      return { ok: true, status: 200 };
+    }
+    urls.push(url);
+    if (project === 'down') return { ok: false, status: 503, json: async () => ({}), text: async () => '' };
+    return { ok: true, status: 200, json: async () => ({ result: { projects: project ? [project] : [] } }) };
+  };
+  return { tg, urls, fetchFn };
+}
+
+test('🔄 on an open job shows its bid count and bids nothing', async () => {
+  const { tg, urls, fetchFn } = checkFetch({ id: 1, status: 'active', frontend_project_status: 'open', bid_stats: { bid_count: 12 } });
+  await onTap(tap('c:1'), tapEnv, fetchFn);
+  assert.equal(urls.length, 1);
+  assert.match(urls[0], /projects\[\]=1/);
+  const ans = tg.find((c) => c.method === 'answerCallbackQuery').body;
+  assert.equal(ans.text, '✅ Job còn mở · 12 bid');
+  assert.equal(ans.show_alert, true);
+  assert.equal(tg.some((c) => c.method === 'editMessageReplyMarkup'), false);
+});
+
+test('🔄 on a closed job says so and swaps ✅ for the link', async () => {
+  const { tg, fetchFn } = checkFetch({ id: 1, status: 'closed', frontend_project_status: 'work', bid_stats: { bid_count: 40 } });
+  await onTap(tap('c:1'), tapEnv, fetchFn);
+  assert.match(tg.find((c) => c.method === 'answerCallbackQuery').body.text, /đã đóng/);
+  assert.equal(lastButton(tg).text, '🔒 Job đã đóng · mở job');
+  assert.equal(lastButton(tg).url, 'https://www.freelancer.com/projects/angular/fix-1');
+});
+
+test('🔄 when Freelancer is down asks to try later and leaves the buttons', async () => {
+  const { tg, fetchFn } = checkFetch('down');
+  await onTap(tap('c:1'), tapEnv, fetchFn);
+  assert.match(tg.find((c) => c.method === 'answerCallbackQuery').body.text, /thử lại sau/);
+  assert.equal(tg.some((c) => c.method === 'editMessageReplyMarkup'), false);
+});
