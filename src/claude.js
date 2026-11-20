@@ -27,6 +27,7 @@ function buildPrompt(jobs, draftMin) {
     location: j.location,
     employmentType: j.employmentType,
     tags: j.tags,
+    client: j.client ?? null,
   }));
   return read('prompts/score.md')
     .replace('{{DRAFT_RULE}}', `score >= ${draftMin}`)

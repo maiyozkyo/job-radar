@@ -37,3 +37,31 @@ export function clientCheck(c, now = Date.now() / 1000) {
 
 /** Summary then flags, one per line. */
 export const clientLines = (c, now) => { const { summary, flags } = clientCheck(c, now); return [summary, ...flags]; };
+
+/**
+ * Why a job is not worth an alert because of its client, or null. Only the
+ * clearest junk signs; a new client with no history is kept, since a freelancer
+ * without reviews wins those most often.
+ * @param {Client} c
+ */
+export function clientDrop(c, now = Date.now() / 1000) {
+  if (c.paymentVerified === false) return 'payment not verified';
+  const days = c.registeredAt ? (now - c.registeredAt) / DAY : null;
+  if (c.depositMade === false && days != null && days < 7) return 'no deposit, new account';
+  if (c.reviews >= 2 && c.rating != null && c.rating < 4) return 'rated below 4';
+  return null;
+}
+
+const DROP_VI = {
+  'payment not verified': 'chưa xác minh thanh toán',
+  'no deposit, new account': 'chưa nạp tiền, tài khoản mới',
+  'rated below 4': 'bị chấm dưới 4★',
+};
+
+/** Yesterday's count of jobs dropped for their client, by reason; null when none. */
+export function clientDropReport(drops) {
+  const entries = Object.entries(drops?.reasons ?? {}).filter(([, n]) => n > 0).sort((a, b) => b[1] - a[1]);
+  const total = entries.reduce((s, [, n]) => s + n, 0);
+  if (!total) return null;
+  return `🧹 Ngày ${drops.day}: bot loại ${total} job Freelancer vì khách (${entries.map(([k, n]) => `${DROP_VI[k] ?? k}: ${n}`).join(', ')}).`;
+}

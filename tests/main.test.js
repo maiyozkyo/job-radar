@@ -227,3 +227,22 @@ test('morning batch is kept when Telegram fails', async () => {
   await assert.rejects(run('poll', deps));
   assert.equal(loadState(stateDir).night.length, 1);
 });
+
+test('jobs dropped for their client are counted and reported once, on the next morning', async () => {
+  const junk = (id) => ({ ...urgent(id), client: { paymentVerified: false, depositMade: false, registeredAt: NOW, reviews: 0, rating: 0, completed: 0 } });
+  const DAY1 = Date.UTC(2026, 10, 19, 5, 0) / 1000;
+  const { deps, sent, stateDir } = setup({ jobs: [junk(1), junk(2), urgent(3)] });
+  deps.now = DAY1;
+  await run('poll', deps);
+  assert.equal(sent.length, 1, 'only the good job');
+  assert.deepEqual(loadState(stateDir).clientDrops, { day: '2026-11-19', reasons: { 'payment not verified': 2 } });
+  deps.fetchAll = async () => ({ jobs: [], errors: [], okSources: ['freelancer'] });
+  deps.now = NIGHT;
+  await run('poll', deps);
+  assert.equal(sent.length, 1, 'no report in quiet hours');
+  deps.now = MORNING;
+  await run('poll', deps);
+  assert.equal(sent[1], '🧹 Ngày 2026-11-19: bot loại 2 job Freelancer vì khách (chưa xác minh thanh toán: 2).');
+  await run('poll', deps);
+  assert.equal(sent.length, 2, 'the report goes out once');
+});

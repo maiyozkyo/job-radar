@@ -27,3 +27,10 @@ test('unknown fields are left out, not flagged', () => {
   assert.equal(summary, '👤 Khách: 4.5★ (3) · xong 3 job');
   assert.deepEqual(flags, []);
 });
+
+test('clientDropReport sums reasons in Vietnamese, null when nothing was dropped', async () => {
+  const { clientDropReport } = await import('../src/client.js');
+  assert.equal(clientDropReport({ day: '2026-11-20', reasons: { 'rated below 4': 1, 'payment not verified': 5 } }),
+    '🧹 Ngày 2026-11-20: bot loại 6 job Freelancer vì khách (chưa xác minh thanh toán: 5, bị chấm dưới 4★: 1).');
+  assert.equal(clientDropReport({ day: '2026-11-20', reasons: {} }), null);
+});

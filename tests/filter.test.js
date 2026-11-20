@@ -118,3 +118,15 @@ test('long keywords match at a word start: "excellent" is not Excel', () => {
   assert.equal(keep(fl({ title: 'Office assistant', description: 'Excellent communication skills' })), false);
   assert.equal(keep(fl({ title: 'Office assistant', description: 'Build reports in Excel' })), true);
 });
+
+test('junk clients are dropped with the reason; a new client with no history is kept', () => {
+  const NOW = 1795000000;
+  const ok = { paymentVerified: true, depositMade: true, registeredAt: NOW - 400 * 86400, reviews: 5, rating: 4.8, completed: 5 };
+  const why = (c) => filterJob(fl({ client: { ...ok, ...c } }), config, NOW).reason;
+  assert.equal(why({ paymentVerified: false }), 'client: payment not verified');
+  assert.equal(why({ depositMade: false, registeredAt: NOW - 2 * 86400 }), 'client: no deposit, new account');
+  assert.equal(why({ rating: 3.5, reviews: 4 }), 'client: rated below 4');
+  assert.equal(filterJob(fl({ client: { ...ok, depositMade: false } }), config, NOW).keep, true, 'no deposit on an old account stays');
+  assert.equal(filterJob(fl({ client: { ...ok, reviews: 0, completed: 0, rating: 0, registeredAt: NOW - 86400 } }), config, NOW).keep, true, 'new verified client stays');
+  assert.equal(keep(fl()), true, 'no record, no drop');
+});

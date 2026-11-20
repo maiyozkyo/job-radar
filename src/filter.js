@@ -1,4 +1,5 @@
 import { riskFlags } from './risk.js';
+import { clientDrop } from './client.js';
 
 const escape = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
@@ -20,7 +21,7 @@ const FLEXIBLE = /contract|part[\s-]?time|freelance/i;
  * @param {import('./job.js').Config} config
  * @returns {{ keep: boolean, reason: string }}
  */
-export function filterJob(job, config) {
+export function filterJob(job, config, now = Date.now() / 1000) {
   const text = `${job.title}\n${job.description}\n${job.tags.join(' ')}`.toLowerCase();
   const drop = (reason) => ({ keep: false, reason });
 
@@ -41,6 +42,8 @@ ${job.tags.join(' ')}`.toLowerCase(), config.blockKeywords)
     if (job.budgetType === 'hourly' && job.budgetMaxUsd < config.minHourlyUsd) return drop('hourly below floor');
     if (job.budgetType !== 'hourly' && job.budgetMaxUsd < config.minFixedUsd) return drop('budget below floor');
     if (job.bidCount != null && job.bidCount > config.maxBidCount) return drop('too many bids');
+    const junk = job.client ? clientDrop(job.client, now) : null;
+    if (junk) return drop(`client: ${junk}`);
   }
 
   if (BOARDS.has(job.source)) {
