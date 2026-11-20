@@ -909,3 +909,9 @@
 2026-11-20T08:30Z run poll fresh=3 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2, block keyword=1
 2026-11-20T08:34Z score 2 - freelancer:40827407 | Official Letter & Document Drafting | https://www.freelancer.com/projects/administrative-support/Official-Letter-Document-Drafting
 2026-11-20T08:34Z run poll fresh=5 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=4
+2026-11-20T08:37Z score 1 - jobicy:153612 | Superside: Conceptual Copywriter | https://jobicy.com/jobs/153612-conceptual-copywriter
+2026-11-20T08:37Z score 1 - jobicy:151032 | Superside: Account Director | https://jobicy.com/jobs/151032-account-director
+2026-11-20T08:37Z score 3 - remoteok:1137808 | Askable: Software Engineer AI Coding Tasks | https://remoteOK.com/remote-jobs/remote-software-engineer-ai-coding-tasks-askable-1137808
+2026-11-20T08:37Z score 1 - wwr:https://weworkremotely.com/remote-jobs/zoominfo-technologies-llc-principal-product-management-growth | ZoomInfo Technologies LLC: Principal Product Management, Growth | https://weworkremotely.com/remote-jobs/zoominfo-technologies-llc-principal-product-management-growth
+2026-11-20T08:37Z score 1 - wwr:https://weworkremotely.com/remote-jobs/oportun-senior-ml-engineer-r14284 | Oportun: Senior ML Engineer (R14284) | https://weworkremotely.com/remote-jobs/oportun-senior-ml-engineer-r14284
+2026-11-20T08:37Z run digest pending=5 alerts=0 sent=0
