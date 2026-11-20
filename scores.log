@@ -886,3 +886,5 @@
 2026-11-20T07:30Z run poll fresh=60 kept=5 night=0 scored=3 unscored=0 alerts=0 sent=0 dropped: location=30, no stack keyword=16, block keyword=9
 2026-11-20T07:30Z run poll fresh=0 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0
 2026-11-20T07:31Z run poll fresh=0 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0
+2026-11-20T07:33Z score 1 - freelancer:40827331 | 20k Detailed NSFW Image Annotations -- 2 | https://www.freelancer.com/projects/data-entry/Detailed-NSFW-Image-Annotations
+2026-11-20T07:33Z run poll fresh=2 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1
