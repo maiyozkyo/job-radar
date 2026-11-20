@@ -1025,3 +1025,4 @@
 2026-11-20T13:25Z run poll fresh=7 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=5, block keyword=1
 2026-11-20T13:30Z score 1 - freelancer:40827726 | Modern Fashion Jewelry Design Set | https://www.freelancer.com/projects/product-design/Modern-Fashion-Jewelry-Design-Set
 2026-11-20T13:30Z run poll fresh=5 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2, block keyword=1, budget below floor=1
+2026-11-20T13:30Z run poll fresh=51 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: location=26, block keyword=18, no stack keyword=6, full-time only=1
