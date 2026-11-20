@@ -895,3 +895,5 @@
 2026-11-20T07:45Z run poll fresh=2 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2
 2026-11-20T07:49Z score 3 - freelancer:40827344 | Content Writing task experience and Beginners level  | https://www.freelancer.com/projects/blog-writing/Content-Writing-task-experience-40827344
 2026-11-20T07:49Z run poll fresh=1 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0
+2026-11-20T07:53Z score 3 - freelancer:40827349 | PDF-to-Word Conversion college student | https://www.freelancer.com/projects/microsoft-word/PDF-Word-Conversion-college-student
+2026-11-20T07:53Z run poll fresh=2 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: too many bids=1
