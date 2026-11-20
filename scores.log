@@ -1092,3 +1092,4 @@
 2026-11-20T20:27Z run digest pending=5 alerts=0 sent=0
 2026-11-20T20:30Z run poll quiet fresh=8 kept=0 night=7 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=4, block keyword=3, location=1
 2026-11-20T20:45Z run poll quiet fresh=4 kept=0 night=7 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=4
+2026-11-20T20:49Z run poll quiet fresh=3 kept=1 night=8 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1, location=1
