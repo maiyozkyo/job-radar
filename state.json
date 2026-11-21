@@ -5986,46 +5986,7 @@
   "freelancer:40828309": 1795223733,
   "remoteok:1137870": 1795223733
  },
- "pending": [
-  {
-   "url": "https://remoteOK.com/remote-jobs/remote-senior-product-engineer-arbor-education-1137865",
-   "title": "Arbor Education: Senior Product Engineer",
-   "description": "Location: Remote - UK\nSalary: Â£70,000-80,000\nAbout us\nAt Arbor, weâre on a mission to transform the way schools work for the better.Â \nWe believe in a future of work in schools where being challenged doesnât mean being burnt out and overworked. Where data guides progress without overwhelming staff. And where everyone working in a school is reminded why they got into education every day.Â \nOur MIS and school management tools are already making a difference in over 7,000 schools and trusts. Giving time and power back to staff, turning data into clear, actionable insights, and supporting happier working days.Â \nAt the heart of our brand is a recognition that the challenges schools face today arenât just about efficiency, outputs and productivity - but about creating happier working lives for the people who drive education everyday: the staff. We want to make schools more joyful places to work, as well as learn.Â About the role\nWe are looking for an experienced and driven Senior Product Engineer to join our Engineering team and help lead and drive the successful completion of high-impact features, specifically contributing to the advancement of Arbor products. The remit and focus of the role is to contribute towards the development of the companies core systems and processes, as well as implement strategies to enhance and optimise product quality and lead time across the entire team. Itâs a broad and exciting role, so weâre looking for someone up for a challenge - if youâre a collaborative and enthusiastic Engineer, this is the role for you.\nCore responsibilities\nWork closely with the Engineering Manager, Tech Lead, QA Engineer, and Product Manager to help solutionise feature requests\nMaintain software that ties together internal systems\nBuild software to centralise add-on purchases for the Arbor Platform\nLead the creation of detailed documentation for new feature developments, incorporating diagrams for comprehensive project understanding.\nDrive the development and implementation of advanced tests around new features, ensuring the highest standards of test coverage and reliability.\nDemonstrate expertise in producing well-architected, efficient, and scalable code using industry-leading design patterns and methodologies.\nTake a leadership role in code reviews and pair programming sessions, guiding and mentoring colleagues towards excellence.\nLead and actively participate in tech-talks, workshops, and team-based learning initiatives, ensuring knowledge is disseminated effectively across the team.\nAbout you\nExtensive and demonstrated experience with Object-Oriented languages and software development.\nConsiderable experience in software development, specifically with PHP\nDemonstrable experience building back-end services in PHP\nSignificant experience working with third-party systems and APIs\nAdvanced understanding and application of best practices and software engineering principles, including SOLID, DRY, etc.\nSignificant database skills and expertise in relational database technologies.\nProactive problem-solving approach with a strategic mindset.\nLeadership qualities demonstrated through collaboration and mentorship.\nA team player, willing to muck in and help others when needed, driven personality who asks questions and actively participates in discussions\nGood written and spoken English so you can present your ideas - our HQ is based in London\nBonus skills\nPast experience with enterprise solutions and large-scale systems\nExperience with React (or experience with Vue and willingness to learn React)\nFamiliarity with Scrum methodology or other agile development processes\nExperience with cloud computing\nExperience with Docker and containerisation\nFamiliarity with software best practices such as Refactoring, Clean Code, Domain-Driven Design, Test-Driven Development, etc.\nWhat we offer\nThe chance to work alongside a team of hard-working, passionate people in a role where youâll see the impact of your work everyday. We also offer:\nA dedicated wellbeing team who champion initiatives such as mindfulness, lunch n learns, manager training, mental health first aid training and much more!\n30 days holiday (plus Bank Holidays). This is made up of 25 days annual leave plus 5 extra company wide days given over Easter, Summer & Christmas\nLife Assurance paid out at 3x annual salary\nComprehensive wellness benefit provided by AIG Smart Health, which provides a 24/7 virtual GP service, Mental health support, Counselling, and personalised Health ChecksÂ \nPrivate Dental Insurance with BupaÂ \nSalary sacrifice Pension provided by Scottish Widows\nEnhanced maternity and adoption leave (20 weeks full pay) and paternity (6 weeks full pay) pay\n5 free return to work maternity coaching sessions, helping you adapt to this new exciting time of life!\nAccess to services such as Calm and Bippit (financial wellbeing coaching)Â \nAll of our roles champion flexible working and we are happy to discuss what this means to you\nSocial committees that plan team, office and company wide events to bring people together and celebrate success\nDedicated professional development training budget (CPD courses, upskilling resources, professional memberships etc)\nVolunteer with a charity of your choice for a day each year\nDog friendly offices!\nInterview process\nPhone screen\n1st stage\n2nd stage\nWe are committed to a fair and comfortable recruitment process, so if you require any reasonable adjustments during your application or interview process, please reach out to a member of the team at careers@arbor-education.com.\nOur commitment is also backed by our partnership with Neurodiversity Consultancy, Lexxic who provide us with training, support and advice.Â \nPlease mention the word **CONTRIBUTION** and tag RNTIuMTQxLjY1LjIxNA== when applying to show you read the job post completely (#RNTIuMTQxLjY1LjIxNA==). This is a beta feature to avoid spam applicants. Companies can search these words to find applicants that read this and see they're human.",
-   "budgetType": "salary",
-   "budgetMinUsd": 70000,
-   "budgetMaxUsd": 80000,
-   "bidCount": null,
-   "location": null,
-   "employmentType": null,
-   "postedAt": 1795132847,
-   "tags": [
-    "design",
-    "react",
-    "backend",
-    "education",
-    "consulting",
-    "docker",
-    "customer support",
-    "dev",
-    "testing",
-    "scrum",
-    "exec",
-    "quality assurance",
-    "finance",
-    "cloud",
-    "php",
-    "senior",
-    "sys admin",
-    "medical",
-    "engineer",
-    "recruiter",
-    "digital nomad"
-   ],
-   "source": "remoteok",
-   "id": "1137865",
-   "key": "remoteok:1137865"
-  }
- ],
+ "pending": [],
  "night": [],
  "clientDrops": {
   "day": "2026-11-21",
