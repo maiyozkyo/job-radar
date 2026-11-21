@@ -1125,3 +1125,5 @@
 2026-11-21T01:16Z run digest pending=1 alerts=0 sent=0
 2026-11-21T01:20Z score 4 - freelancer:40828319 | FreeTCF Practice Tests GitHub Transfer | https://www.freelancer.com/projects/github/FreeTCF-Practice-Tests-GitHub-Transfer
 2026-11-21T01:20Z run poll fresh=2 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1
+2026-11-21T01:25Z score 2 - freelancer:40828322 | Targeted Online Survey Outreach | https://www.freelancer.com/projects/data-collection/Targeted-Online-Survey-Outreach
+2026-11-21T01:25Z run poll fresh=3 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: too many bids=1, block keyword=1
