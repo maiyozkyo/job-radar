@@ -1270,3 +1270,6 @@
 2026-11-21T19:08Z run poll quiet fresh=2 kept=1 night=4 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1
 2026-11-21T19:15Z run poll quiet fresh=23 kept=0 night=4 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=8, location=8, block keyword=6, client=1
 2026-11-21T19:18Z run poll quiet fresh=2 kept=1 night=5 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=1
+2026-11-21T19:21Z score 1 - himalayas:https://himalayas.app/companies/welo-global/jobs/english-to-belarusian-review-lead-for-ui-marketing-product-content | Welo Global: English to Belarusian Review Lead for UI, Marketing & Product Conte | https://himalayas.app/companies/welo-global/jobs/english-to-belarusian-review-lead-for-ui-marketing-product-content?utm_source=api
+2026-11-21T19:21Z score 2 - wwr:https://weworkremotely.com/remote-jobs/a-team-senior-independent-ai-engineer-architect | A.Team: Senior Independent AI Engineer / Architect | https://weworkremotely.com/remote-jobs/a-team-senior-independent-ai-engineer-architect
+2026-11-21T19:21Z run digest pending=2 alerts=0 sent=0
