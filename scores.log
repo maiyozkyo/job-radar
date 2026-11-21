@@ -1213,3 +1213,4 @@
 2026-11-21T12:15Z run poll fresh=1 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1
 2026-11-21T12:16Z score 1 - remoteok:1137912 | iFIT: Senior Manager, Product Analytics (Growth) | https://remoteOK.com/remote-jobs/remote-senior-manager-product-analytics-growth-ifit-1137912
 2026-11-21T12:16Z run digest pending=1 alerts=0 sent=0
+2026-11-21T12:30Z run poll fresh=8 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=4, too many bids=2, block keyword=1, client=1
