@@ -1221,3 +1221,4 @@
 2026-11-21T12:54Z run poll fresh=2 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=1
 2026-11-21T13:00Z run poll fresh=2 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: client=1, no stack keyword=1
 2026-11-21T13:15Z run poll fresh=25 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: location=15, no stack keyword=6, block keyword=3, too many bids=1
+2026-11-21T13:30Z run poll fresh=4 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: too many bids=1, no stack keyword=1, risk=1, block keyword=1
