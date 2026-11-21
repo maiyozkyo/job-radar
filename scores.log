@@ -1267,3 +1267,4 @@
 2026-11-21T18:45Z run poll quiet fresh=4 kept=0 night=3 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=2, no stack keyword=2
 2026-11-21T19:00Z run poll quiet fresh=7 kept=1 night=3 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=3, block keyword=2, location=1
 2026-11-21T19:05Z run poll quiet fresh=0 kept=0 night=3 scored=0 unscored=0 alerts=0 sent=0
+2026-11-21T19:08Z run poll quiet fresh=2 kept=1 night=4 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1
