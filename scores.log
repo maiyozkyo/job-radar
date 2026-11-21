@@ -1179,3 +1179,4 @@
 2026-11-21T08:20Z score 1 - wwr:https://weworkremotely.com/remote-jobs/welcomehome-software-senior-software-engineer | WelcomeHome Software: Senior Software Engineer | https://weworkremotely.com/remote-jobs/welcomehome-software-senior-software-engineer
 2026-11-21T08:20Z run digest pending=5 alerts=0 sent=0
 2026-11-21T08:30Z run poll fresh=10 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=3, hourly below floor=2, client=2, no stack keyword=1, budget below floor=1, location=1
+2026-11-21T08:45Z run poll fresh=10 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=6, client=2, too many bids=1, location=1
