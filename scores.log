@@ -1211,3 +1211,5 @@
 2026-11-21T12:11Z score 4 - freelancer:40828871 | PDF Translation With Layout Integrity | https://www.freelancer.com/projects/data-entry/PDF-Translation-With-Layout-Integrity
 2026-11-21T12:11Z run poll fresh=5 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: budget below floor=1, client=1, block keyword=1, no stack keyword=1
 2026-11-21T12:15Z run poll fresh=1 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1
+2026-11-21T12:16Z score 1 - remoteok:1137912 | iFIT: Senior Manager, Product Analytics (Growth) | https://remoteOK.com/remote-jobs/remote-senior-manager-product-analytics-growth-ifit-1137912
+2026-11-21T12:16Z run digest pending=1 alerts=0 sent=0
