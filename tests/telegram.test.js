@@ -239,3 +239,20 @@ test('sendMessage retries once after a 504 or a hung request, then gives up', as
   await assert.rejects(sendMessage('hi', env, async () => { n++; return { ok: false, status: 504, text: async () => 'Gateway Timeout' }; }, async () => {}), /HTTP 504/);
   assert.equal(n, 2, 'only one retry');
 });
+
+test('alerts show what the client needs between budget and score; the digest does not', () => {
+  const s = { ...scored, summaryVi: ['Sửa <chart>', 'Xong trong 48h'] };
+  for (const text of [formatAlert(job, s), formatAlertHtml(job, s).plain]) {
+    assert.match(text, /💰[^\n]*\n📋 Khách cần:\n• Sửa <chart>\n• Xong trong 48h\n⭐/);
+  }
+  assert.match(formatAlertHtml(job, s).text, /📋 Khách cần:\n• Sửa &lt;chart&gt;\n• Xong trong 48h/);
+  assert.doesNotMatch(formatAlert(job, { ...scored, summaryVi: [] }), /Khách cần/);
+  assert.doesNotMatch(formatDigest([{ job, scored: s }]), /Khách cần/);
+});
+
+test('a summary that would make the alert too long is left out, so buttons and the copy block stay', () => {
+  const proposalEn = 'p'.repeat(3100);
+  const m = formatAlertHtml(job, { ...scored, proposalEn, summaryVi: Array(3).fill('y'.repeat(110)) });
+  assert.doesNotMatch(m.text, /Khách cần/);
+  assert.match(m.text, /<pre>p+<\/pre>/);
+});

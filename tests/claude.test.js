@@ -139,3 +139,18 @@ test('an Opus failure keeps the first drafts; no redraftMin means no extra call'
   await scoreJobs(jobs, { draftMin: 7 }, run);
   assert.equal(n, 1);
 });
+
+test('summaryVi: at most 3 short clean lines; anything else is empty', async () => {
+  const out = await scoreJobs(jobs, { draftMin: 7 }, reply([
+    { ...good[1], summaryVi: ['Dựng store\ntheme free', 'Xem https://evil.example/x, mail bob@evil.example', ' ', 'x'.repeat(300), 'dòng thừa'] },
+    { ...good[0], summaryVi: 'không phải mảng' },
+  ]));
+  assert.deepEqual(out[0].summaryVi, ['Dựng store theme free', 'Xem [link bị xóa], mail [email bị xóa]', 'x'.repeat(110)]);
+  assert.deepEqual(out[1].summaryVi, []);
+});
+
+test('the scoring prompt asks for summaryVi', async () => {
+  let prompt = '';
+  await scoreJobs(jobs, { draftMin: 7 }, async (p) => { prompt = p; return JSON.stringify(good); });
+  assert.match(prompt, /`summaryVi`/);
+});
