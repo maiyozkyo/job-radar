@@ -1324,3 +1324,4 @@
 2026-11-22T03:15Z run poll fresh=0 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0
 2026-11-22T03:30Z run poll fresh=2 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1, location=1
 2026-11-22T03:45Z run poll fresh=27 kept=1 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: location=11, no stack keyword=9, block keyword=4, client=1, risk=1
+2026-11-22T04:00Z run poll fresh=7 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=4, location=2, block keyword=1
