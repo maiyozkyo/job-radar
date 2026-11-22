@@ -1421,3 +1421,5 @@
 2026-11-22T15:45Z run poll fresh=1 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1
 2026-11-22T16:00Z run poll fresh=5 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2, block keyword=2, budget below floor=1
 2026-11-22T16:15Z run poll fresh=5 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=4, block keyword=1
+2026-11-22T16:17Z score 1 - freelancer:40830374 | Toronto Laneway Permit Drawings | https://www.freelancer.com/projects/autocad/Toronto-Laneway-Permit-Drawings
+2026-11-22T16:17Z run poll fresh=23 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: location=10, no stack keyword=6, block keyword=5, risk=1
