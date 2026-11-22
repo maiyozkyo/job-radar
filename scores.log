@@ -1370,3 +1370,5 @@
 2026-11-22T10:15Z run poll fresh=3 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2, block keyword=1
 2026-11-22T10:17Z score 1 - freelancer:40830012 | International AI Collaboration Opportunity | potentially earn $1,000 per month. | https://www.freelancer.com/projects/ai-automation/International-Collaboration-Opportunity
 2026-11-22T10:17Z run poll fresh=1 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0
+2026-11-22T10:26Z score 1 - freelancer:40830017 | DataAnnotation Account Partnership Opportunity |  potentially earn more than $1, | https://www.freelancer.com/projects/data-annotation/DataAnnotation-Account-Partnership
+2026-11-22T10:26Z run poll fresh=6 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: client=2, no stack keyword=2, location=1
