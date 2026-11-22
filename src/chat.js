@@ -2,6 +2,7 @@
 // either says it is a job post (scored as usual) or answers it as chat.
 import { readFileSync } from 'node:fs';
 import { defaultRunClaude } from './claude.js';
+import { readProfile } from './profile.js';
 
 const JOB = '[[JOB]]';
 const read = (rel) => readFileSync(new URL(`../${rel}`, import.meta.url), 'utf8');
@@ -9,7 +10,7 @@ const read = (rel) => readFileSync(new URL(`../${rel}`, import.meta.url), 'utf8'
 export function chatPrompt(text) {
   // Function replacers: a `$&` in the user's text must stay as typed.
   return read('prompts/chat.md')
-    .replace('{{PROFILE}}', () => read('profile.md'))
+    .replace('{{PROFILE}}', readProfile)
     .replace('{{MESSAGE}}', () => text);
 }
 

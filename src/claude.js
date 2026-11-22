@@ -1,6 +1,7 @@
 import { spawn } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { netUsd, splitMilestones, suggestBid } from './fees.js';
+import { readProfile } from './profile.js';
 
 /**
  * `hours` is Claude's effort estimate; `bid` is computed from it (see fees.js).
@@ -32,7 +33,7 @@ function buildPrompt(jobs, draftMin) {
   return read('prompts/score.md')
     .replaceAll('{{DRAFT_RULE}}', `score >= ${draftMin}`)
     // Function replacers: a `$&` in job text must stay as typed.
-    .replace('{{PROFILE}}', () => read('profile.md'))
+    .replace('{{PROFILE}}', readProfile)
     .replace('{{JOBS}}', () => JSON.stringify(data, null, 1));
 }
 
@@ -176,7 +177,7 @@ export async function redraft(jobs, scored, redraftMin, runClaude = defaultRunCl
     key: job.key, source: job.source, title: job.title, description: job.description.slice(0, MAX_DESCRIPTION),
     budgetType: job.budgetType, budgetMinUsd: job.budgetMinUsd, budgetMaxUsd: job.budgetMaxUsd, tags: job.tags, draft: s.proposalEn,
   }));
-  const prompt = read('prompts/redraft.md').replace('{{PROFILE}}', () => read('profile.md')).replace('{{JOBS}}', () => JSON.stringify(data, null, 1));
+  const prompt = read('prompts/redraft.md').replace('{{PROFILE}}', readProfile).replace('{{JOBS}}', () => JSON.stringify(data, null, 1));
   let byKey;
   try {
     byKey = new Map(parseArray(await runClaude(prompt, { model: 'opus' })).map((r) => [r?.key, r?.proposalEn]));

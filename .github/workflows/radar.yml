@@ -69,6 +69,14 @@ jobs:
           npm i -g @anthropic-ai/claude-code@2.1.325
           claude --version
 
+      # Not in the repo, which is public.
+      - name: Write profile
+        env:
+          PROFILE_MD: ${{ secrets.PROFILE_MD }}
+        run: |
+          [ -n "$PROFILE_MD" ] || { echo "missing PROFILE_MD"; exit 1; }
+          printf '%s\n' "$PROFILE_MD" > profile.md
+
       - name: Run ${{ env.MODE }}
         run: npm run "$MODE"
         env:

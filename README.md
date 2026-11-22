@@ -36,7 +36,7 @@ It looks for install-time npm scripts, VS Code tasks that run on folder open, ob
 
 ## Tuning
 
-Edit `config.json`: search terms, stack and block keywords, budget floors, bid limit, score thresholds, allowed locations. `profile.md` is what Claude may cite in proposals; `prompts/score.md` is the scoring prompt.
+Edit `config.json`: search terms, stack and block keywords, budget floors, bid limit, score thresholds, allowed locations. `profile.md` (not in git; start from `profile.example.md`, then `gh secret set PROFILE_MD < profile.md` after each edit) is what Claude may cite in proposals; `prompts/score.md` is the scoring prompt.
 
 ## Setup
 
@@ -44,6 +44,7 @@ Actions secrets:
 
 | Secret | From |
 |---|---|
+| `PROFILE_MD` | `gh secret set PROFILE_MD < profile.md` |
 | `TELEGRAM_BOT_TOKEN` | @BotFather |
 | `TELEGRAM_CHAT_ID` | `https://api.telegram.org/bot<token>/getUpdates` after messaging the bot |
 | `CLAUDE_CODE_OAUTH_TOKEN` | `claude setup-token` |
