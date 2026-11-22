@@ -1345,3 +1345,7 @@
 2026-11-22T07:42Z run poll fresh=9 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=4, too many bids=2, client=1, block keyword=1
 2026-11-22T07:45Z run poll fresh=6 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=3, hourly below floor=2, block keyword=1
 2026-11-22T08:00Z run poll fresh=56 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 errors=wwr: The operation was aborted due to timeout dropped: location=26, block keyword=15, no stack keyword=13, hourly below floor=1, full-time only=1
+2026-11-22T08:03Z score 4 - himalayas:https://himalayas.app/companies/elvoro/jobs/ai-app-developer-chatgpt-claude-grok-connectors-elvoro-ltd | Elvoro: AI App Developer (ChatGPT, Claude & Grok Connectors) – Elvoro Ltd | https://himalayas.app/companies/elvoro/jobs/ai-app-developer-chatgpt-claude-grok-connectors-elvoro-ltd?utm_source=api
+2026-11-22T08:03Z score 2 - himalayas:https://himalayas.app/companies/clera/jobs/freelance-engineer | Clera: Freelance Engineer | https://himalayas.app/companies/clera/jobs/freelance-engineer?utm_source=api
+2026-11-22T08:03Z score 1 - remoteok:1137930 | Carrot: Sr. Security Operations Manager | https://remoteOK.com/remote-jobs/remote-sr-security-operations-manager-carrot-1137930
+2026-11-22T08:03Z run digest pending=3 alerts=0 sent=0
