@@ -154,3 +154,12 @@ test('the scoring prompt asks for summaryVi', async () => {
   await scoreJobs(jobs, { draftMin: 7 }, async (p) => { prompt = p; return JSON.stringify(good); });
   assert.match(prompt, /`summaryVi`/);
 });
+
+test('dollar signs in job text reach the prompt as typed', async () => {
+  let prompt = '';
+  const description = "Budget $150, pattern $& and $' and $` end";
+  const job = makeJob({ source: 'freelancer', id: 9, title: 'Regex fix', description });
+  await scoreJobs([job], { draftMin: 7 }, async (p) => { prompt = p; return JSON.stringify([{ key: job.key, score: 5 }]); });
+  assert.ok(prompt.includes(JSON.stringify(description)));
+  assert.doesNotMatch(prompt, /\{\{JOBS\}\}/);
+});

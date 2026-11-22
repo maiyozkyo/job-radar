@@ -31,8 +31,9 @@ function buildPrompt(jobs, draftMin) {
   }));
   return read('prompts/score.md')
     .replaceAll('{{DRAFT_RULE}}', `score >= ${draftMin}`)
-    .replace('{{PROFILE}}', read('profile.md'))
-    .replace('{{JOBS}}', JSON.stringify(data, null, 1));
+    // Function replacers: a `$&` in job text must stay as typed.
+    .replace('{{PROFILE}}', () => read('profile.md'))
+    .replace('{{JOBS}}', () => JSON.stringify(data, null, 1));
 }
 
 // Job text is untrusted. If a post smuggles instructions that make Claude put
