@@ -1,7 +1,10 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { fileURLToPath } from 'node:url';
 import { scoreJobs, ClaudeOutputError } from '../src/claude.js';
 import { makeJob } from '../src/job.js';
+
+process.env.PROFILE_FILE = fileURLToPath(new URL('../profile.example.md', import.meta.url));
 
 const jobs = [
   makeJob({ source: 'freelancer', id: 1, title: 'Angular fix', description: 'x'.repeat(5000), budgetType: 'fixed', budgetMaxUsd: 50 }),
@@ -41,7 +44,7 @@ test('runner failure propagates', async () => {
 test('prompt holds the profile, every key, the threshold, and trimmed descriptions', async () => {
   let prompt = '';
   await scoreJobs(jobs, { draftMin: 7 }, async (p) => { prompt = p; return JSON.stringify(good); });
-  assert.match(prompt, /ShopTemplate/);
+  assert.match(prompt, /ExampleShop/);
   assert.match(prompt, /freelancer:1/);
   assert.match(prompt, /hn:2/);
   assert.match(prompt, /score >= 7/);

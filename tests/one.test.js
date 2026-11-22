@@ -1,7 +1,10 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { fileURLToPath } from 'node:url';
 import { alertOne, projectApiUrl } from '../src/one.js';
 import { chatOrJob, chatPrompt } from '../src/chat.js';
+
+process.env.PROFILE_FILE = fileURLToPath(new URL('../profile.example.md', import.meta.url));
 
 test('project links and ids become API URLs; other input is refused', () => {
   assert.match(projectApiUrl('https://www.freelancer.com/projects/microsoft-word/PDF-Word-Conversion-40822297?frm=x&sb=t'),
