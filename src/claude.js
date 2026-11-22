@@ -5,7 +5,7 @@ import { netUsd, splitMilestones, suggestBid } from './fees.js';
 /**
  * `hours` is Claude's effort estimate; `bid` is computed from it (see fees.js).
  * `milestones` splits the bid over Claude's milestone names (fixed-price bids only).
- * @typedef {{ key: string, score: number, reasonVi: string, proposalEn: string|null, hours: number|null, bid: ReturnType<typeof suggestBid>, milestones: ReturnType<typeof splitMilestones> }} Scored
+ * @typedef {{ key: string, score: number, reasonVi: string, summaryVi: string[], proposalEn: string|null, hours: number|null, bid: ReturnType<typeof suggestBid>, milestones: ReturnType<typeof splitMilestones> }} Scored
  */
 
 export class ClaudeOutputError extends Error {}
@@ -30,7 +30,7 @@ function buildPrompt(jobs, draftMin) {
     client: j.client ?? null,
   }));
   return read('prompts/score.md')
-    .replace('{{DRAFT_RULE}}', `score >= ${draftMin}`)
+    .replaceAll('{{DRAFT_RULE}}', `score >= ${draftMin}`)
     .replace('{{PROFILE}}', read('profile.md'))
     .replace('{{JOBS}}', JSON.stringify(data, null, 1));
 }
@@ -78,6 +78,18 @@ function milestoneNames(raw) {
     .filter(Boolean);
 }
 
+const MAX_SUMMARY_LINES = 3;
+const MAX_SUMMARY_CHARS = 110;
+
+/** What the client asks for: a few short lines, cleaned like proposals since job text is untrusted. */
+function summaryLines(raw) {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .map((l) => sanitizeProposal(String(l ?? '')).replace(/\s+/g, ' ').trim().slice(0, MAX_SUMMARY_CHARS))
+    .filter(Boolean)
+    .slice(0, MAX_SUMMARY_LINES);
+}
+
 /** A job Claude skipped comes back as null, so one gap does not sink the batch. */
 function parseScores(output, jobs, bidOpts) {
   const arr = parseArray(output);
@@ -92,7 +104,7 @@ function parseScores(output, jobs, bidOpts) {
     const hours = Number.isFinite(h) && h > 0 && h <= 500 ? h : null;
     const bid = suggestBid(job, hours, bidOpts);
     return {
-      key: job.key, score, reasonVi: String(s.reasonVi ?? ''),
+      key: job.key, score, reasonVi: String(s.reasonVi ?? ''), summaryVi: summaryLines(s.summaryVi),
       proposalEn: s.proposalEn ? sanitizeProposal(String(s.proposalEn)) : null,
       hours, bid, milestones: splitMilestones(bid, milestoneNames(s.milestonesEn)),
     };

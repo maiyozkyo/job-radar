@@ -93,11 +93,19 @@ function riskLines(job) {
 /** Freelancer: who the client is, and red flags with reasons. */
 const clientBlock = (job, now) => (job.source === 'freelancer' && job.client ? clientLines(job.client, now).join('\n') : null);
 
-function jobBlock(job, scored, now) {
+const summaryBlock = (scored) => (scored?.summaryVi?.length
+  ? ['📋 Khách cần:', ...scored.summaryVi.map((l) => `• ${l}`)].join('\n')
+  : null);
+
+// The desk puts its own header above an alert; leave room for it.
+const HEADER_ROOM = 700;
+
+function jobBlock(job, scored, now, summary = null) {
   return [
     `[${job.source}] ${job.title}`,
     budgetLine(job),
     competitionLine(job, now),
+    summary,
     scored ? `⭐ ${scored.score}/10 – ${scored.reasonVi}` : null,
     bidLines(job, scored?.bid),
     clientBlock(job, now),
@@ -109,7 +117,7 @@ function jobBlock(job, scored, now) {
 
 /** One job alert, plain text. */
 export function formatAlert(job, scored, warning, now) {
-  return [jobBlock(job, scored, now), warning ? `\n⚠️ ${warning}` : null].filter(Boolean).join('\n');
+  return [jobBlock(job, scored, now, summaryBlock(scored)), warning ? `\n⚠️ ${warning}` : null].filter(Boolean).join('\n');
 }
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -123,10 +131,12 @@ const plainAmount = (n) => (Number.isInteger(n) ? String(n) : n.toFixed(2));
  * @returns {{ text: string, html: true, plain: string, buttons: object[][] }}
  */
 export function formatAlertHtml(job, scored, warning, now) {
+  const summary = summaryBlock(scored);
   const head = [
     `[${job.source}] ${job.title}`,
     budgetLine(job),
     competitionLine(job, now),
+    summary,
     scored ? `⭐ ${scored.score}/10 – ${scored.reasonVi}` : null,
     bidLines(job, scored?.bid),
     clientBlock(job, now),
@@ -149,6 +159,8 @@ export function formatAlertHtml(job, scored, warning, now) {
     scored?.proposalEn ? `\n✍️ Proposal${scored.redrafted ? ' (Opus viết lại)' : ''} (bấm vào khung để copy):\n<pre>${esc(scored.proposalEn)}</pre>` : null,
     warning ? `\n⚠️ ${esc(warning)}` : null,
   ].filter(Boolean).join('\n');
+  // Too long would be sent as plain text, losing buttons and the copy block: the summary goes first.
+  if (summary && text.length > LIMIT - HEADER_ROOM) return formatAlertHtml(job, { ...scored, summaryVi: [] }, warning, now);
   // One-tap bid: the Worker places exactly this bid, with the proposal from
   // the <pre> block, only when the user taps ✅. Escrow.com projects refuse
   // API bids without a linked Escrow.com account, so they get no ✅.
