@@ -1447,3 +1447,4 @@
 2026-11-22T19:37Z run poll quiet fresh=4 kept=1 night=5 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2, block keyword=1
 2026-11-22T19:45Z run digest pending=0 sent=0
 2026-11-22T19:45Z run poll quiet fresh=6 kept=0 night=5 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=3, no stack keyword=2, too many bids=1
+2026-11-22T20:00Z run poll quiet fresh=5 kept=0 night=5 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=3, too many bids=1, no stack keyword=1
