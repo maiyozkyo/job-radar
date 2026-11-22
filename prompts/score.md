@@ -29,7 +29,12 @@ Return **only** a JSON array, one object per input job, same keys:
 ```
 
 - `score`: integer 1–10.
-- `hours`: your honest estimate of the freelancer's total hours for the job (work, testing, client messages, revisions), as a number; `null` when the scope is too vague to estimate. The bid amount is computed from it, so do not put prices in the proposal.
+- `hours`: the freelancer's hands-on hours for the whole job, as a number; `null` when the scope is too vague to estimate. The bid amount is computed from it, so do not put prices in the proposal. The freelancer works with AI coding tools and scripts, so do not use manual agency timings. Estimate like this before you score:
+  1. Split the post into its deliverables.
+  2. For each, subtract what already exists: what the platform, theme, app or library gives out of the box (pages, checkout, responsive layout, admin settings), and what one import or script does for many items at once. Configuring something built in takes minutes, and a long bullet list of such settings is still a small job.
+  3. Count what is left: code or configuration to produce, content to create when the post does not say the client supplies it, and human review, which still grows with volume when every item must be checked.
+  4. Add testing, client messages and the revisions the post asks for: about an hour in total on a small job, more on a big one.
+  Give the normal case, not the worst case: assume the client hands over the materials and access the post implies, in usable form. Do not shrink what is really big: custom features, third-party integrations, unfamiliar code to read, and work with no shortcut keep their full hours.
 - `milestonesEn`: only with a `proposalEn` for a fixed-price job; otherwise `null`. Payment milestones in delivery order, each one line of English (≤ 90 characters) naming a concrete deliverable the client can check, e.g. "Working demo on your test inbox". Use one milestone when the job is about 8 hours or less, two otherwise. No prices: the amounts are computed from the bid.
 - `reasonVi`: one short line in Vietnamese (≤ 15 words) saying why.
 - `summaryVi`: only when {{DRAFT_RULE}}; otherwise `[]`. What the client asks for, as 1–3 lines of Vietnamese (each ≤ 100 characters; keep technical terms in English): the deliverables with their quantities, then the must-have requirements and any deadline. Only what the post says: no opinion, no budget (shown separately), no links or contact details.
