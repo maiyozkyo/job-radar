@@ -1363,3 +1363,5 @@
 2026-11-22T09:15Z run poll fresh=1 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1
 2026-11-22T09:30Z run poll fresh=33 kept=1 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: location=14, no stack keyword=9, block keyword=5, client=3, budget below floor=1
 2026-11-22T09:45Z run poll fresh=6 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2, budget below floor=1, block keyword=1, location=1, risk=1
+2026-11-22T09:48Z score 2 - freelancer:40829969 | GenAI Mobile app and backend developers | https://www.freelancer.com/projects/ai-app-development/GenAI-Mobile-app-backend-developers
+2026-11-22T09:48Z run poll fresh=2 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=1
