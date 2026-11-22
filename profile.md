@@ -12,7 +12,7 @@ Never name the current employer in a proposal or message: call it "a US automoti
 - Also in production work: EF Core, Dapper, SignalR, JWT, RabbitMQ, SQL Server; AWS (S3, Location Service); auth with OTP, QR login, TOTP/2FA; PDF e-signatures (VNPT CA, SmartCA, USB tokens)
 - Python for small, well-scoped work: scripts, automation, scraping, data processing, small API integrations (working knowledge, not expert: no long-term roles or large Python codebases)
 - Laravel (PHP) for small, well-scoped work in an existing project: bug fixes, one feature, API integrations, endpoints (working knowledge from study, no client projects yet: no long-term roles, no sites from scratch, no WordPress)
-- Shopify (used at my day job): store setup and admin, Shopify API integrations, apps and custom pages outside the theme. Not a Liquid theme specialist: small theme edits only
+- Shopify (used at my day job): store build and admin (not launch, domain or payment setup), Shopify API integrations, apps and custom pages outside the theme. Not a Liquid theme specialist: small theme edits only
 - AI agents and automation with Claude, Gemini and other LLM APIs (tool use, multi-agent workflows, voice-to-order)
 - Docker, Google Cloud Run, Cloud Build, Artifact Registry, Secret Manager, Cloudflare Pages, Neon Postgres
 
