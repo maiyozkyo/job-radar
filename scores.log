@@ -1393,3 +1393,5 @@
 2026-11-22T12:30Z run poll fresh=0 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0
 2026-11-22T12:31Z score 2 - freelancer:40830122 | Source Alibaba Solar Energy Kits | https://www.freelancer.com/projects/sourcing/Source-Alibaba-Solar-Energy-Kits
 2026-11-22T12:31Z run poll fresh=1 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0
+2026-11-22T12:33Z score 1 - freelancer:40830124 | ACP Canopy Shop Drawings | https://www.freelancer.com/projects/shop-drawings/ACP-Canopy-Shop-Drawings
+2026-11-22T12:33Z run poll fresh=2 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1
