@@ -1403,3 +1403,5 @@
 2026-11-22T13:25Z run poll fresh=5 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=2, no stack keyword=1, client=1, too many bids=1
 2026-11-22T13:30Z run poll fresh=4 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2, client=1, block keyword=1
 2026-11-22T13:45Z run poll fresh=9 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=6, budget below floor=1, hourly below floor=1, no stack keyword=1
+2026-11-22T13:58Z score 2 - freelancer:40830227 | English AI Training Knowledge Interview | https://www.freelancer.com/projects/english-translation/English-Training-Knowledge-Interview
+2026-11-22T13:58Z run poll fresh=9 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=6, budget below floor=1, risk=1
