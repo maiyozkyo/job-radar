@@ -1589,3 +1589,4 @@
 2026-11-23T09:15Z run poll fresh=5 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2, budget below floor=1, block keyword=1, risk=1
 2026-11-23T09:30Z run poll fresh=9 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=4, block keyword=2, hourly below floor=1, budget below floor=1, client=1
 2026-11-23T09:45Z run poll fresh=6 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=4, too many bids=1, block keyword=1
+2026-11-23T10:00Z run poll fresh=13 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=5, no stack keyword=5, client=2, too many bids=1
