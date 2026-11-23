@@ -1579,3 +1579,10 @@
 2026-11-23T09:02Z run poll fresh=1 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=1
 2026-11-23T09:10Z score 1 - freelancer:40831504 | Pickleball Paddle Development Engineer | https://www.freelancer.com/projects/3d-cad/Pickleball-Paddle-Development-Engineer
 2026-11-23T09:10Z run poll fresh=6 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=4, no stack keyword=1
+2026-11-23T09:10Z score 1 - himalayas:https://himalayas.app/companies/micro1/jobs/mathlib-contributor | micro1: Mathlib Contributor | https://himalayas.app/companies/micro1/jobs/mathlib-contributor?utm_source=api
+2026-11-23T09:10Z score 1 - himalayas:https://himalayas.app/companies/micro1/jobs/math-programmer-lean-4 | micro1: Math Programmer (Lean 4) | https://himalayas.app/companies/micro1/jobs/math-programmer-lean-4?utm_source=api
+2026-11-23T09:10Z score 2 - himalayas:https://himalayas.app/companies/g2i-inc/jobs/senior-software-engineer-ai-training-7373703440 | G2i Inc.: Senior Software Engineer, AI Training | https://himalayas.app/companies/g2i-inc/jobs/senior-software-engineer-ai-training-7373703440?utm_source=api
+2026-11-23T09:10Z score 1 - himalayas:https://himalayas.app/companies/micro1/jobs/inpatient-facility-coder | micro1: Inpatient facility coder | https://himalayas.app/companies/micro1/jobs/inpatient-facility-coder?utm_source=api
+2026-11-23T09:10Z score 4 - wwr:https://weworkremotely.com/remote-jobs/secure-privacy-senior-full-stack-web-developer-net-c-mongodb-angular-redux-ai-first-with-gdpr-experience | Secure Privacy: Senior Full-Stack Web Developer (.NET/C#/MongoDB/Angular/Redux)  | https://weworkremotely.com/remote-jobs/secure-privacy-senior-full-stack-web-developer-net-c-mongodb-angular-redux-ai-first-with-gdpr-experience
+2026-11-23T09:10Z score 1 - wwr:https://weworkremotely.com/remote-jobs/toptal-ml-inference-engineer-terminal-bench-task-designer | Toptal: ML Inference Engineer – Terminal-Bench Task Designer | https://weworkremotely.com/remote-jobs/toptal-ml-inference-engineer-terminal-bench-task-designer
+2026-11-23T09:10Z run digest pending=6 alerts=0 sent=0
