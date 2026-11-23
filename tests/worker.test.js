@@ -249,6 +249,30 @@ test('short chat goes to job mode as a paste for Claude to answer', async () => 
   assert.match(sent[0], /Đại ca chờ em/);
 });
 
+test('/bids replies with the owner\'s Freelancer bids and starts no workflow', async () => {
+  const sent = [];
+  const dispatched = [];
+  const fetchFn = async (url, init = {}) => {
+    if (url.includes('api.github.com')) { dispatched.push(1); return { ok: true, status: 204 }; }
+    if (url.includes('api.telegram.org')) { sent.push(JSON.parse(init.body)); return { ok: true, status: 200 }; }
+    const json = url.includes('/self/') ? { result: { id: 9 } }
+      : url.includes('/bids/') ? { result: { bids: [{ project_id: 5, amount: 40, time_submitted: 1795366472 }] } }
+      : { result: { projects: [{ id: 5, title: 'Fix a .NET API', seo_url: 'dotnet/fix-api', status: 'active', frontend_project_status: 'open', currency: { code: 'USD' } }] } };
+    return { ok: true, status: 200, json: async () => json };
+  };
+  await onMessage({ message_id: 1, chat: { id: 42 }, from: owner, text: '/bids' }, { ...msgEnv(), FREELANCER_TOKEN: 'FT' }, fetchFn);
+  assert.equal(dispatched.length, 0);
+  assert.match(sent[0].text, /Fix a \.NET API/);
+  assert.match(sent[0].text, /⏳ Đang chờ/);
+  assert.equal(sent[0].entities[0].url, 'https://www.freelancer.com/projects/dotnet/fix-api');
+});
+
+test('/bids from a stranger is ignored', async () => {
+  const { sent, fetchFn } = msgFetch();
+  await onMessage({ message_id: 1, chat: { id: 7 }, from: { id: 7 }, text: '/bids' }, msgEnv(), fetchFn);
+  assert.equal(sent.length, 0);
+});
+
 test('commands get help; strangers are ignored', async () => {
   const { sent, dispatched, fetchFn } = msgFetch();
   await onMessage({ message_id: 2, chat: { id: 42 }, from: owner, text: '/start' }, msgEnv(), fetchFn);
