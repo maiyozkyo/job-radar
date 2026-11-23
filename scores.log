@@ -1526,3 +1526,4 @@
 2026-11-23T04:15Z run poll fresh=1 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=1
 2026-11-23T04:19Z score 1 - freelancer:40831062 | Claude账号注册协助 | https://www.freelancer.com/projects/ai-chatbot/Claude-40831062
 2026-11-23T04:19Z run poll fresh=6 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=4, location=1
+2026-11-23T04:30Z run poll fresh=12 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=6, location=3, block keyword=2, budget below floor=1
