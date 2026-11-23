@@ -1496,3 +1496,4 @@
 2026-11-23T01:15Z score 1 - himalayas:https://himalayas.app/companies/syd-life-ai/jobs/junior-software-engineer | Syd Life AI: Junior Software Engineer | https://himalayas.app/companies/syd-life-ai/jobs/junior-software-engineer?utm_source=api
 2026-11-23T01:15Z run digest pending=4 alerts=0 sent=0
 2026-11-23T01:15Z run poll fresh=4 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=3, client=1
+2026-11-23T01:30Z run poll fresh=7 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=4, location=2, block keyword=1
