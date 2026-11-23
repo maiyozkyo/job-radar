@@ -1629,3 +1629,5 @@
 2026-11-23T13:00Z run poll fresh=7 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=6, block keyword=1
 2026-11-23T13:03Z score 1 - freelancer:40831794 | Rewrite Dutch Academic Report | https://www.freelancer.com/projects/academic-writing/Rewrite-Dutch-Academic-Report
 2026-11-23T13:03Z run poll fresh=3 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: client=1, no stack keyword=1
+2026-11-23T13:10Z score 2 - freelancer:40831804 | AI & Local SEO Boost | https://www.freelancer.com/projects/wordpress/Local-SEO-Boost
+2026-11-23T13:10Z run poll fresh=22 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=8, location=8, block keyword=4, client=1
