@@ -1694,3 +1694,4 @@
 2026-11-23T21:15Z run poll quiet fresh=5 kept=0 night=14 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2, block keyword=2, too many bids=1
 2026-11-23T21:30Z run poll quiet fresh=24 kept=0 night=14 scored=0 unscored=0 alerts=0 sent=0 errors=wwr: The operation was aborted due to timeout dropped: no stack keyword=14, location=8, block keyword=2
 2026-11-23T21:40Z run poll quiet fresh=8 kept=1 night=15 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=3, too many bids=2, block keyword=2
+2026-11-23T21:45Z run poll quiet fresh=4 kept=0 night=15 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=3, no stack keyword=1
