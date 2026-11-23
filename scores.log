@@ -1646,3 +1646,5 @@
 2026-11-23T15:15Z run poll fresh=33 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=11, block keyword=10, location=10, budget below floor=1, too many bids=1
 2026-11-23T15:30Z run poll fresh=12 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=6, block keyword=3, hourly below floor=1, too many bids=1, budget below floor=1
 2026-11-23T15:45Z run poll fresh=22 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: location=7, block keyword=6, client=3, no stack keyword=2, unknown budget=1, too many bids=1, hourly below floor=1, budget below floor=1
+2026-11-23T15:47Z score 1 - freelancer:40832030 | Remote Retail Tech Project Coordinator | https://www.freelancer.com/projects/marketing/Remote-Retail-Tech-Project-Coordinator
+2026-11-23T15:47Z run poll fresh=2 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1
