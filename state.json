@@ -8886,29 +8886,7 @@
   "himalayas:https://himalayas.app/companies/kerten-hospitality/jobs/sales-marketing-executive-61583758": 1795436128,
   "himalayas:https://himalayas.app/companies/ooma/jobs/senior-telephony-engineer": 1795436128
  },
- "pending": [
-  {
-   "url": "https://himalayas.app/companies/xperteez-technology/jobs/stem-expert-remote-contract-3276095955?utm_source=api",
-   "title": "Xperteez Technology: STEM Expert, Remote- Contract",
-   "description": "Job Title: STEM Expert\nLocation: Global, fully remote\nJob Type: Contract (~15 hours per week)\nSchedule: Flexible—you choose the hours and days you work, including weekends if desired\nThe work involves solving, reviewing, and validating challenging problems within your area of expertise. A representative task may require analyzing a scientific or mathematical problem, developing a rigorous solution, using Python to perform calculations or simulations, and evaluating whether an AI-generated answer is technically correct.\nThis is a very coding heavy role. Candidates but have experience using coding agents in their workflow.\nCandidates are not expected to be experts across every STEM discipline. We are looking for deep expertise in at least one of the following areas:\nChemistry\nBiology\nMathematics\nPhysics\nEarth Science / Geoscience / Environmental Science\nRobotics\nAdjacent scientific or quantitative disciplines may also be considered where the candidate's expertise is directly relevant.  \nRequired Skills\nBiology   What You’ll Work On\nSolve complex scientific, mathematical, or technical problems within your domain of expertise.\nReview AI-generated solutions for factual, mathematical, and scientific correctness.\nIdentify incorrect assumptions, reasoning errors, missing constraints, and subtle technical mistakes. \nRequired Qualifications\nStrong expertise in at least one relevant STEM or scientific domain.\nPractical proficiency with Python or other coding languages.\nStrong scientific, mathematical, or quantitative problem-solving ability.\nRelevant Python tools may include NumPy, SciPy, pandas, SymPy, Jupyter, or domain-specific scientific libraries. No particular Python library is mandatory.\nExpertise may come from academic research, industry, teaching, engineering, independent technical work, or other demonstrated experience. A specific degree or number of years of experience is not strictly required if you can demonstrate strong expertise in your field.\nOriginally posted on Himalayas",
-   "budgetType": "salary",
-   "budgetMinUsd": 60,
-   "budgetMaxUsd": 120,
-   "bidCount": null,
-   "location": null,
-   "employmentType": "Contractor",
-   "postedAt": 1795427907,
-   "tags": [
-    "STEM-Expert",
-    "Scientist",
-    "Computational-Scientist",
-    "Research-Scientist"
-   ],
-   "source": "himalayas",
-   "id": "https://himalayas.app/companies/xperteez-technology/jobs/stem-expert-remote-contract-3276095955",
-   "key": "himalayas:https://himalayas.app/companies/xperteez-technology/jobs/stem-expert-remote-contract-3276095955"
-  }
- ],
+ "pending": [],
  "night": [],
  "clientDrops": {
   "day": "2026-11-23",
