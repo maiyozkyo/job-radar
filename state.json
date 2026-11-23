@@ -9582,42 +9582,7 @@
   "freelancer:40832556": 1795478042,
   "freelancer:40832550": 1795478042
  },
- "pending": [
-  {
-   "url": "https://himalayas.app/companies/micro1/jobs/manufacturing-process-expert-cnc-cam-semiconductors?utm_source=api",
-   "title": "micro1: Manufacturing Process Expert -CNC, CAM & Semiconductors",
-   "description": "Role Title: Manufacturing Process Expert -CNC, CAM & Semiconductors\nRole Type: ContractorLocation: RemoteOpportunity SnapshotPay:$70 - $ 155/hour\nCommitment: Flexible — fits alongside your current role\nLocation: Fully remote\nYou'll need: Hands-on experience in CNC machining, CAM programming, or semiconductor manufacturing\nYour tasks: Build technical problems from your own manufacturing work and define what makes an answer correct\nmicro1 is engaging manufacturing and process experts to design the technical problems that measure what AI systems can actually do. Your hands-on expertise is what matters here — no prior AI experience required.\nThe work draws on what you already know: the problems where the handbook answer isn't enough, where the right approach depends on the material, the machine, or the tolerance, and where a plausible-looking solution quietly fails on the floor.\nWhat you'll do\nDesign technical problems from your own area — toolpath strategy, machining parameters, fixturing, tolerancing, process integration, yield — with realistic constraints and supporting data.\nProvide the correct solution and walk through the reasoning that gets there.\nDefine objective criteria for correctness, so another expert reviewing the work would reach the same verdict.\nReview problems built by other contributors for technical accuracy.\nFlag problems that turn out to be ambiguous or ungradable rather than submitting them.\nWhat we're looking for\nHands-on experience in one of: CNC machining and CAM programming, precision manufacturing, or semiconductor fabrication and process engineering.\nDirect ownership of the work — parts you programmed or processes you ran, not ones you supervised from a distance.\nDeep knowledge of the practical constraints: materials, tooling, machines, tolerances, and what goes wrong.\nAble to explain why an answer is correct clearly enough that another practitioner could verify it.\nFormal training, certification, or an engineering degree is a plus, but hands-on depth matters more.\nAI or LLM evaluation experience is a plus, but not required.\nHow the selection process works\nApply and complete the screening questions\nComplete the AI interview for this role — it's how your expertise gets in front of the client\nProfile review\nOnboarding — our Talent Ops team will get you set up\nOriginally posted on Himalayas",
-   "budgetType": "salary",
-   "budgetMinUsd": 70,
-   "budgetMaxUsd": 155,
-   "bidCount": null,
-   "location": null,
-   "employmentType": "Contractor",
-   "postedAt": 1795458528,
-   "tags": [],
-   "source": "himalayas",
-   "id": "https://himalayas.app/companies/micro1/jobs/manufacturing-process-expert-cnc-cam-semiconductors",
-   "key": "himalayas:https://himalayas.app/companies/micro1/jobs/manufacturing-process-expert-cnc-cam-semiconductors"
-  },
-  {
-   "url": "https://weworkremotely.com/remote-jobs/toptal-cryptography-specialist-for-ai-lab",
-   "title": "Toptal: Cryptography Specialist for AI lab",
-   "description": "Headquarters: \nOverview\nA fast-growing AI evaluation company is building expert-level benchmarks that test how well AI agents handle real professional work in the terminal. We are hiring cryptography experts to turn real, paid tasks from their own work into end-to-end challenges for AI agents, each with a working solution and a check that proves the result is correct.\n***THIS IS A TASK BASED COMPENSATION MODEL. PLEASE CHECK THE APPLICATION QUESTIONS FOR MORE DETAILS.***\nResponsibilities\n• Design expert-level Terminal-Bench cryptography tasks by turning real, paid work from your own experience into challenges that an AI agent must solve end to end.\n• Define the task environment, including files, systems, ciphertexts and data, so the challenge is realistic, self-contained and reproducible in a Linux command-line setup.\n• Write a working reference solution in Python or SageMath that proves the task is solvable, for example by recovering a key or decrypting a secret.\n• Build automated checks and tests that objectively verify the final result is correct, and explain how a mistake or a partial answer would be detected.\n• Calibrate task difficulty so a typical expert needs about 60-75 minutes to solve it, keeping it hard for AI agents while still fair and unambiguous.\n• Package each task with Docker and Git where applicable, document instructions clearly, and revise based on reviewer feedback until it meets the required quality bar.\nSkills/Experience\n• 3+ years of hands-on cryptanalysis or applied cryptography; GRC, audit-only, policy, sales or management roles do not count, nor does coursework only\n• Did the work in the last 3 years and can name the systems, tools, data and rules used\n• Uses the low-level tools of the subfield, such as SageMath and Python, and works comfortably on the Linux command line\n• Can show how a finding is proven, such as a decrypted secret or a recovered key, and explain how a mistake would be caught\n• Technical fluency with files, CSV/JSON, APIs or databases\n• Available to start around November 2026\nNice-to-have\n• Published write-ups or research on cryptanalysis\n• Strong CTF results, especially in crypto categories\n• CVEs discovered in cryptographic implementations\n• Experience with Docker, Git and writing automated tests\n• Proficiency in C for low-level cryptographic work\nProcess\n• Task vetting: complete a vetting task instead of a live interview\n• Work is paid per task, with each task taking roughly 60-75 minutes\n• Expected start around early November 2026\nTo apply: https://weworkremotely.com/remote-jobs/toptal-cryptography-specialist-for-ai-lab",
-   "budgetType": "salary",
-   "budgetMinUsd": null,
-   "budgetMaxUsd": null,
-   "bidCount": null,
-   "location": "Anywhere in the World",
-   "employmentType": null,
-   "postedAt": 1793898547,
-   "tags": [
-    "Full-Stack Programming"
-   ],
-   "source": "wwr",
-   "id": "https://weworkremotely.com/remote-jobs/toptal-cryptography-specialist-for-ai-lab",
-   "key": "wwr:https://weworkremotely.com/remote-jobs/toptal-cryptography-specialist-for-ai-lab"
-  }
- ],
+ "pending": [],
  "night": [
   {
    "url": "https://www.freelancer.com/projects/content-writing/Update-Wikipedia-Word",

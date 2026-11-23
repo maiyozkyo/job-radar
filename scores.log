@@ -1710,3 +1710,6 @@
 2026-11-23T23:31Z run poll quiet fresh=1 kept=1 night=20 scored=0 unscored=0 alerts=0 sent=0
 2026-11-23T23:45Z run poll quiet fresh=7 kept=0 night=20 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=5, too many bids=1, client=1
 2026-11-23T23:54Z run poll quiet fresh=3 kept=1 night=21 scored=0 unscored=0 alerts=0 sent=0 dropped: hourly below floor=1, too many bids=1
+2026-11-23T23:58Z score 1 - himalayas:https://himalayas.app/companies/micro1/jobs/manufacturing-process-expert-cnc-cam-semiconductors | micro1: Manufacturing Process Expert -CNC, CAM & Semiconductors | https://himalayas.app/companies/micro1/jobs/manufacturing-process-expert-cnc-cam-semiconductors?utm_source=api
+2026-11-23T23:58Z score 1 - wwr:https://weworkremotely.com/remote-jobs/toptal-cryptography-specialist-for-ai-lab | Toptal: Cryptography Specialist for AI lab | https://weworkremotely.com/remote-jobs/toptal-cryptography-specialist-for-ai-lab
+2026-11-23T23:58Z run digest pending=2 alerts=0 sent=0
