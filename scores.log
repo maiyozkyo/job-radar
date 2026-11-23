@@ -1622,3 +1622,4 @@
 2026-11-23T12:15Z run poll fresh=0 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0
 2026-11-23T12:15Z score 2 - himalayas:https://himalayas.app/companies/xperteez-technology/jobs/stem-expert-remote-contract-3276095955 | Xperteez Technology: STEM Expert, Remote- Contract | https://himalayas.app/companies/xperteez-technology/jobs/stem-expert-remote-contract-3276095955?utm_source=api
 2026-11-23T12:15Z run digest pending=1 alerts=0 sent=0
+2026-11-23T12:30Z run poll fresh=10 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=4, location=4, too many bids=1, block keyword=1
