@@ -1598,3 +1598,5 @@
 2026-11-23T10:15Z run poll fresh=15 kept=1 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=6, location=6, block keyword=2
 2026-11-23T10:25Z score 1 - freelancer:40831603 | Hong Kong based Sourcing Agent – Purchase of SoM Samples | https://www.freelancer.com/projects/sourcing/Hong-Kong-based-Sourcing-Agent
 2026-11-23T10:25Z run poll fresh=6 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: too many bids=2, hourly below floor=1, block keyword=1, client=1
+2026-11-23T10:30Z score 1 - freelancer:40831618 | GEO Brand Mentions Reseller Partner | https://www.freelancer.com/projects/ai-content-creation/GEO-Brand-Mentions-Reseller-Partner
+2026-11-23T10:30Z run poll fresh=5 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=2, client=1, no stack keyword=1
