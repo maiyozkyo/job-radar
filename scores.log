@@ -1505,3 +1505,4 @@
 2026-11-23T02:15Z run poll fresh=1 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=1
 2026-11-23T02:22Z score 1 - freelancer:40830942 | 2517 | joinery drawings | https://www.freelancer.com/projects/drafting/joinery-drawings
 2026-11-23T02:22Z run poll fresh=5 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=2, too many bids=1, no stack keyword=1
+2026-11-23T02:30Z run poll fresh=17 kept=1 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=8, location=6, block keyword=1, too many bids=1
