@@ -1601,3 +1601,4 @@
 2026-11-23T10:30Z score 1 - freelancer:40831618 | GEO Brand Mentions Reseller Partner | https://www.freelancer.com/projects/ai-content-creation/GEO-Brand-Mentions-Reseller-Partner
 2026-11-23T10:30Z run poll fresh=5 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=2, client=1, no stack keyword=1
 2026-11-23T10:31Z run poll fresh=0 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0
+2026-11-23T10:45Z run poll fresh=8 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=4, no stack keyword=2, too many bids=1, client=1
