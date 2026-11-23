@@ -15,6 +15,7 @@ import { clientLines } from '../src/client.js';
 import { pickFresh, querySlice } from '../src/fastpoll.js';
 import { extractProposal, parseCallback, placeBid, skipCallback } from '../src/bid.js';
 import { findFreelancerLink, MAX_PASTE } from '../src/paste.js';
+import { fetchMyBids, formatBids, isBidsCommand } from '../src/mybids.js';
 
 const nowSec = () => Math.floor(Date.now() / 1000);
 
@@ -136,7 +137,7 @@ export async function onTap(cq, env, fetchFn = fetch) {
   }
 }
 
-const HELP = 'Đại ca gửi em link job Freelancer, hoặc dán/chuyển tiếp nội dung job (Upwork, Contra, Fiverr, LinkedIn…) gồm mô tả và ngân sách. Khoảng 1 phút sau em gửi điểm, proposal và giá gợi ý. Đại ca nhắn gì khác thì em trả lời như chat bình thường.';
+const HELP = 'Đại ca gửi em link job Freelancer, hoặc dán/chuyển tiếp nội dung job (Upwork, Contra, Fiverr, LinkedIn…) gồm mô tả và ngân sách. Khoảng 1 phút sau em gửi điểm, proposal và giá gợi ý. /bids: xem các bid Freelancer và trạng thái. Đại ca nhắn gì khác thì em trả lời như chat bình thường.';
 
 /** A message from the owner goes to job mode: a Freelancer link as is, other text as paste:<key>. Others are ignored. */
 export async function onMessage(msg, env, fetchFn = fetch) {
@@ -146,6 +147,14 @@ export async function onMessage(msg, env, fetchFn = fetch) {
   // keyboard (📝 Xem đơn / ❌ Bỏ) in this chat; this bot never uses one.
   const reply = (text) => tg('sendMessage', { chat_id: msg.chat.id, reply_to_message_id: msg.message_id, text, reply_markup: { remove_keyboard: true } });
   const text = String(msg.text ?? msg.caption ?? '').trim();
+  if (isBidsCommand(text)) {
+    try {
+      const { text: body, entities } = formatBids(await fetchMyBids(env.FREELANCER_TOKEN, fetchFn));
+      return tg('sendMessage', { chat_id: msg.chat.id, reply_to_message_id: msg.message_id, text: body, entities, link_preview_options: { is_disabled: true }, reply_markup: { remove_keyboard: true } });
+    } catch (err) {
+      return reply(`⚠️ Không đọc được bid Freelancer: ${String(err.message).slice(0, 200)}`);
+    }
+  }
   if (!text || text.startsWith('/')) return reply(HELP);
 
   let job = findFreelancerLink(text);
