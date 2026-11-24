@@ -1834,3 +1834,5 @@
 2026-11-24T14:15Z run poll fresh=8 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=3, no stack keyword=3, too many bids=1, client=1
 2026-11-24T14:25Z score 1 - freelancer:40833603 |  ESP32 Startup & W5500 problem fix  (EasyEDA Pro) | https://www.freelancer.com/projects/electronics/ESP-Startup-problem-fix-EasyEDA
 2026-11-24T14:25Z run poll fresh=9 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=4, no stack keyword=3, too many bids=1
+2026-11-24T14:29Z score 1 - freelancer:40833610 | GEO AEO Brand Mentions Reseller Partnership | https://www.freelancer.com/projects/generative-engine-optimization/GEO-AEO-Brand-Mentions-Reseller
+2026-11-24T14:29Z run poll fresh=3 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2
