@@ -1841,3 +1841,5 @@
 2026-11-24T15:00Z run poll fresh=11 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=5, no stack keyword=4, client=2
 2026-11-24T15:03Z score 1 - freelancer:40833654 | NY PE Stamp/calcs | https://www.freelancer.com/projects/structural-engineering/Stamp-calcs
 2026-11-24T15:03Z run poll fresh=1 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0
+2026-11-24T15:15Z score 3 - freelancer:40833668 | Complete Shopify Food Store Setup | https://www.freelancer.com/projects/payment-gateway-integration/Complete-Shopify-Food-Store-Setup
+2026-11-24T15:15Z run poll fresh=53 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: location=27, no stack keyword=14, block keyword=8, too many bids=2, client=1
