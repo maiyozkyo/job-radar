@@ -1779,3 +1779,4 @@
 2026-11-24T08:30Z run poll fresh=4 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2, too many bids=1, block keyword=1
 2026-11-24T08:31Z score 1 - freelancer:40833161 | Complete APA Dementia Research Paper - TIME SENSITIVE  | https://www.freelancer.com/projects/academic-writing/Complete-APA-Dementia-Research-Paper
 2026-11-24T08:31Z run poll fresh=1 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0
+2026-11-24T08:45Z run poll fresh=27 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: location=17, no stack keyword=4, block keyword=3, client=2, too many bids=1
