@@ -1786,3 +1786,5 @@
 2026-11-24T09:11Z score 3 - freelancer:40833207 | Remove Family Info from Web | https://www.freelancer.com/projects/data-management/Remove-Family-Info-from-Web
 2026-11-24T09:11Z run poll fresh=11 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=5, block keyword=2, hourly below floor=2, too many bids=1
 2026-11-24T09:15Z run poll fresh=2 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=1, too many bids=1
+2026-11-24T09:21Z score 2 - freelancer:40833221 | Tally Sync, Dashboard & Cloud Deployment | https://www.freelancer.com/projects/api-integration/Tally-Sync-Dashboard-Cloud-Deployment
+2026-11-24T09:21Z run poll fresh=5 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2, budget below floor=1, location=1
