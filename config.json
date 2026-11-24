@@ -128,7 +128,6 @@
     "flask",
     "cloudflare"
   ],
-  "vnStackKeywords": ["website", "trang web", "web", "landing page", "lập trình", "phần mềm", "ứng dụng", "dịch thuật", "biên dịch", "dịch tiếng anh", "dịch sang tiếng anh", "tự động hóa", "tự động hoá", "sửa lỗi", "google sheet"],
   "blockKeywords": [
     "commission",
     "sales",
@@ -160,6 +159,7 @@
     "apac",
     "gmt+7"
   ],
+  "vnHourlyVnd": 200000,
   "hourlyRateUsd": 20,
   "hoursPerDay": 5,
   "firstJobDiscount": 0.75,

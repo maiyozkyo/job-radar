@@ -29,15 +29,16 @@ export function filterJob(job, config, now = Date.now() / 1000) {
   // Block words only in the title and tags: a description saying "daily sales
   // report" or "email verification" is a normal job. Some block words only in
   // the title: Freelancer tags Excel cleanup jobs "Data Entry".
-  const blocked = firstMatch(`${job.title}
-${job.tags.join(' ')}`.toLowerCase(), config.blockKeywords)
-    ?? firstMatch(job.title.toLowerCase(), config.titleBlockKeywords ?? []);
+  const title = job.title.normalize('NFC').toLowerCase();
+  const blocked = firstMatch(`${title}\n${job.tags.join(' ').toLowerCase()}`, config.blockKeywords)
+    ?? firstMatch(title, config.titleBlockKeywords ?? []);
   if (blocked) return drop(`block keyword: ${blocked}`);
   const scam = riskFlags(job).find((f) => f.level === 'block');
   if (scam) return drop(`risk: ${scam.label}`);
-  // Vietnamese keywords only on the Vietnamese boards: "web" alone is too broad elsewhere.
-  const stack = firstMatch(text, config.stackKeywords)
-    ?? (VN_BOARDS.has(job.source) ? firstMatch(text, config.vnStackKeywords ?? []) : undefined);
+  // Vietnamese boards: a few jobs a day, in Vietnamese the freelancer can check,
+  // so Claude scores every one (rules in prompts/score.md) instead of a keyword gate.
+  if (VN_BOARDS.has(job.source)) return { keep: true, reason: 'vn board' };
+  const stack = firstMatch(text, config.stackKeywords);
   if (!stack) return drop('no stack keyword');
 
   if (job.source === 'freelancer') {

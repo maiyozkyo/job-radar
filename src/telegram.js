@@ -5,6 +5,11 @@ import { clientLines } from './client.js';
 
 const LIMIT = 4096;
 const money = (n) => `$${Number.isInteger(n) ? n : n.toFixed(2)}`;
+const vnd = (n) => `${Math.round(n).toLocaleString('de-DE')}đ`; // 500000 -> 500.000đ
+
+/** Vietnamese boards: suggested price in VND (from Claude's hours); the proposal is in Vietnamese. */
+const vnPriceLine = (scored) => (scored?.priceVnd ? `💵 Gợi ý giá: ${vnd(scored.priceVnd)}${scored.hours ? ` · ~${scored.hours} giờ` : ''}` : null);
+const proposalLabel = (job) => (job.source === 'freelancerviet' || job.source === 'vlance' ? 'Đơn chào' : 'Proposal');
 
 const range = (min, max, fmt) => (min != null && min !== max ? `${fmt(min)}–${fmt(max)}` : fmt(max));
 
@@ -108,10 +113,11 @@ function jobBlock(job, scored, now, summary = null) {
     summary,
     scored ? `⭐ ${scored.score}/10 – ${scored.reasonVi}` : null,
     bidLines(job, scored?.bid),
+    vnPriceLine(scored),
     clientBlock(job, now),
     riskLines(job),
     job.url,
-    scored?.proposalEn ? `\n✍️ Proposal:\n${scored.proposalEn}` : null,
+    scored?.proposalEn ? `\n✍️ ${proposalLabel(job)}:\n${scored.proposalEn}` : null,
   ].filter(Boolean).join('\n');
 }
 
@@ -139,6 +145,7 @@ export function formatAlertHtml(job, scored, warning, now) {
     summary,
     scored ? `⭐ ${scored.score}/10 – ${scored.reasonVi}` : null,
     bidLines(job, scored?.bid),
+    vnPriceLine(scored),
     clientBlock(job, now),
     riskLines(job),
   ].filter(Boolean).map(esc)
@@ -156,7 +163,7 @@ export function formatAlertHtml(job, scored, warning, now) {
     milestones.length
       ? `\n📌 Mốc thanh toán:\n${milestones.map((m, i) => `${i + 1}. ${esc(m.name)} — ${esc(fmt(msAmount(m, i)))}`).join('\n')}`
       : null,
-    scored?.proposalEn ? `\n✍️ Proposal${scored.redrafted ? ' (Opus viết lại)' : ''} (bấm vào khung để copy):\n<pre>${esc(scored.proposalEn)}</pre>` : null,
+    scored?.proposalEn ? `\n✍️ ${proposalLabel(job)}${scored.redrafted ? ' (Opus viết lại)' : ''} (bấm vào khung để copy):\n<pre>${esc(scored.proposalEn)}</pre>` : null,
     warning ? `\n⚠️ ${esc(warning)}` : null,
   ].filter(Boolean).join('\n');
   // Too long would be sent as plain text, losing buttons and the copy block: the summary goes first.

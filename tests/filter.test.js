@@ -131,20 +131,13 @@ test('junk clients are dropped with the reason; a new client with no history is 
   assert.equal(keep(fl()), true, 'no record, no drop');
 });
 
-test('FreelancerViet: Vietnamese keywords count only for that board, and it alerts at once', () => {
-  const vn = (over) => makeJob({ source: 'freelancerviet', id: 3, title: 'Làm landing page cho shop', description: '', ...over });
-  assert.equal(keep(vn()), true);
-  assert.equal(keep(vn({ title: 'Dịch thuật tài liệu', description: 'Tiếng Anh sang tiếng Việt' })), true);
-  assert.equal(keep(vn({ title: 'Gõ văn bản', description: 'Gõ lại tài liệu' })), false);
-  assert.equal(keep(board('wwr', { title: 'Làm landing page', description: 'Contract' })), false);
-  // NFD text from a copy-paste still matches
-  assert.equal(keep(vn({ title: 'Dịch thuật'.normalize('NFD') })), true);
-  assert.equal(isUrgent(vn()), true);
-});
-
-test('vLance: Vietnamese keywords too; account verification jobs are dropped', () => {
-  const vl = (over) => makeJob({ source: 'vlance', id: 4, title: 'Thiết kế lập trình website', description: '', ...over });
-  assert.equal(keep(vl()), true);
-  assert.equal(keep(vl({ title: 'Cần người hỗ trợ xác minh tài khoản công cụ AI Claude' })), false);
-  assert.equal(isUrgent(vl()), true);
+test('Vietnamese boards: no keyword gate (Claude scores every job), block words still apply', () => {
+  const vn = (source, over) => makeJob({ source, id: 3, title: 'Viết bài chuẩn SEO', description: '', ...over });
+  assert.equal(keep(vn('freelancerviet')), true);
+  assert.equal(keep(vn('vlance', { title: 'Thiết kế slide thuyết trình' })), true);
+  assert.equal(keep(vn('vlance', { title: 'Cần người hỗ trợ xác minh tài khoản công cụ AI Claude' })), false);
+  assert.equal(keep(vn('freelancerviet', { title: 'Xác minh tài khoản'.normalize('NFD') })), false);
+  assert.equal(keep(board('wwr', { title: 'Viết bài chuẩn SEO', description: 'Contract' })), false);
+  assert.equal(isUrgent(vn('freelancerviet')), true);
+  assert.equal(isUrgent(vn('vlance')), true);
 });

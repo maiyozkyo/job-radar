@@ -256,3 +256,11 @@ test('a summary that would make the alert too long is left out, so buttons and t
   assert.doesNotMatch(m.text, /Khách cần/);
   assert.match(m.text, /<pre>p+<\/pre>/);
 });
+
+test('Vietnamese board alert: VND price line, Vietnamese proposal label, no bid buttons', () => {
+  const vn = { key: 'vlance:9', source: 'vlance', id: '9', url: 'https://www.vlance.vn/viec-freelance/x', title: 'Viết bài', description: '', tags: [], budgetMaxUsd: null, bidCount: null, postedAt: 0 };
+  const m = formatAlertHtml(vn, { key: 'vlance:9', score: 8, reasonVi: 'Hợp', summaryVi: [], proposalEn: 'Chào anh/chị', hours: 2.5, priceVnd: 500000, bid: null, milestones: [] });
+  assert.match(m.text, /💵 Gợi ý giá: 500\.000đ · ~2\.5 giờ/);
+  assert.match(m.text, /Đơn chào/);
+  assert.deepEqual(m.buttons, []);
+});

@@ -18,6 +18,9 @@ Weigh:
 - **Competition**: many existing bids lower the score.
 - **Client** (`client`, null when unknown): the client's record. Freelancer: payment verified, deposit made, account age (`registeredAt`, unix seconds), reviews, rating, completed jobs. Upwork: payment `verified`, `hires`, `reviews`, `rating`, `spentUsd`. Clients with unverified payment are already filtered out. A client with no reviews and no completed jobs is fine on its own (the freelancer has no reviews either and wins these most often), but together with a vague scope, a big scope for a small budget, or urgency it lowers the score by 1–2; say so in `reasonVi`. Never mention the client's record in the proposal.
 - Remote job posts must be open to someone in Vietnam (GMT+7); otherwise score 1.
+- **Vietnamese boards** (`source` `freelancerviet` or `vlance`): Vietnamese clients writing in Vietnamese, budgets in VND in the text. Every job reaches you, unfiltered. The freelancer reads Vietnamese natively and checks every result, so here a third kind of work fits, done with AI and reviewed by the freelancer:
+  3. Vietnamese writing (articles, SEO content, scripts, CVs, documents, product descriptions), slides, Excel/Google Sheets and reports, turning images or PDFs into Word/Excel text, plus types 1 and 2.
+  Score at most 2: phone or voice work, live customer service or chat shifts, tutoring, on-site or office work, running ads accounts, liking/commenting/posting for someone, account verification, logo/image/video design, recruiting or sales, and posts with no clear deliverable (a title like "Online" or a person's name). A budget far too small for the work scores low as usual; read it from the text (e.g. "3 triệu" = 3,000,000 VND, roughly 120 USD).
 - `paste` jobs are posts the freelancer copied from another platform (Upwork, Contra, Fiverr, LinkedIn, …), so the budget, bid count and client details are only what the text says. Read them from the text when present.
 
 ## Output
@@ -39,7 +42,7 @@ Return **only** a JSON array, one object per input job, same keys:
 - `reasonVi`: one short line in Vietnamese (≤ 15 words) saying why.
 - `summaryVi`: only when {{DRAFT_RULE}}; otherwise `[]`. What the client asks for, as 1–3 lines of Vietnamese (each ≤ 100 characters; keep technical terms in English): the deliverables with their quantities, then the must-have requirements and any deadline. Only what the post says: no opinion, no budget (shown separately), no links or contact details.
 - `proposalEn`: only when {{DRAFT_RULE}}; otherwise `null`.
-  - ≤ 120 words, English, written as the freelancer in first person.
+  - ≤ 120 words, English, written as the freelancer in first person. Vietnamese boards: write it in Vietnamese instead, polite and natural, calling yourself "em" and the client "anh/chị"; no prices (the price is computed from `hours`).
   - Open with the client's actual problem, not a greeting like "Dear Sir".
   - Cite at most one or two portfolio projects from the profile that are truly relevant, with a concrete detail. **Never invent experience, clients, numbers or projects that are not in the profile.**
   - Say briefly how you would approach it.

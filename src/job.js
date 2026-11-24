@@ -27,7 +27,7 @@ import { readFileSync } from 'node:fs';
  * @typedef {object} Config
  * @property {string[]} freelancerQueries
  * @property {string[]} stackKeywords
- * @property {string[]} [vnStackKeywords] extra Vietnamese keywords, FreelancerViet and vLance only
+ * @property {number} [vnHourlyVnd]     price per hour on the Vietnamese boards, in VND
  * @property {string[]} blockKeywords      matched in title and tags
  * @property {string[]} [titleBlockKeywords] matched in the title only
  * @property {number} minFixedUsd

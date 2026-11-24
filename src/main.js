@@ -17,7 +17,7 @@ const MAX_MORNING = 8;
 
 const claudeWarning = (err) => `Claude lỗi: ${err.message.slice(0, 120)}, chưa chấm điểm`;
 const newestFirst = (a, b) => b.postedAt - a.postedAt;
-const bidOpts = (config) => ({ rate: config.hourlyRateUsd ?? 20, hoursPerDay: config.hoursPerDay ?? 2, discount: config.firstJobDiscount ?? 1 });
+const bidOpts = (config) => ({ rate: config.hourlyRateUsd ?? 20, hoursPerDay: config.hoursPerDay ?? 2, discount: config.firstJobDiscount ?? 1, vnHourlyVnd: config.vnHourlyVnd });
 // Urgent alerts only: their proposals go out on one tap.
 const redraftOpts = (config) => ({ redraftMin: config.opusRedraftScore ?? null });
 

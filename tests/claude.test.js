@@ -166,3 +166,15 @@ test('dollar signs in job text reach the prompt as typed', async () => {
   assert.ok(prompt.includes(JSON.stringify(description)));
   assert.doesNotMatch(prompt, /\{\{JOBS\}\}/);
 });
+
+test('Vietnamese boards: price in VND from the hours, rounded to 50k, and no Opus rewrite', async () => {
+  const vn = makeJob({ source: 'vlance', id: 9, title: 'Viết 10 bài SEO' });
+  const calls = [];
+  const run = async (prompt, opts) => { calls.push(opts); return JSON.stringify([{ key: 'vlance:9', score: 9, reasonVi: 'Hợp', proposalEn: 'Chào anh/chị', hours: 2.6 }]); };
+  const [s] = await scoreJobs([vn], { draftMin: 7, redraftMin: 8, vnHourlyVnd: 200000 }, run);
+  assert.equal(s.priceVnd, 500000);
+  assert.equal(s.bid, null);
+  assert.equal(calls.length, 1, 'no Opus redraft for a Vietnamese proposal');
+  const [none] = await scoreJobs([vn], { draftMin: 7, vnHourlyVnd: 200000 }, async () => JSON.stringify([{ key: 'vlance:9', score: 3, reasonVi: 'x', hours: null }]));
+  assert.equal(none.priceVnd, null);
+});
