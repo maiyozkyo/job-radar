@@ -130,3 +130,14 @@ test('junk clients are dropped with the reason; a new client with no history is 
   assert.equal(filterJob(fl({ client: { ...ok, reviews: 0, completed: 0, rating: 0, registeredAt: NOW - 86400 } }), config, NOW).keep, true, 'new verified client stays');
   assert.equal(keep(fl()), true, 'no record, no drop');
 });
+
+test('FreelancerViet: Vietnamese keywords count only for that board, and it alerts at once', () => {
+  const vn = (over) => makeJob({ source: 'freelancerviet', id: 3, title: 'Làm landing page cho shop', description: '', ...over });
+  assert.equal(keep(vn()), true);
+  assert.equal(keep(vn({ title: 'Dịch thuật tài liệu', description: 'Tiếng Anh sang tiếng Việt' })), true);
+  assert.equal(keep(vn({ title: 'Gõ văn bản', description: 'Gõ lại tài liệu' })), false);
+  assert.equal(keep(board('wwr', { title: 'Làm landing page', description: 'Contract' })), false);
+  // NFD text from a copy-paste still matches
+  assert.equal(keep(vn({ title: 'Dịch thuật'.normalize('NFD') })), true);
+  assert.equal(isUrgent(vn()), true);
+});

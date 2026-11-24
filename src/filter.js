@@ -22,7 +22,7 @@ const FLEXIBLE = /contract|part[\s-]?time|freelance/i;
  * @returns {{ keep: boolean, reason: string }}
  */
 export function filterJob(job, config, now = Date.now() / 1000) {
-  const text = `${job.title}\n${job.description}\n${job.tags.join(' ')}`.toLowerCase();
+  const text = `${job.title}\n${job.description}\n${job.tags.join(' ')}`.normalize('NFC').toLowerCase();
   const drop = (reason) => ({ keep: false, reason });
 
   // Block words only in the title and tags: a description saying "daily sales
@@ -34,7 +34,9 @@ ${job.tags.join(' ')}`.toLowerCase(), config.blockKeywords)
   if (blocked) return drop(`block keyword: ${blocked}`);
   const scam = riskFlags(job).find((f) => f.level === 'block');
   if (scam) return drop(`risk: ${scam.label}`);
-  const stack = firstMatch(text, config.stackKeywords);
+  // Vietnamese keywords only on the Vietnamese board: "web" alone is too broad elsewhere.
+  const stack = firstMatch(text, config.stackKeywords)
+    ?? (job.source === 'freelancerviet' ? firstMatch(text, config.vnStackKeywords ?? []) : undefined);
   if (!stack) return drop('no stack keyword');
 
   if (job.source === 'freelancer') {
@@ -58,4 +60,5 @@ ${job.tags.join(' ')}`.toLowerCase(), config.blockKeywords)
 }
 
 /** Sources where clients decide within hours, so alerts go out at once. */
-export const isUrgent = (job) => job.source === 'freelancer' || job.source === 'hn' || job.source === 'reddit';
+// FreelancerViet: about one job a day, so it alerts at once instead of waiting for the digest.
+export const isUrgent = (job) => ['freelancer', 'hn', 'reddit', 'freelancerviet'].includes(job.source);

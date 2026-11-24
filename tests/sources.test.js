@@ -68,6 +68,7 @@ const allFetch = (overrides = {}) => async (url) => {
   if (url.includes('remoteok.com')) return ok(json('remoteok.json'));
   if (url.includes('remotive.com')) return ok(json('remotive.json'));
   if (url.includes('jobicy.com')) return ok(json('jobicy.json'));
+  if (url.includes('freelancerviet.vn')) return ok(null, read('freelancerviet.xml'));
   return hnFetch(url);
 };
 
@@ -76,7 +77,7 @@ test('fetchAll: one source down does not stop the others', async () => {
   const { jobs, errors } = await fetchAll({ freelancerQueries: ['angular'] }, allFetch({ 'remoteok.com': down }), NOW);
   assert.deepEqual(errors, ['remoteok: HTTP 403']);
   const sources = new Set(jobs.map((j) => j.source));
-  assert.deepEqual([...sources].sort(), ['freelancer', 'himalayas', 'hn', 'jobicy', 'remotive', 'wwr']);
+  assert.deepEqual([...sources].sort(), ['freelancer', 'freelancerviet', 'himalayas', 'hn', 'jobicy', 'remotive', 'wwr']);
 });
 
 test('Remotive: company in title, location and job type kept, link back to Remotive', () => {
@@ -123,4 +124,16 @@ test('fetchAll: a failed rate-limited source still waits before the next try', a
   const { errors } = await fetchAll({ freelancerQueries: ['angular'] }, allFetch({ 'jobicy.com': down }), NOW, lastFetch);
   assert.deepEqual(errors, ['jobicy: HTTP 500']);
   assert.equal(lastFetch.jobicy, NOW);
+});
+
+test('FreelancerViet: parses the RSS feed, content over description, slug as id', async () => {
+  const { parseFreelancerViet } = await import('../src/sources/freelancerviet.js');
+  const [a, b] = parseFreelancerViet(read('freelancerviet.xml'));
+  assert.equal(a.key, 'freelancerviet:web-landing-page-cho-shop-nho');
+  assert.equal(a.url, 'https://freelancerviet.vn/thong-tin-viec-freelance/web-landing-page-cho-shop-nho.html');
+  assert.equal(a.title, 'web/landing page cho shop nhỏ');
+  assert.match(a.description, /landing page bán hàng & form đặt hàng\nNgân sách 3 triệu/);
+  assert.equal(a.postedAt, Math.floor(Date.parse('2026-11-17T22:53:38+07:00') / 1000));
+  assert.equal(a.location, 'Việt Nam');
+  assert.equal(b.description, 'Gõ lại tài liệu');
 });

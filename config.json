@@ -128,6 +128,7 @@
     "flask",
     "cloudflare"
   ],
+  "vnStackKeywords": ["website", "trang web", "web", "landing page", "lập trình", "phần mềm", "ứng dụng", "dịch thuật", "biên dịch", "dịch tiếng anh", "dịch sang tiếng anh", "tự động hóa", "tự động hoá", "sửa lỗi", "google sheet"],
   "blockKeywords": [
     "commission",
     "sales",

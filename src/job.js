@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
  * One job, normalized from any source.
  * @typedef {object} Job
  * @property {string} key            "source:id"
- * @property {'freelancer'|'hn'|'wwr'|'remoteok'|'himalayas'|'remotive'|'jobicy'|'reddit'|'paste'} source
+ * @property {'freelancer'|'hn'|'wwr'|'remoteok'|'himalayas'|'remotive'|'jobicy'|'reddit'|'freelancerviet'|'paste'} source
  * @property {string} id
  * @property {string} url
  * @property {string} title
@@ -27,6 +27,7 @@ import { readFileSync } from 'node:fs';
  * @typedef {object} Config
  * @property {string[]} freelancerQueries
  * @property {string[]} stackKeywords
+ * @property {string[]} [vnStackKeywords] extra Vietnamese keywords, FreelancerViet only
  * @property {string[]} blockKeywords      matched in title and tags
  * @property {string[]} [titleBlockKeywords] matched in the title only
  * @property {number} minFixedUsd
