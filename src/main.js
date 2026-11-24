@@ -7,7 +7,7 @@ import { isVnBoard, scoreJobs } from './claude.js';
 import { formatAlertHtml, formatDigest, formatUnscored, sendMessage } from './telegram.js';
 import { fetchFreelancerStatus } from './sources/freelancer.js';
 import { dayGmt7, isQuiet } from './night.js';
-import { clientDropReport } from './client.js';
+import { clientAdjustedScore, clientDropReport } from './client.js';
 
 const MAX_DIGEST = 10;
 const MAX_DIGEST_SCORING = 40;
@@ -58,7 +58,8 @@ async function scoreUrgent(jobs, deps, log) {
   let warning = 'Claude bỏ sót, chưa chấm điểm';
   if (!jobs.length) return { alerts, unscored, warning };
   try {
-    const scored = await deps.scoreJobs(jobs, { draftMin: config.alertScore, vnDraftMin: config.vnAlertScore ?? config.alertScore, ...bidOpts(config), ...redraftOpts(config) });
+    const scored = (await deps.scoreJobs(jobs, { draftMin: config.alertScore, vnDraftMin: config.vnAlertScore ?? config.alertScore, ...bidOpts(config), ...redraftOpts(config) }))
+      .map((s, i) => (s ? { ...s, score: clientAdjustedScore(s.score, jobs[i].client) } : s));
     logScores(jobs, scored, log, now);
     jobs.forEach((job, i) => {
       if (!scored[i]) unscored.push(job);

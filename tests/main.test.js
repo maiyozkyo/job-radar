@@ -229,20 +229,20 @@ test('morning batch is kept when Telegram fails', async () => {
 });
 
 test('jobs dropped for their client are counted and reported once, on the next morning', async () => {
-  const junk = (id) => ({ ...urgent(id), client: { paymentVerified: false, depositMade: false, registeredAt: NOW, reviews: 0, rating: 0, completed: 0 } });
+  const junk = (id) => ({ ...urgent(id), client: { paymentVerified: false, depositMade: false, registeredAt: Date.UTC(2026, 10, 18) / 1000, reviews: 0, rating: 0, completed: 0 } });
   const DAY1 = Date.UTC(2026, 10, 19, 5, 0) / 1000;
   const { deps, sent, stateDir } = setup({ jobs: [junk(1), junk(2), urgent(3)] });
   deps.now = DAY1;
   await run('poll', deps);
   assert.equal(sent.length, 1, 'only the good job');
-  assert.deepEqual(loadState(stateDir).clientDrops, { day: '2026-11-19', reasons: { 'payment not verified': 2 } });
+  assert.deepEqual(loadState(stateDir).clientDrops, { day: '2026-11-19', reasons: { 'no deposit, new account': 2 } });
   deps.fetchAll = async () => ({ jobs: [], errors: [], okSources: ['freelancer'] });
   deps.now = NIGHT;
   await run('poll', deps);
   assert.equal(sent.length, 1, 'no report in quiet hours');
   deps.now = MORNING;
   await run('poll', deps);
-  assert.equal(sent[1], '🧹 Ngày 2026-11-19: bot loại 2 job Freelancer vì khách (chưa xác minh thanh toán: 2).');
+  assert.equal(sent[1], '🧹 Ngày 2026-11-19: bot loại 2 job Freelancer vì khách (chưa nạp tiền, tài khoản mới: 2).');
   await run('poll', deps);
   assert.equal(sent.length, 2, 'the report goes out once');
 });
@@ -260,4 +260,15 @@ test('Vietnamese boards alert from vnAlertScore (6); other sources still need al
   assert.equal(opts.vnDraftMin, 6, 'proposals are drafted from 6 on the Vietnamese boards');
   assert.equal(sent.length, 1);
   assert.match(sent[0].text, /vlance\.vn/);
+});
+
+test('a client with unverified payment is scored one lower, so only an 8 alerts (as 7)', async () => {
+  const client = { paymentVerified: false, depositMade: true, registeredAt: NOW - 400 * 86400, reviews: 3, rating: 4.9, completed: 3 };
+  const unverified = (id) => ({ ...urgent(id), client });
+  const { deps, sent } = setup({ jobs: [unverified(1), unverified(2)], scores: { 'freelancer:1': 8, 'freelancer:2': 7 } });
+  await run('poll', deps);
+  assert.equal(sent.length, 1);
+  assert.match(sent[0].text, /https:\/\/f\/1/);
+  assert.match(sent[0].text, /7\/10/);
+  assert.match(sent[0].text, /Chưa xác minh thanh toán/);
 });
