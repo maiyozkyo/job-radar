@@ -10195,48 +10195,7 @@
   "freelancer:40833319": 1795517128,
   "freelancer:40833333": 1795517128
  },
- "pending": [
-  {
-   "url": "https://himalayas.app/companies/xperteez-technology/jobs/mathematics-expert-remote-contract?utm_source=api",
-   "title": "Xperteez Technology: 🌍 Mathematics Expert, Remote- Contract",
-   "description": "Role Title: Mathematics Expert\nLocation: Global, fully remote\nJob Type: Contract (~15 hours per week)\nSchedule: Flexible—you can choose the hours and days you work, including weekends if desired as long as you're active.\nRequired Skills:\nMathematics\nPython\nProgramming Languages\nResearch\nApplied Math\nWe are looking for highly skilled Mathematics Experts to contribute to an AI training project involving advanced mathematical problem-solving, computational mathematics, numerical methods, and Python.\nThe work involves creating, solving, reviewing, and validating mathematical tasks that can be completed through programmatic, command-line-based workflows. A representative task may require translating a mathematical problem into a computational procedure, implementing the relevant equations or algorithms, calculating a reproducible result, testing special cases, and determining whether the final answer is mathematically and numerically valid.\nWhat You’ll Work On:\nSolve and validate advanced mathematical and computational problems.\nTranslate mathematical requirements into precise, executable workflows.\nImplement mathematical workflows using Python and command-line-accessible tools.\nUse Python to automate calculations, numerical experiments, parameter sweeps, visualization, and result validation.\nRequired Qualifications:\nAn BSc, MSc or PhD in Mathematics, Applied Mathematics, Statistics, Operations Research, Computational Science, Theoretical Computer Science, or a closely related quantitative field; or\nStrong expertise in at least one mathematical area, such as applied mathematics, numerical analysis, optimization, probability, statistics, discrete mathematics, algebra, geometry, mathematical modeling, or dynamical systems.\nPractical proficiency with Python or other coding languages.\nRelevant tools may include Python, SymPy, SageMath, SciPy, CVXPY, NumPy, GNU Octave, Julia, or similar programmatic mathematical software. Experience with an equivalent CLI-accessible tool is acceptable.\nRelevant Python tools may include NumPy, SciPy, SymPy, pandas, Matplotlib, Jupyter, CVXPY, statsmodels, NetworkX, numerical solvers, optimization libraries, or domain-specific scientific packages. No single library is mandatory.\nProcess:\nApply to the role and complete the screening questions.\nComplete an AI interview of approximately 30 minutes.\nComplete the hiring manager review.\nCompensation Structure:\nCompensation is output-based. Experts are paid per task that meets the project specifications. The time required to complete each task may vary depending on the expert’s experience and workflow.\nMinimum submission requirements apply.\nStart Timeline & Availability:\nWe typically fill roles within 48 hours and are looking for experts who are ready to begin immediately. If selected, you will be expected to start your first task within 24–48 hours of completing onboarding.\nOriginally posted on Himalayas",
-   "budgetType": "salary",
-   "budgetMinUsd": 60,
-   "budgetMaxUsd": 120,
-   "bidCount": null,
-   "location": null,
-   "employmentType": "Contractor",
-   "postedAt": 1795500872,
-   "tags": [
-    "Mathematics-Expert",
-    "Mathematician",
-    "Computational-Mathematics",
-    "Quantitative-Researcher",
-    "Programmer"
-   ],
-   "source": "himalayas",
-   "id": "https://himalayas.app/companies/xperteez-technology/jobs/mathematics-expert-remote-contract",
-   "key": "himalayas:https://himalayas.app/companies/xperteez-technology/jobs/mathematics-expert-remote-contract"
-  },
-  {
-   "url": "https://weworkremotely.com/remote-jobs/vertican-senior-applied-ai-engineer-document-intelligence",
-   "title": "Vertican: Senior Applied AI Engineer, Document Intelligence",
-   "description": "Headquarters: New Jersey, USA\n    \nURL: https://vertican.com\nAbout the role\nFor 40 years Vertican has buildt software that runs law firms. One year ago we created a new modern AI platform for document automation (processing/extraction/redacting) which our customers have been adopting faster than any product we've ever had. Our suite of AI-enabled products save customers thousands of hours each week by processing high volumes of documents with precision and speed.The AI team is growing and we'd like you to join.\nWe are hiring an engineer to own the document processing pipelines end to end: design, benchmarking, experimenting with new architectures and tools, threshold required for deploying a new pipeline, etc.\nWe believe it's important to build our own tooling to help us run, improve, and measure our applications. Therefore, the ideal candidate thinks outside the box on how to not just build the product/pipeline, but also the tooling needed around it.\nYou will be the first dedicated ML hire on the product taking over from the engineering manager who build the current solution and will work directly with the founding engineering team.\nThis is a senior, hands-on individual-contributor role, but we are small team and you'll be involved in design, planning, roadmapping, and architectural decisions.\nWhat you will do\nDesign the pipelines. Own the architecture of the extraction-to-posting pipelines: page classification, field extraction, candidate retrieval, claim matching, confidence gating and the hand-off to human review, etc. Decide where rules end and models begin, and what each stage must guarantee to the next, what the separation of concerns are, etc.\nWe have different pipelines for different document types and expect that at any given point in time we may have new ones emerge and may consolidate others.\nEvaluate new systems before we adopt them. Run structured trials of candidate components and recommend what to keep. Examples include probabilistic record linkage (Splink), Azure AI Content Understanding and Document Intelligence, Azure OpenAI and Foundry-hosted models, and LLM agents with tools. Similarly, test new models with the existing pipeline as they are relased from the frontier labs.\nBuild the evaluation process. You'll own the process of evaluating false positives, false negatives, errors of ommission, etc, that we ultimately use to determine if we should upgrade the pipeline. \nShip and operate. Take components from trial to production in our python workers on the cloud, instrument them, watch cost and quota, and diagnose the cases reviewers send back.\nSet direction. Work with leadereship on the planing for accuracy, cost improvement, and overall product improvements.\nWhat we are looking for\nRequired\n6+ years building ML or data-intensive systems, at least 3 of them owning a production pipeline whose output people acted on.\nSolid backend engineering understanding and ideally cloud architecture understanding.\nIdeally hands-on experience with document understanding: OCR or layout models, field extraction from scanned PDFs, or intelligent document processing products.\nExperience with entity resolution or record linkage at scale (Splink, Dedupe, Zingg, or your own blocking-and-scoring system) against databases of hundreds of thousands of rows.\nYou have designed an evaluation from scratch: built a labeled ground-truth set, chosen the metrics, and defended a threshold to a non-technical stakeholder.\nProduction experience with LLM APIs, including structured output, tool calling and cost or rate-limit management; you can say when an LLM is the wrong tool.\nStrong Python and SQL. Comfortable reading Postgres query plans and writing the raw query when the ORM gets in the way.\nEngineering/Scientist mindset: you are scientific about testing the pipeline and how results are interpeted/presented.\nNice to have\nAzure AI services (Content Understanding, Document Intelligence, Azure OpenAI, Foundry) or the AWS and GCP equivalents.\nFinancial document processing: checks, remittance advices, lockbox files, payment matching, or accounts receivable automation.\nExposure to collections, legal operations or other regulated workflows handling PII.\nProbabilistic matching theory (Fellegi-Sunter) or active-learning labeling workflows.\nExperience building human-review tooling or feedback loops that feed back into training and evaluation data.\nHow we work and what we offer\nSmall team, direct access to large datasets, weekly planning, daily standup, everyone remote in US timezones.\nWhat we offer:\nA small team of tight-knit, like-minded people passionate about high quality software\nCompetitive compensation, commensurate with a senior individual-contributor role.\nMonthly payments in USD\nVertican is an equal opportunity employer. We hire on merit and do not discriminate on the basis of race, color, religion, sex, sexual orientation, gender identity, national origin, age, disability or veteran status.\nTo apply: https://weworkremotely.com/remote-jobs/vertican-senior-applied-ai-engineer-document-intelligence",
-   "budgetType": "salary",
-   "budgetMinUsd": null,
-   "budgetMaxUsd": null,
-   "bidCount": null,
-   "location": "Anywhere in the World",
-   "employmentType": null,
-   "postedAt": 1793898747,
-   "tags": [
-    "Back-End Programming"
-   ],
-   "source": "wwr",
-   "id": "https://weworkremotely.com/remote-jobs/vertican-senior-applied-ai-engineer-document-intelligence",
-   "key": "wwr:https://weworkremotely.com/remote-jobs/vertican-senior-applied-ai-engineer-document-intelligence"
-  }
- ],
+ "pending": [],
  "night": [],
  "clientDrops": {
   "day": "2026-11-24",
