@@ -183,3 +183,11 @@ test('Vietnamese boards: price in VND from the hours, rounded to 50k, and no Opu
   const [fl] = await scoreJobs([jobs[0]], { draftMin: 7, vnHourlyVnd: 200000 }, async () => JSON.stringify([{ key: 'freelancer:1', score: 8, hours: 2, budgetVnd: 900000 }]));
   assert.equal(fl.priceVnd, null, 'only on the Vietnamese boards');
 });
+
+test('the draft rule names the lower Vietnamese-board threshold when given', async () => {
+  let prompt = '';
+  await scoreJobs(jobs, { draftMin: 7, vnDraftMin: 6 }, async (p) => { prompt = p; return JSON.stringify(good); });
+  assert.match(prompt, /score >= 7 \(Vietnamese boards: score >= 6\)/);
+  await scoreJobs(jobs, { draftMin: 7 }, async (p) => { prompt = p; return JSON.stringify(good); });
+  assert.doesNotMatch(prompt, /Vietnamese boards: score >=/);
+});

@@ -159,6 +159,7 @@
     "apac",
     "gmt+7"
   ],
+  "vnAlertScore": 6,
   "vnHourlyVnd": 200000,
   "hourlyRateUsd": 20,
   "hoursPerDay": 5,

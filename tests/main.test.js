@@ -246,3 +246,18 @@ test('jobs dropped for their client are counted and reported once, on the next m
   await run('poll', deps);
   assert.equal(sent.length, 2, 'the report goes out once');
 });
+
+test('Vietnamese boards alert from vnAlertScore (6); other sources still need alertScore', async () => {
+  const vn = makeJob({ source: 'vlance', id: 5, title: 'Thiết kế slide', url: 'https://www.vlance.vn/viec-freelance/a' });
+  const { deps, sent } = setup({ jobs: [vn, urgent(1)], scores: { 'vlance:5': 6, 'freelancer:1': 6 } });
+  deps.fetchAll = async () => ({ jobs: [vn, urgent(1)], errors: [], okSources: ['freelancer', 'vlance'] });
+  saveState(deps.stateDir, { initialized: true, seeded: { freelancer: true, vlance: true }, seen: {}, pending: [] });
+  let opts;
+  const score = deps.scoreJobs;
+  deps.scoreJobs = async (list, o) => { opts = o; return score(list, o); };
+  await run('poll', deps);
+  assert.equal(config.vnAlertScore, 6);
+  assert.equal(opts.vnDraftMin, 6, 'proposals are drafted from 6 on the Vietnamese boards');
+  assert.equal(sent.length, 1);
+  assert.match(sent[0].text, /vlance\.vn/);
+});

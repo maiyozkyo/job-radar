@@ -28,6 +28,7 @@ import { readFileSync } from 'node:fs';
  * @property {string[]} freelancerQueries
  * @property {string[]} stackKeywords
  * @property {number} [vnHourlyVnd]     price per hour on the Vietnamese boards, in VND
+ * @property {number} [vnAlertScore]    alert threshold on the Vietnamese boards (default alertScore)
  * @property {string[]} blockKeywords      matched in title and tags
  * @property {string[]} [titleBlockKeywords] matched in the title only
  * @property {number} minFixedUsd

@@ -14,7 +14,7 @@ export class ClaudeOutputError extends Error {}
 const read = (rel) => readFileSync(new URL(`../${rel}`, import.meta.url), 'utf8');
 const MAX_DESCRIPTION = 3000;
 
-function buildPrompt(jobs, draftMin) {
+function buildPrompt(jobs, draftMin, vnDraftMin = null) {
   const data = jobs.map((j) => ({
     key: j.key,
     source: j.source,
@@ -31,7 +31,7 @@ function buildPrompt(jobs, draftMin) {
     client: j.client ?? null,
   }));
   return read('prompts/score.md')
-    .replaceAll('{{DRAFT_RULE}}', `score >= ${draftMin}`)
+    .replaceAll('{{DRAFT_RULE}}', `score >= ${draftMin}${vnDraftMin != null && vnDraftMin !== draftMin ? ` (Vietnamese boards: score >= ${vnDraftMin})` : ''}`)
     // Function replacers: a `$&` in job text must stay as typed.
     .replace('{{PROFILE}}', readProfile)
     .replace('{{JOBS}}', () => JSON.stringify(data, null, 1));
@@ -177,9 +177,9 @@ export function defaultRunClaude(prompt, { timeoutMs = TIMEOUT_MS, command = 'cl
  * Scores jobs and drafts proposals for those scoring at least `draftMin`.
  * @returns {Promise<(Scored|null)[]>} in the same order as `jobs`; null when Claude skipped a job
  */
-export async function scoreJobs(jobs, { draftMin, rate = 20, hoursPerDay = 2, discount = 1, redraftMin = null, vnHourlyVnd = null }, runClaude = defaultRunClaude) {
+export async function scoreJobs(jobs, { draftMin, rate = 20, hoursPerDay = 2, discount = 1, redraftMin = null, vnHourlyVnd = null, vnDraftMin = null }, runClaude = defaultRunClaude) {
   if (!jobs.length) return [];
-  const scored = parseScores(await runClaude(buildPrompt(jobs, draftMin)), jobs, { rate, hoursPerDay, discount, vnHourlyVnd });
+  const scored = parseScores(await runClaude(buildPrompt(jobs, draftMin, vnDraftMin)), jobs, { rate, hoursPerDay, discount, vnHourlyVnd });
   return redraftMin == null ? scored : redraft(jobs, scored, redraftMin, runClaude);
 }
 
