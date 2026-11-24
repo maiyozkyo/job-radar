@@ -1759,3 +1759,5 @@
 2026-11-24T05:45Z run poll fresh=4 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=4
 2026-11-24T06:12Z run poll fresh=36 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=15, location=9, block keyword=5, too many bids=4, client=1, hourly below floor=1, risk=1
 2026-11-24T06:15Z run poll fresh=1 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1
+2026-11-24T06:24Z score 1 - freelancer:40832996 | Senior Procurement Transformation Contractor - BFSI Client, Dublin (Hybrid) | https://www.freelancer.com/projects/procurement/Senior-Procurement-Transformation
+2026-11-24T06:24Z run poll fresh=6 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: client=2, no stack keyword=2, block keyword=1
