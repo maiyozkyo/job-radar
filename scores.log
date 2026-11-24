@@ -1825,3 +1825,5 @@
 2026-11-24T12:30Z run poll fresh=12 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=4, no stack keyword=3, client=2, too many bids=2, budget below floor=1
 2026-11-24T12:45Z run poll fresh=35 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: location=13, no stack keyword=12, block keyword=4, client=3, too many bids=2, budget below floor=1
 2026-11-24T13:00Z run poll fresh=9 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=5, block keyword=4
+2026-11-24T13:06Z score 2 - freelancer:40833509 | Launch Luxury Resale Ecommerce Website | https://www.freelancer.com/projects/ai-integration/Launch-Luxury-Resale-Ecommerce-Website
+2026-11-24T13:06Z run poll fresh=34 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: location=16, block keyword=12, no stack keyword=4, full-time only=1
