@@ -1903,3 +1903,4 @@
 2026-11-24T22:30Z score 1 - remoteok:1138074 | Thrive: Strategic Technical Advisor | https://remoteOK.com/remote-jobs/remote-strategic-technical-advisor-thrive-1138074
 2026-11-24T22:30Z run digest pending=2 alerts=0 sent=0
 2026-11-24T22:30Z run poll quiet fresh=5 kept=0 night=22 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=5
+2026-11-24T22:35Z run poll quiet fresh=3 kept=0 night=22 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2, too many bids=1
