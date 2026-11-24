@@ -166,3 +166,28 @@ test('dollar signs in job text reach the prompt as typed', async () => {
   assert.ok(prompt.includes(JSON.stringify(description)));
   assert.doesNotMatch(prompt, /\{\{JOBS\}\}/);
 });
+
+test('Vietnamese boards: price in VND from the hours, rounded to 50k, and no Opus rewrite', async () => {
+  const vn = makeJob({ source: 'vlance', id: 9, title: 'Viết 10 bài SEO' });
+  const calls = [];
+  const run = async (prompt, opts) => { calls.push(opts); return JSON.stringify([{ key: 'vlance:9', score: 9, reasonVi: 'Hợp', proposalEn: 'Chào anh/chị', hours: 2.6 }]); };
+  const [s] = await scoreJobs([vn], { draftMin: 7, redraftMin: 8, vnHourlyVnd: 200000 }, run);
+  assert.equal(s.priceVnd, 500000);
+  assert.equal(s.bid, null);
+  assert.equal(calls.length, 1, 'no Opus redraft for a Vietnamese proposal');
+  const [none] = await scoreJobs([vn], { draftMin: 7, vnHourlyVnd: 200000 }, async () => JSON.stringify([{ key: 'vlance:9', score: 3, reasonVi: 'x', hours: null }]));
+  assert.equal(none.priceVnd, null);
+  const one = (extra) => scoreJobs([vn], { draftMin: 7, vnHourlyVnd: 200000 }, async () => JSON.stringify([{ key: 'vlance:9', score: 8, hours: 1.5, ...extra }]));
+  assert.equal((await one({ budgetVnd: 620000 }))[0].priceVnd, 600000, 'stated budget wins, rounded to 50k');
+  assert.equal((await one({ budgetVnd: 'không rõ' }))[0].priceVnd, 300000, 'no usable budget: hours x rate');
+  const [fl] = await scoreJobs([jobs[0]], { draftMin: 7, vnHourlyVnd: 200000 }, async () => JSON.stringify([{ key: 'freelancer:1', score: 8, hours: 2, budgetVnd: 900000 }]));
+  assert.equal(fl.priceVnd, null, 'only on the Vietnamese boards');
+});
+
+test('the draft rule names the lower Vietnamese-board threshold when given', async () => {
+  let prompt = '';
+  await scoreJobs(jobs, { draftMin: 7, vnDraftMin: 6 }, async (p) => { prompt = p; return JSON.stringify(good); });
+  assert.match(prompt, /score >= 7 \(Vietnamese boards: score >= 6\)/);
+  await scoreJobs(jobs, { draftMin: 7 }, async (p) => { prompt = p; return JSON.stringify(good); });
+  assert.doesNotMatch(prompt, /Vietnamese boards: score >=/);
+});

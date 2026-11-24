@@ -6,7 +6,7 @@ import { readProfile } from './profile.js';
 /**
  * `hours` is Claude's effort estimate; `bid` is computed from it (see fees.js).
  * `milestones` splits the bid over Claude's milestone names (fixed-price bids only).
- * @typedef {{ key: string, score: number, reasonVi: string, summaryVi: string[], proposalEn: string|null, hours: number|null, bid: ReturnType<typeof suggestBid>, milestones: ReturnType<typeof splitMilestones> }} Scored
+ * @typedef {{ key: string, score: number, reasonVi: string, summaryVi: string[], proposalEn: string|null, hours: number|null, bid: ReturnType<typeof suggestBid>, milestones: ReturnType<typeof splitMilestones>, priceVnd: number|null }} Scored
  */
 
 export class ClaudeOutputError extends Error {}
@@ -14,7 +14,7 @@ export class ClaudeOutputError extends Error {}
 const read = (rel) => readFileSync(new URL(`../${rel}`, import.meta.url), 'utf8');
 const MAX_DESCRIPTION = 3000;
 
-function buildPrompt(jobs, draftMin) {
+function buildPrompt(jobs, draftMin, vnDraftMin = null) {
   const data = jobs.map((j) => ({
     key: j.key,
     source: j.source,
@@ -31,7 +31,7 @@ function buildPrompt(jobs, draftMin) {
     client: j.client ?? null,
   }));
   return read('prompts/score.md')
-    .replaceAll('{{DRAFT_RULE}}', `score >= ${draftMin}`)
+    .replaceAll('{{DRAFT_RULE}}', `score >= ${draftMin}${vnDraftMin != null && vnDraftMin !== draftMin ? ` (Vietnamese boards: score >= ${vnDraftMin})` : ''}`)
     // Function replacers: a `$&` in job text must stay as typed.
     .replace('{{PROFILE}}', readProfile)
     .replace('{{JOBS}}', () => JSON.stringify(data, null, 1));
@@ -93,6 +93,24 @@ function summaryLines(raw) {
 }
 
 /** A job Claude skipped comes back as null, so one gap does not sink the batch. */
+const VN_BOARDS = new Set(['freelancerviet', 'vlance']);
+export const isVnBoard = (job) => VN_BOARDS.has(job.source);
+
+const round50k = (n) => Math.round(n / 50_000) * 50_000;
+
+/**
+ * Vietnamese boards: the client's stated budget when there is one (Vietnamese
+ * clients pick at or under it; with AI the effort fits most budgets), else
+ * hours × VND rate. Rounded to 50k, at least 100k; null off those boards.
+ */
+function priceVnd(job, hours, rate, budgetVnd) {
+  if (!isVnBoard(job)) return null;
+  const budget = Number(budgetVnd);
+  if (Number.isFinite(budget) && budget >= 100_000) return round50k(budget);
+  if (!(hours > 0) || !(rate > 0)) return null;
+  return Math.max(100_000, round50k(hours * rate));
+}
+
 function parseScores(output, jobs, bidOpts) {
   const arr = parseArray(output);
   if (!arr.length) throw new ClaudeOutputError('empty reply');
@@ -106,6 +124,7 @@ function parseScores(output, jobs, bidOpts) {
     const hours = Number.isFinite(h) && h > 0 && h <= 500 ? h : null;
     const bid = suggestBid(job, hours, bidOpts);
     return {
+      priceVnd: priceVnd(job, hours, bidOpts?.vnHourlyVnd, s.budgetVnd),
       key: job.key, score, reasonVi: String(s.reasonVi ?? ''), summaryVi: summaryLines(s.summaryVi),
       proposalEn: s.proposalEn ? sanitizeProposal(String(s.proposalEn)) : null,
       hours, bid, milestones: splitMilestones(bid, milestoneNames(s.milestonesEn)),
@@ -158,9 +177,9 @@ export function defaultRunClaude(prompt, { timeoutMs = TIMEOUT_MS, command = 'cl
  * Scores jobs and drafts proposals for those scoring at least `draftMin`.
  * @returns {Promise<(Scored|null)[]>} in the same order as `jobs`; null when Claude skipped a job
  */
-export async function scoreJobs(jobs, { draftMin, rate = 20, hoursPerDay = 2, discount = 1, redraftMin = null }, runClaude = defaultRunClaude) {
+export async function scoreJobs(jobs, { draftMin, rate = 20, hoursPerDay = 2, discount = 1, redraftMin = null, vnHourlyVnd = null, vnDraftMin = null }, runClaude = defaultRunClaude) {
   if (!jobs.length) return [];
-  const scored = parseScores(await runClaude(buildPrompt(jobs, draftMin)), jobs, { rate, hoursPerDay, discount });
+  const scored = parseScores(await runClaude(buildPrompt(jobs, draftMin, vnDraftMin)), jobs, { rate, hoursPerDay, discount, vnHourlyVnd });
   return redraftMin == null ? scored : redraft(jobs, scored, redraftMin, runClaude);
 }
 
@@ -171,7 +190,7 @@ export async function scoreJobs(jobs, { draftMin, rate = 20, hoursPerDay = 2, di
  * Each rewritten proposal carries `redrafted: true`.
  */
 export async function redraft(jobs, scored, redraftMin, runClaude = defaultRunClaude) {
-  const picks = jobs.map((job, i) => ({ job, s: scored[i] })).filter(({ s }) => s?.proposalEn && s.score >= redraftMin);
+  const picks = jobs.map((job, i) => ({ job, s: scored[i] })).filter(({ job, s }) => s?.proposalEn && s.score >= redraftMin && !isVnBoard(job)); // redraft.md writes English
   if (!picks.length) return scored;
   const data = picks.map(({ job, s }) => ({
     key: job.key, source: job.source, title: job.title, description: job.description.slice(0, MAX_DESCRIPTION),

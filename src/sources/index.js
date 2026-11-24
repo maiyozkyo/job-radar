@@ -5,6 +5,7 @@ import { fetchRemoteOk } from './remoteok.js';
 import { fetchHimalayas } from './himalayas.js';
 import { fetchRemotive } from './remotive.js';
 import { fetchJobicy } from './jobicy.js';
+import { fetchFreelancerViet, fetchVlance } from './vnboards.js';
 import { fetchReddit, hasRedditKeys } from './reddit.js';
 
 /**
@@ -30,6 +31,8 @@ export async function fetchAll(config, fetchFn = fetch, now = Math.floor(Date.no
     himalayas: () => fetchHimalayas(fetchFn),
     remotive: () => fetchRemotive(fetchFn),
     jobicy: () => fetchJobicy(fetchFn),
+    freelancerviet: () => fetchFreelancerViet(fetchFn),
+    vlance: () => fetchVlance(fetchFn),
   };
   if (hasRedditKeys(env)) sources.reddit = () => fetchReddit(env, fetchFn);
   const due = (name) => !(name in RATE_LIMITS) || now - (lastFetch[name] ?? 0) >= RATE_LIMITS[name];

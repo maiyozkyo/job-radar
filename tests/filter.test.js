@@ -130,3 +130,14 @@ test('junk clients are dropped with the reason; a new client with no history is 
   assert.equal(filterJob(fl({ client: { ...ok, reviews: 0, completed: 0, rating: 0, registeredAt: NOW - 86400 } }), config, NOW).keep, true, 'new verified client stays');
   assert.equal(keep(fl()), true, 'no record, no drop');
 });
+
+test('Vietnamese boards: no keyword gate (Claude scores every job), block words still apply', () => {
+  const vn = (source, over) => makeJob({ source, id: 3, title: 'Viết bài chuẩn SEO', description: '', ...over });
+  assert.equal(keep(vn('freelancerviet')), true);
+  assert.equal(keep(vn('vlance', { title: 'Thiết kế slide thuyết trình' })), true);
+  assert.equal(keep(vn('vlance', { title: 'Cần người hỗ trợ xác minh tài khoản công cụ AI Claude' })), false);
+  assert.equal(keep(vn('freelancerviet', { title: 'Xác minh tài khoản'.normalize('NFD') })), false);
+  assert.equal(keep(board('wwr', { title: 'Viết bài chuẩn SEO', description: 'Contract' })), false);
+  assert.equal(isUrgent(vn('freelancerviet')), true);
+  assert.equal(isUrgent(vn('vlance')), true);
+});

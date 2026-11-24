@@ -3,7 +3,7 @@ import { loadConfig } from './job.js';
 import { fetchAll } from './sources/index.js';
 import { filterJob, isUrgent } from './filter.js';
 import { appendLog, loadState, saveState, takeNew, prune } from './state.js';
-import { scoreJobs } from './claude.js';
+import { isVnBoard, scoreJobs } from './claude.js';
 import { formatAlertHtml, formatDigest, formatUnscored, sendMessage } from './telegram.js';
 import { fetchFreelancerStatus } from './sources/freelancer.js';
 import { dayGmt7, isQuiet } from './night.js';
@@ -17,8 +17,10 @@ const MAX_MORNING = 8;
 
 const claudeWarning = (err) => `Claude lỗi: ${err.message.slice(0, 120)}, chưa chấm điểm`;
 const newestFirst = (a, b) => b.postedAt - a.postedAt;
-const bidOpts = (config) => ({ rate: config.hourlyRateUsd ?? 20, hoursPerDay: config.hoursPerDay ?? 2, discount: config.firstJobDiscount ?? 1 });
+const bidOpts = (config) => ({ rate: config.hourlyRateUsd ?? 20, hoursPerDay: config.hoursPerDay ?? 2, discount: config.firstJobDiscount ?? 1, vnHourlyVnd: config.vnHourlyVnd });
 // Urgent alerts only: their proposals go out on one tap.
+/** Vietnamese boards alert lower (`vnAlertScore`): cheap jobs, but many are worth taking. */
+const alertMin = (config, job) => (isVnBoard(job) ? config.vnAlertScore ?? config.alertScore : config.alertScore);
 const redraftOpts = (config) => ({ redraftMin: config.opusRedraftScore ?? null });
 
 const stamp = (now) => new Date(now * 1000).toISOString().slice(0, 16) + 'Z';
@@ -56,11 +58,11 @@ async function scoreUrgent(jobs, deps, log) {
   let warning = 'Claude bỏ sót, chưa chấm điểm';
   if (!jobs.length) return { alerts, unscored, warning };
   try {
-    const scored = await deps.scoreJobs(jobs, { draftMin: config.alertScore, ...bidOpts(config), ...redraftOpts(config) });
+    const scored = await deps.scoreJobs(jobs, { draftMin: config.alertScore, vnDraftMin: config.vnAlertScore ?? config.alertScore, ...bidOpts(config), ...redraftOpts(config) });
     logScores(jobs, scored, log, now);
     jobs.forEach((job, i) => {
       if (!scored[i]) unscored.push(job);
-      else if (scored[i].score >= config.alertScore) alerts.push({ job, scored: scored[i] });
+      else if (scored[i].score >= alertMin(config, job)) alerts.push({ job, scored: scored[i] });
     });
   } catch (err) {
     unscored = jobs;

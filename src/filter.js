@@ -13,6 +13,7 @@ const matcher = (kw) => {
 const firstMatch = (text, keywords) => keywords.find((kw) => matcher(kw)(text));
 
 const BOARDS = new Set(['wwr', 'remoteok', 'himalayas', 'remotive', 'jobicy']);
+const VN_BOARDS = new Set(['freelancerviet', 'vlance']);
 const FULL_TIME = /full[\s_-]?time/i; // Remotive writes "full_time"
 const FLEXIBLE = /contract|part[\s-]?time|freelance/i;
 
@@ -22,18 +23,21 @@ const FLEXIBLE = /contract|part[\s-]?time|freelance/i;
  * @returns {{ keep: boolean, reason: string }}
  */
 export function filterJob(job, config, now = Date.now() / 1000) {
-  const text = `${job.title}\n${job.description}\n${job.tags.join(' ')}`.toLowerCase();
+  const text = `${job.title}\n${job.description}\n${job.tags.join(' ')}`.normalize('NFC').toLowerCase();
   const drop = (reason) => ({ keep: false, reason });
 
   // Block words only in the title and tags: a description saying "daily sales
   // report" or "email verification" is a normal job. Some block words only in
   // the title: Freelancer tags Excel cleanup jobs "Data Entry".
-  const blocked = firstMatch(`${job.title}
-${job.tags.join(' ')}`.toLowerCase(), config.blockKeywords)
-    ?? firstMatch(job.title.toLowerCase(), config.titleBlockKeywords ?? []);
+  const title = job.title.normalize('NFC').toLowerCase();
+  const blocked = firstMatch(`${title}\n${job.tags.join(' ').toLowerCase()}`, config.blockKeywords)
+    ?? firstMatch(title, config.titleBlockKeywords ?? []);
   if (blocked) return drop(`block keyword: ${blocked}`);
   const scam = riskFlags(job).find((f) => f.level === 'block');
   if (scam) return drop(`risk: ${scam.label}`);
+  // Vietnamese boards: a few jobs a day, in Vietnamese the freelancer can check,
+  // so Claude scores every one (rules in prompts/score.md) instead of a keyword gate.
+  if (VN_BOARDS.has(job.source)) return { keep: true, reason: 'vn board' };
   const stack = firstMatch(text, config.stackKeywords);
   if (!stack) return drop('no stack keyword');
 
@@ -58,4 +62,5 @@ ${job.tags.join(' ')}`.toLowerCase(), config.blockKeywords)
 }
 
 /** Sources where clients decide within hours, so alerts go out at once. */
-export const isUrgent = (job) => job.source === 'freelancer' || job.source === 'hn' || job.source === 'reddit';
+// The Vietnamese boards post a few jobs a day, so they alert at once instead of waiting for the digest.
+export const isUrgent = (job) => ['freelancer', 'hn', 'reddit'].includes(job.source) || VN_BOARDS.has(job.source);
