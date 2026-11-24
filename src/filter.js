@@ -13,6 +13,7 @@ const matcher = (kw) => {
 const firstMatch = (text, keywords) => keywords.find((kw) => matcher(kw)(text));
 
 const BOARDS = new Set(['wwr', 'remoteok', 'himalayas', 'remotive', 'jobicy']);
+const VN_BOARDS = new Set(['freelancerviet', 'vlance']);
 const FULL_TIME = /full[\s_-]?time/i; // Remotive writes "full_time"
 const FLEXIBLE = /contract|part[\s-]?time|freelance/i;
 
@@ -34,9 +35,9 @@ ${job.tags.join(' ')}`.toLowerCase(), config.blockKeywords)
   if (blocked) return drop(`block keyword: ${blocked}`);
   const scam = riskFlags(job).find((f) => f.level === 'block');
   if (scam) return drop(`risk: ${scam.label}`);
-  // Vietnamese keywords only on the Vietnamese board: "web" alone is too broad elsewhere.
+  // Vietnamese keywords only on the Vietnamese boards: "web" alone is too broad elsewhere.
   const stack = firstMatch(text, config.stackKeywords)
-    ?? (job.source === 'freelancerviet' ? firstMatch(text, config.vnStackKeywords ?? []) : undefined);
+    ?? (VN_BOARDS.has(job.source) ? firstMatch(text, config.vnStackKeywords ?? []) : undefined);
   if (!stack) return drop('no stack keyword');
 
   if (job.source === 'freelancer') {
@@ -60,5 +61,5 @@ ${job.tags.join(' ')}`.toLowerCase(), config.blockKeywords)
 }
 
 /** Sources where clients decide within hours, so alerts go out at once. */
-// FreelancerViet: about one job a day, so it alerts at once instead of waiting for the digest.
-export const isUrgent = (job) => ['freelancer', 'hn', 'reddit', 'freelancerviet'].includes(job.source);
+// The Vietnamese boards post a few jobs a day, so they alert at once instead of waiting for the digest.
+export const isUrgent = (job) => ['freelancer', 'hn', 'reddit'].includes(job.source) || VN_BOARDS.has(job.source);

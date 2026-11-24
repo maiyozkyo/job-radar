@@ -141,3 +141,10 @@ test('FreelancerViet: Vietnamese keywords count only for that board, and it aler
   assert.equal(keep(vn({ title: 'Dịch thuật'.normalize('NFD') })), true);
   assert.equal(isUrgent(vn()), true);
 });
+
+test('vLance: Vietnamese keywords too; account verification jobs are dropped', () => {
+  const vl = (over) => makeJob({ source: 'vlance', id: 4, title: 'Thiết kế lập trình website', description: '', ...over });
+  assert.equal(keep(vl()), true);
+  assert.equal(keep(vl({ title: 'Cần người hỗ trợ xác minh tài khoản công cụ AI Claude' })), false);
+  assert.equal(isUrgent(vl()), true);
+});
