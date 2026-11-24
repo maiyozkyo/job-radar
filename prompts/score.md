@@ -20,7 +20,13 @@ Weigh:
 - Remote job posts must be open to someone in Vietnam (GMT+7); otherwise score 1.
 - **Vietnamese boards** (`source` `freelancerviet` or `vlance`): Vietnamese clients writing in Vietnamese, budgets in VND in the text. Every job reaches you, unfiltered. The freelancer reads Vietnamese natively and checks every result, so here a third kind of work fits, done with AI and reviewed by the freelancer:
   3. Vietnamese writing (articles, SEO content, scripts, CVs, documents, product descriptions), slides, Excel/Google Sheets and reports, turning images or PDFs into Word/Excel text, plus types 1 and 2.
-  Score at most 2: phone or voice work, live customer service or chat shifts, tutoring, on-site or office work, running ads accounts, liking/commenting/posting for someone, account verification, logo/image/video design, recruiting or sales, and posts with no clear deliverable (a title like "Online" or a person's name). A budget far too small for the work scores low as usual; read it from the text (e.g. "3 triệu" = 3,000,000 VND, roughly 120 USD).
+  Score at most 2: phone or voice work, live customer service or chat shifts, tutoring, on-site or office work, running ads accounts, liking/commenting/posting for someone, account verification, logo/image/video design, recruiting or sales, and posts with no clear deliverable (a title like "Online" or a person's name).
+  How to score type-3 work here:
+  - **Effort is AI effort.** AI produces the draft, OCR or sheet in minutes; the freelancer's `hours` are prompting plus reading and fixing the result, e.g. 30 scanned pages to Word ≈ 1–2 h, 10 SEO articles ≈ 2–3 h, a 15-slide deck ≈ 1 h. Never count manual typing or writing time.
+  - **Vietnamese budgets are small by nature.** Judge the budget against that AI effort, not against an hourly rate: 600,000 VND for 1–2 hours of review is good pay. Lower the score only when the budget is clearly below even that effort.
+  - **A short post is normal here.** A clear kind of work with the size missing ("gõ văn bản", "thiết kế slide") scores 6–7, not lower: the proposal asks for the size. Only a post with no deliverable at all is vague.
+  - A clear, AI-doable job with a fair budget scores 8–9.
+  - `budgetVnd`: the client's budget in VND read from the text (e.g. "3 triệu" = 3000000, "600k" = 600000; for a range, the top), or `null` when none is given.
 - `paste` jobs are posts the freelancer copied from another platform (Upwork, Contra, Fiverr, LinkedIn, …), so the budget, bid count and client details are only what the text says. Read them from the text when present.
 
 ## Output
@@ -30,6 +36,8 @@ Return **only** a JSON array, one object per input job, same keys:
 ```json
 [{ "key": "freelancer:123", "score": 8, "reasonVi": "...", "summaryVi": ["...", "..."], "proposalEn": "...", "hours": 6, "milestonesEn": ["...", "..."] }]
 ```
+
+Vietnamese-board jobs also carry `"budgetVnd": 600000` (or `null`).
 
 - `score`: integer 1–10.
 - `hours`: the freelancer's hands-on hours for the whole job, as a number; `null` when the scope is too vague to estimate. The bid amount is computed from it, so do not put prices in the proposal. The freelancer works with AI coding tools and scripts, so do not use manual agency timings. Estimate like this before you score:

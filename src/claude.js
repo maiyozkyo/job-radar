@@ -96,10 +96,19 @@ function summaryLines(raw) {
 const VN_BOARDS = new Set(['freelancerviet', 'vlance']);
 export const isVnBoard = (job) => VN_BOARDS.has(job.source);
 
-/** Vietnamese boards: hours × VND rate, rounded to 50k, at least 100k; null off those boards or without hours. */
-function priceVnd(job, hours, rate) {
-  if (!isVnBoard(job) || !(hours > 0) || !(rate > 0)) return null;
-  return Math.max(100_000, Math.round((hours * rate) / 50_000) * 50_000);
+const round50k = (n) => Math.round(n / 50_000) * 50_000;
+
+/**
+ * Vietnamese boards: the client's stated budget when there is one (Vietnamese
+ * clients pick at or under it; with AI the effort fits most budgets), else
+ * hours × VND rate. Rounded to 50k, at least 100k; null off those boards.
+ */
+function priceVnd(job, hours, rate, budgetVnd) {
+  if (!isVnBoard(job)) return null;
+  const budget = Number(budgetVnd);
+  if (Number.isFinite(budget) && budget >= 100_000) return round50k(budget);
+  if (!(hours > 0) || !(rate > 0)) return null;
+  return Math.max(100_000, round50k(hours * rate));
 }
 
 function parseScores(output, jobs, bidOpts) {
@@ -115,7 +124,7 @@ function parseScores(output, jobs, bidOpts) {
     const hours = Number.isFinite(h) && h > 0 && h <= 500 ? h : null;
     const bid = suggestBid(job, hours, bidOpts);
     return {
-      priceVnd: priceVnd(job, hours, bidOpts?.vnHourlyVnd),
+      priceVnd: priceVnd(job, hours, bidOpts?.vnHourlyVnd, s.budgetVnd),
       key: job.key, score, reasonVi: String(s.reasonVi ?? ''), summaryVi: summaryLines(s.summaryVi),
       proposalEn: s.proposalEn ? sanitizeProposal(String(s.proposalEn)) : null,
       hours, bid, milestones: splitMilestones(bid, milestoneNames(s.milestonesEn)),
