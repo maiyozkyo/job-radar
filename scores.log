@@ -2084,3 +2084,10 @@
 2026-11-25T12:00Z run poll fresh=31 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=12, location=12, block keyword=6, hourly below floor=1
 2026-11-25T12:07Z score 6 7h freelancer:40835192 | Competitor & Marketing Research (London and Dubai) | https://www.freelancer.com/projects/digital-marketing/Competitor-Marketing-Research-London
 2026-11-25T12:07Z run poll fresh=6 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=3, too many bids=1, block keyword=1
+2026-11-25T12:15Z score 1 - himalayas:https://himalayas.app/companies/zabota-llc/jobs/senior-creative-strategist | Zabota LLC: Senior Creative Strategist | https://himalayas.app/companies/zabota-llc/jobs/senior-creative-strategist?utm_source=api
+2026-11-25T12:15Z score 1 - himalayas:https://himalayas.app/companies/micro1/jobs/lowe-s-specialist | micro1: Lowe’s Specialist | https://himalayas.app/companies/micro1/jobs/lowe-s-specialist?utm_source=api
+2026-11-25T12:15Z score 1 - himalayas:https://himalayas.app/companies/micro1/jobs/teladoc-specialist | micro1: Teladoc Specialist | https://himalayas.app/companies/micro1/jobs/teladoc-specialist?utm_source=api
+2026-11-25T12:15Z score 1 - himalayas:https://himalayas.app/companies/micro1/jobs/carfax-car-care-specialist | micro1: CARFAX Car Care Specialist | https://himalayas.app/companies/micro1/jobs/carfax-car-care-specialist?utm_source=api
+2026-11-25T12:15Z score 1 - remoteok:1138100 | Storyblok: Senior Global Partner Specialist - USA | https://remoteOK.com/remote-jobs/remote-senior-global-partner-specialist-usa-storyblok-1138100
+2026-11-25T12:15Z score 1 - remoteok:1138090 | Oscar Health: Associate, Payment Integrity | https://remoteOK.com/remote-jobs/remote-associate-payment-integrity-oscar-health-1138090
+2026-11-25T12:15Z run digest pending=6 alerts=0 sent=0
