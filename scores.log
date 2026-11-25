@@ -2101,3 +2101,5 @@
 2026-11-25T13:15Z run poll fresh=29 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: location=10, block keyword=8, no stack keyword=6, too many bids=3, client=2
 2026-11-25T13:25Z score 1 - freelancer:40835304 | Belarusian Document Sourcing for AI Training | https://www.freelancer.com/projects/data-annotation/Belarusian-Document-Sourcing-for
 2026-11-25T13:25Z run poll fresh=11 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=7, too many bids=2, block keyword=1
+2026-11-25T13:27Z score 1 - freelancer:40835305 | Bosnian Document Sourcing for AI Training | https://www.freelancer.com/projects/bosnian-translator/Bosnian-Document-Sourcing-for-Training
+2026-11-25T13:27Z run poll fresh=1 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0
