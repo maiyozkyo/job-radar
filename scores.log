@@ -1954,3 +1954,4 @@
 2026-11-25T02:33Z run poll fresh=1 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0
 2026-11-25T02:45Z run poll fresh=5 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=3, block keyword=2
 2026-11-25T03:00Z run poll fresh=5 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 errors=wwr: The operation was aborted due to timeout dropped: no stack keyword=4, block keyword=1
+2026-11-25T03:15Z run poll fresh=26 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=11, location=10, block keyword=4, too many bids=1
