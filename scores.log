@@ -2133,3 +2133,6 @@
 2026-11-25T14:30Z run poll fresh=8 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=3, block keyword=2, client=1, too many bids=1, budget below floor=1
 2026-11-25T14:32Z score 2 - freelancer:40835384 | Online Job Application Assistant Needed | https://www.freelancer.com/projects/writing/Online-Job-Application-Assistant-Needed
 2026-11-25T14:32Z run poll fresh=1 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0
+2026-11-25T14:34Z score 1 - freelancer:40835388 | Hungarian Document Sourcing for AI Training | https://www.freelancer.com/projects/hungarian-translator/Hungarian-Document-Sourcing-for-Training
+2026-11-25T14:34Z score 2 - freelancer:40835386 | AI Language Learning Platform Development | https://www.freelancer.com/projects/ai-app-development/Language-Learning-Platform-Development
+2026-11-25T14:34Z run poll fresh=5 kept=2 night=0 scored=2 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2, client=1
