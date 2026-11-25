@@ -12320,29 +12320,7 @@
   "freelancer:40835940": 1795643134,
   "freelancer:40835932": 1795643134
  },
- "pending": [
-  {
-   "url": "https://himalayas.app/companies/xperteez-technology/jobs/applied-scientists-machine-learning-remote-contract?utm_source=api",
-   "title": "Xperteez Technology: Applied Scientists — Machine Learning ,Remote- Contract",
-   "description": "Location: Global, fully remote\nJob Type: Contract (~15 hours per week)\nSchedule: Flexible—you choose the hours and days you work, including weekends if desired\nThe work involves creating, solving, reviewing, and validating challenging machine-learning engineering tasks. A representative task may require implementing or modifying a model, constructing a reproducible training or inference workflow, optimizing memory or throughput, debugging numerical or system-level failures, and verifying that the resulting implementation satisfies objective correctness and performance requirements.\nThis is a very coding heavy role. Candidates but have experience using coding agents with python in their workflow. \nRequired Skills\nMachine learningWhat You’ll Work On\nDevelop and validate machine-learning models, training pipelines, inference systems, and supporting infrastructure.\nImplement model components, data pipelines, evaluation systems, and numerical methods.\nBuild reproducible programmatic workflows using Python and command-line tools.   \nRequired Qualifications\nA BS in Computer Science, Machine Learning, Artificial Intelligence, Applied Mathematics, Statistics, Engineering, or a closely related quantitative discipline.\nStrong professional or research experience in machine learning.\nPractical proficiency with Python and coding agents.\nOriginally posted on Himalayas",
-   "budgetType": "salary",
-   "budgetMinUsd": 60,
-   "budgetMaxUsd": 120,
-   "bidCount": null,
-   "location": null,
-   "employmentType": "Contractor",
-   "postedAt": 1795619056,
-   "tags": [
-    "Applied-Scientist",
-    "Machine-Learning-Engineer",
-    "Machine-Learning-Scientist",
-    "AI-Engineer"
-   ],
-   "source": "himalayas",
-   "id": "https://himalayas.app/companies/xperteez-technology/jobs/applied-scientists-machine-learning-remote-contract",
-   "key": "himalayas:https://himalayas.app/companies/xperteez-technology/jobs/applied-scientists-machine-learning-remote-contract"
-  }
- ],
+ "pending": [],
  "night": [
   {
    "url": "https://www.freelancer.com/projects/digital-marketing/Build-High-Sydney-Electrician-Backlinks",

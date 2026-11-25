@@ -2256,3 +2256,5 @@
 2026-11-25T21:30Z run poll quiet fresh=1 kept=0 night=18 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1
 2026-11-25T21:44Z run poll quiet fresh=9 kept=1 night=19 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=5, client=3
 2026-11-25T21:45Z run poll quiet fresh=0 kept=0 night=19 scored=0 unscored=0 alerts=0 sent=0
+2026-11-25T21:46Z score 3 - himalayas:https://himalayas.app/companies/xperteez-technology/jobs/applied-scientists-machine-learning-remote-contract | Xperteez Technology: Applied Scientists — Machine Learning ,Remote- Contract | https://himalayas.app/companies/xperteez-technology/jobs/applied-scientists-machine-learning-remote-contract?utm_source=api
+2026-11-25T21:46Z run digest pending=1 alerts=0 sent=0
