@@ -2128,3 +2128,5 @@
 2026-11-25T14:06Z run poll fresh=7 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: client=2, too many bids=2, block keyword=2, no stack keyword=1
 2026-11-25T14:12Z run poll fresh=2 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=1, no stack keyword=1
 2026-11-25T14:15Z run poll fresh=1 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1
+2026-11-25T14:18Z score 2 - freelancer:40835367 | Electrical / MEP Estimator – Data Center Construction (Freelance / Remote) | https://www.freelancer.com/projects/quantity-surveying/Electrical-MEP-Estimator-Data-Center
+2026-11-25T14:18Z run poll fresh=11 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: location=6, block keyword=3, no stack keyword=1
