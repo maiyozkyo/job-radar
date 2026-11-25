@@ -2108,3 +2108,5 @@
 2026-11-25T13:31Z run poll fresh=1 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0
 2026-11-25T13:35Z score 1 - freelancer:40835314 | Corsican Document Sourcing for AI Training | https://www.freelancer.com/projects/ai-hw-sw/Corsican-Document-Sourcing-for-Training
 2026-11-25T13:35Z run poll fresh=1 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0
+2026-11-25T13:37Z score 2 - freelancer:40835317 | Croatian Document Sourcing for AI Training | https://www.freelancer.com/projects/croatian-translator/Croatian-Document-Sourcing-for-Training
+2026-11-25T13:37Z run poll fresh=2 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1
