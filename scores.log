@@ -2124,3 +2124,4 @@
 2026-11-25T13:50Z run poll fresh=1 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0
 2026-11-25T13:53Z score 1 - freelancer:40835342 | Hebrew Document Sourcing for AI Training | https://www.freelancer.com/projects/ai-training-data/Hebrew-Document-Sourcing-for-Training
 2026-11-25T13:53Z run poll fresh=5 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=3, block keyword=1
+2026-11-25T14:00Z run poll fresh=2 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=1, no stack keyword=1
