@@ -2106,3 +2106,5 @@
 2026-11-25T13:30Z run poll fresh=2 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 errors=wwr: The operation was aborted due to timeout dropped: block keyword=1, no stack keyword=1
 2026-11-25T13:31Z score 1 - freelancer:40835313 | Bulgarian Document Sourcing for AI Training | https://www.freelancer.com/projects/ai-training-data/Bulgarian-Document-Sourcing-for-Training
 2026-11-25T13:31Z run poll fresh=1 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0
+2026-11-25T13:35Z score 1 - freelancer:40835314 | Corsican Document Sourcing for AI Training | https://www.freelancer.com/projects/ai-hw-sw/Corsican-Document-Sourcing-for-Training
+2026-11-25T13:35Z run poll fresh=1 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0
