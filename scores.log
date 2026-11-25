@@ -2052,3 +2052,4 @@
 2026-11-25T09:53Z score 1 - remoteok:1138082 | Dropbox: Region Head, Asia | https://remoteOK.com/remote-jobs/remote-region-head-asia-dropbox-1138082
 2026-11-25T09:53Z score 1 - wwr:https://weworkremotely.com/remote-jobs/epam-systems-senior-web-application-security-engineer | EPAM Systems: Senior Web Application Security Engineer | https://weworkremotely.com/remote-jobs/epam-systems-senior-web-application-security-engineer
 2026-11-25T09:53Z run digest pending=5 alerts=0 sent=0
+2026-11-25T10:00Z run poll fresh=28 kept=4 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: location=9, no stack keyword=6, block keyword=5, client=3, hourly below floor=1
