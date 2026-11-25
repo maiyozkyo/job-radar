@@ -1991,3 +1991,5 @@
 2026-11-25T06:00Z run poll fresh=2 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2
 2026-11-25T06:02Z score 1 - freelancer:40834647 | UK English native speakers needed for 10-minute online recording | https://www.freelancer.com/projects/audio-services/English-native-speakers-needed-for
 2026-11-25T06:02Z run poll fresh=1 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0
+2026-11-25T06:03Z score 6 - freelancer:40834651 | Automatización IA Respuestas Multicanal CRM | https://www.freelancer.com/projects/ai-chatbot-development/Automatizaci-Respuestas-Multicanal-CRM
+2026-11-25T06:03Z run poll fresh=2 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1
