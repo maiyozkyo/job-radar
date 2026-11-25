@@ -2078,3 +2078,4 @@
 2026-11-25T11:15Z run poll fresh=12 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=8, block keyword=3, hourly below floor=1
 2026-11-25T11:23Z score 4 5h freelancer:40835106 | Gender in Sports Media Seminar - 25/11/2026 06:01 EST | https://www.freelancer.com/projects/academic-writing/Gender-Sports-Media-Seminar-EST
 2026-11-25T11:23Z run poll fresh=7 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=3, location=2, block keyword=1
+2026-11-25T11:30Z run poll fresh=5 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2, block keyword=2, too many bids=1
