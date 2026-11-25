@@ -1942,3 +1942,8 @@
 2026-11-25T01:25Z run poll fresh=26 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=13, location=6, too many bids=3, block keyword=3, hourly below floor=1
 2026-11-25T01:30Z run poll fresh=2 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1, block keyword=1
 2026-11-25T01:45Z run poll fresh=2 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1, block keyword=1
+2026-11-25T02:00Z score 4 - vlance:94920 | Tuyển Freelancer Viết Content Và Thiết Kế Hình Ảnh Cho Fanpage Bán Hàng | https://www.vlance.vn/viec-freelance/content-18
+2026-11-25T02:00Z score 1 - vlance:94919 | Completing KYC on Claude using Vietnamese documents | https://www.vlance.vn/viec-freelance/completing-kyc-on-claude-using-vietnamese-documents
+2026-11-25T02:00Z score 1 - vlance:94918 | Thiết kế giao diện web bằng figma | https://www.vlance.vn/viec-freelance/thiet-ke-giao-dien-web-bang-figma-1
+2026-11-25T02:00Z score 1 - vlance:94914 | Quay video và edit | https://www.vlance.vn/viec-freelance/quay-video-va-edit
+2026-11-25T02:00Z run poll fresh=7 kept=4 night=0 scored=4 unscored=0 alerts=0 sent=0 dropped: block keyword=1, too many bids=1, no stack keyword=1
