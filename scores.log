@@ -1965,3 +1965,5 @@
 2026-11-25T03:59Z run poll fresh=3 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1, block keyword=1
 2026-11-25T04:00Z run poll fresh=0 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0
 2026-11-25T04:04Z run poll fresh=1 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=1
+2026-11-25T04:15Z score 1 - vlance:94923 | NHÂN VIÊN TRỰC PAGE PART-TIME (Offline kết hợp Online) | https://www.vlance.vn/viec-freelance/nhan-vien-truc-page-part-time-offline-ket-hop-online
+2026-11-25T04:15Z run poll fresh=6 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=3, unknown budget=1, no stack keyword=1
