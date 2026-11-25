@@ -2112,3 +2112,6 @@
 2026-11-25T13:37Z run poll fresh=2 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1
 2026-11-25T13:39Z score 2 - freelancer:40835319 | Czech Document Sourcing for AI Training | https://www.freelancer.com/projects/ai-training-data/Czech-Document-Sourcing-for-Training
 2026-11-25T13:39Z run poll fresh=2 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1
+2026-11-25T13:45Z score 1 - freelancer:40835327 | French Document Sourcing for AI Training | https://www.freelancer.com/projects/ai-training-data/French-Document-Sourcing-for-Training
+2026-11-25T13:45Z score 3 - freelancer:40835330 | Informational Website Development -- 2 | https://www.freelancer.com/projects/mern-stack/Informational-Website-Development
+2026-11-25T13:45Z run poll fresh=8 kept=2 night=0 scored=2 unscored=0 alerts=0 sent=0 dropped: no stack keyword=4, block keyword=2
