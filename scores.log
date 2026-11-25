@@ -1986,3 +1986,5 @@
 2026-11-25T05:45Z run poll fresh=2 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: client=1, no stack keyword=1
 2026-11-25T05:51Z score 7 5h freelancer:40834630 | Scanned Form Data to Excel | https://www.freelancer.com/projects/optical-character-recognition/Scanned-Form-Data-Excel
 2026-11-25T05:51Z run poll fresh=7 kept=1 night=0 scored=1 unscored=0 alerts=1 sent=1 dropped: no stack keyword=3, block keyword=2, too many bids=1
+2026-11-25T05:57Z score 2 - freelancer:40834641 | Early Adopter & User Research Coordinator – AI Travel Platform  -- 2 | https://www.freelancer.com/projects/project-management/Early-Adopter-User-Research-Coordinator
+2026-11-25T05:57Z run poll fresh=4 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=1, no stack keyword=1, client=1
