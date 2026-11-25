@@ -2001,3 +2001,4 @@
 2026-11-25T06:31Z run poll fresh=2 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: client=1
 2026-11-25T06:40Z score 7 1.5h freelancer:40834693 | Remove Duplicates from Product CSV | https://www.freelancer.com/projects/data-analysis/Remove-Duplicates-from-Product-CSV
 2026-11-25T06:40Z run poll fresh=5 kept=1 night=0 scored=1 unscored=0 alerts=1 sent=1 dropped: block keyword=2, no stack keyword=1, hourly below floor=1
+2026-11-25T06:45Z run poll fresh=2 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1, block keyword=1
