@@ -2058,3 +2058,5 @@
 2026-11-25T10:15Z score 1 - freelancer:40835034 | Oga Coffee Branding & Website | https://www.freelancer.com/projects/branding/Oga-Coffee-Branding-Website
 2026-11-25T10:15Z run poll fresh=3 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: client=1, block keyword=1
 2026-11-25T10:16Z run poll fresh=0 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0
+2026-11-25T10:29Z score 6 3h freelancer:40835059 | Scanned PDF Tables to Excel | https://www.freelancer.com/projects/optical-character-recognition/Scanned-PDF-Tables-Excel
+2026-11-25T10:29Z run poll fresh=16 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=7, block keyword=5, hourly below floor=1, client=1, risk=1
