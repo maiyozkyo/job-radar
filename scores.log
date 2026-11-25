@@ -2080,3 +2080,4 @@
 2026-11-25T11:23Z run poll fresh=7 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=3, location=2, block keyword=1
 2026-11-25T11:30Z run poll fresh=5 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2, block keyword=2, too many bids=1
 2026-11-25T11:37Z run poll fresh=6 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=4, too many bids=1, no stack keyword=1
+2026-11-25T11:45Z run poll fresh=8 kept=1 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: too many bids=2, block keyword=2, no stack keyword=2, budget below floor=1
