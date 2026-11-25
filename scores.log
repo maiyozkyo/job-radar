@@ -2206,3 +2206,5 @@
 2026-11-25T16:24Z run poll fresh=7 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=3, no stack keyword=2, client=1
 2026-11-25T16:26Z score 2 - freelancer:40835572 | Japanese Document Sourcing for AI Training | https://www.freelancer.com/projects/ai-training-data/Japanese-Document-Sourcing-for-Training
 2026-11-25T16:26Z run poll fresh=1 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0
+2026-11-25T16:27Z score 1 - freelancer:40835574 | Korean Document Sourcing for AI Training | https://www.freelancer.com/projects/ai-training-data/Korean-Document-Sourcing-for-Training
+2026-11-25T16:27Z run poll fresh=4 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=3
