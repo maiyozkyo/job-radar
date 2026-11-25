@@ -240,6 +240,18 @@ test('sendMessage retries once after a 504 or a hung request, then gives up', as
   assert.equal(n, 2, 'only one retry');
 });
 
+test('alerts show what đại ca must do under what the client needs; too long drops both', () => {
+  const s = { ...scored, summaryVi: ['Dựng store'], todoVi: ['Import 9 sản phẩm <CSV>', 'Gọi khách 15 phút'] };
+  for (const text of [formatAlert(job, s), formatAlertHtml(job, s).plain]) {
+    assert.match(text, /📋 Khách cần:\n• Dựng store\n🛠 Đại ca cần làm:\n• Import 9 sản phẩm <CSV>\n• Gọi khách 15 phút\n⭐/);
+  }
+  assert.match(formatAlertHtml(job, s).text, /• Import 9 sản phẩm &lt;CSV&gt;/);
+  assert.match(formatAlert(job, { ...scored, summaryVi: [], todoVi: ['Làm X'] }), /🛠 Đại ca cần làm:\n• Làm X/);
+  assert.doesNotMatch(formatAlert(job, { ...scored, summaryVi: ['a'], todoVi: [] }), /cần làm/);
+  const long = formatAlertHtml(job, { ...s, proposalEn: 'p'.repeat(3100), summaryVi: Array(3).fill('y'.repeat(110)) });
+  assert.doesNotMatch(long.text, /cần làm|Khách cần/);
+});
+
 test('alerts show what the client needs between budget and score; the digest does not', () => {
   const s = { ...scored, summaryVi: ['Sửa <chart>', 'Xong trong 48h'] };
   for (const text of [formatAlert(job, s), formatAlertHtml(job, s).plain]) {

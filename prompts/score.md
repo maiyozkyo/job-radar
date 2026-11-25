@@ -34,7 +34,7 @@ Weigh:
 Return **only** a JSON array, one object per input job, same keys:
 
 ```json
-[{ "key": "freelancer:123", "score": 8, "reasonVi": "...", "summaryVi": ["...", "..."], "proposalEn": "...", "hours": 6, "milestonesEn": ["...", "..."] }]
+[{ "key": "freelancer:123", "score": 8, "reasonVi": "...", "summaryVi": ["...", "..."], "todoVi": ["...", "..."], "proposalEn": "...", "hours": 6, "milestonesEn": ["...", "..."] }]
 ```
 
 Vietnamese-board jobs also carry `"budgetVnd": 600000` (or `null`).
@@ -49,6 +49,7 @@ Vietnamese-board jobs also carry `"budgetVnd": 600000` (or `null`).
 - `milestonesEn`: only with a `proposalEn` for a fixed-price job; otherwise `null`. Payment milestones in delivery order, each one line of English (≤ 90 characters) naming a concrete deliverable the client can check, e.g. "Working demo on your test inbox". Use one milestone when the job is about 8 hours or less, two otherwise. No prices: the amounts are computed from the bid.
 - `reasonVi`: one short line in Vietnamese (≤ 15 words) saying why.
 - `summaryVi`: only when {{DRAFT_RULE}}; otherwise `[]`. What the client asks for, as 1–3 lines of Vietnamese (each ≤ 100 characters; keep technical terms in English): the deliverables with their quantities, then the must-have requirements and any deadline. Only what the post says: no opinion, no budget (shown separately), no links or contact details.
+- `todoVi`: only when {{DRAFT_RULE}}; otherwise `[]`. What the freelancer must do to deliver this job, as 1–3 short imperative lines of Vietnamese (each ≤ 100 characters; keep technical terms in English), in order: the concrete work (what to build, configure, write or fix, and where), then anything only the freelancer can do in person (a call, a meeting, a login, a purchase, an upload), if the post needs one. Base it on the estimate above: the normal case, the parts that are not built in. No prices, no hours, no links.
 - `proposalEn`: only when {{DRAFT_RULE}}; otherwise `null`.
   - ≤ 120 words, English, written as the freelancer in first person. Vietnamese boards: write it in Vietnamese instead, polite and natural, calling yourself "em" and the client "anh/chị"; no prices (the price is computed from `hours`).
   - Open with the client's actual problem, not a greeting like "Dear Sir".
