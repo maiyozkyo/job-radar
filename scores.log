@@ -2170,3 +2170,5 @@
 2026-11-25T15:13Z score 1 - freelancer:40835459 | Scots Document Sourcing for AI Training | https://www.freelancer.com/projects/ai-training-data/Scots-Document-Sourcing-for-Training
 2026-11-25T15:13Z run poll fresh=3 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=2
 2026-11-25T15:15Z run poll fresh=0 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0
+2026-11-25T15:16Z score 1 - freelancer:40835464 | Serbian Cyrillic Document Sourcing for AI Training | https://www.freelancer.com/projects/ai-hw-sw/Serbian-Cyrillic-Document-Sourcing-for
+2026-11-25T15:16Z run poll fresh=2 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: hourly below floor=1
