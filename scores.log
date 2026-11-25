@@ -1937,3 +1937,4 @@
 2026-11-25T00:30Z run poll fresh=5 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2, block keyword=2, too many bids=1
 2026-11-25T00:45Z run poll fresh=3 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=3
 2026-11-25T01:00Z run poll fresh=6 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=3, too many bids=1, client=1, no stack keyword=1
+2026-11-25T01:15Z run digest pending=0 sent=0
