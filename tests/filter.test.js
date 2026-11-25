@@ -142,3 +142,11 @@ test('Vietnamese boards: no keyword gate (Claude scores every job), block words 
   assert.equal(isUrgent(vn('freelancerviet')), true);
   assert.equal(isUrgent(vn('vlance')), true);
 });
+
+test('QA, website audit and product upload jobs pass the keyword gate', () => {
+  for (const title of ['QA tester for our web app', 'Manual testing of checkout flow', 'Website accessibility audit (WCAG 2.1)', 'Improve PageSpeed and Core Web Vitals', 'Find broken links on our site', 'Playwright end-to-end tests', 'Shopify product upload from CSV']) {
+    assert.equal(keep(fl({ title })), true, title);
+  }
+  // whole words only: "qa" does not hit "Qatar"
+  assert.equal(keep(fl({ title: 'Logo for a Qatar bakery' })), false);
+});
