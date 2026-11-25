@@ -2002,3 +2002,6 @@
 2026-11-25T06:40Z score 7 1.5h freelancer:40834693 | Remove Duplicates from Product CSV | https://www.freelancer.com/projects/data-analysis/Remove-Duplicates-from-Product-CSV
 2026-11-25T06:40Z run poll fresh=5 kept=1 night=0 scored=1 unscored=0 alerts=1 sent=1 dropped: block keyword=2, no stack keyword=1, hourly below floor=1
 2026-11-25T06:45Z run poll fresh=2 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1, block keyword=1
+2026-11-25T07:00Z score 1 - freelancerviet:cong-tac-vien-kinh-doanh-chuong-trinh-tieng-anh-3 | CỘNG TÁC VIÊN KINH DOANH CHƯƠNG TRÌNH TIẾNG ANH | https://freelancerviet.vn/thong-tin-viec-freelance/cong-tac-vien-kinh-doanh-chuong-trinh-tieng-anh-3.html
+2026-11-25T07:00Z score 1 - freelancerviet:cong-tac-vien-dang-ky-tai-khoan-claude-va-mua-goi-pro | Cộng tác viên đăng ký tài khoản Claude và mua gói Pro | https://freelancerviet.vn/thong-tin-viec-freelance/cong-tac-vien-dang-ky-tai-khoan-claude-va-mua-goi-pro.html
+2026-11-25T07:00Z run poll fresh=36 kept=2 night=0 scored=2 unscored=0 alerts=0 sent=0 dropped: no stack keyword=16, location=9, block keyword=4, hourly below floor=2, client=2, too many bids=1
