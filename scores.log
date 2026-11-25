@@ -2034,3 +2034,5 @@
 2026-11-25T09:04Z run poll fresh=2 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1
 2026-11-25T09:10Z score 1 - freelancer:40834938 | License Existing COBOL Codebases for AI | https://www.freelancer.com/projects/cobol/License-Existing-COBOL-Codebases-for
 2026-11-25T09:10Z run poll fresh=3 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=2
+2026-11-25T09:13Z score 1 - freelancer:40834947 | Recover Data From Unreadable SSD | https://www.freelancer.com/projects/data-recovery/Recover-Data-From-Unreadable-SSD
+2026-11-25T09:13Z run poll fresh=6 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: hourly below floor=1, unknown budget=1, block keyword=1, no stack keyword=1, client=1
