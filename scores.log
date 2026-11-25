@@ -1934,3 +1934,4 @@
 2026-11-25T00:15Z run poll fresh=1 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: client=1
 2026-11-25T00:17Z score 1 - freelancer:40834254 | Revise Prefab Container Home Drawings | https://www.freelancer.com/projects/3d-modelling/Revise-Prefab-Container-Home-Drawings
 2026-11-25T00:17Z run poll fresh=3 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=1, no stack keyword=1
+2026-11-25T00:30Z run poll fresh=5 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2, block keyword=2, too many bids=1
