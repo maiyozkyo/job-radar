@@ -2263,3 +2263,4 @@
 2026-11-25T22:15Z run poll quiet fresh=26 kept=1 night=20 scored=0 unscored=0 alerts=0 sent=0 dropped: location=13, no stack keyword=8, block keyword=2, client=1, too many bids=1
 2026-11-25T22:30Z run poll quiet fresh=5 kept=0 night=20 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=4, block keyword=1
 2026-11-25T22:45Z run poll quiet fresh=4 kept=0 night=20 scored=0 unscored=0 alerts=0 sent=0 dropped: too many bids=1, client=1, block keyword=1, no stack keyword=1
+2026-11-25T23:00Z run poll quiet fresh=24 kept=0 night=20 scored=0 unscored=0 alerts=0 sent=0 dropped: location=16, block keyword=4, no stack keyword=3, too many bids=1
