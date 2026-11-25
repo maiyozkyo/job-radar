@@ -6,7 +6,7 @@ import { readProfile } from './profile.js';
 /**
  * `hours` is Claude's effort estimate; `bid` is computed from it (see fees.js).
  * `milestones` splits the bid over Claude's milestone names (fixed-price bids only).
- * @typedef {{ key: string, score: number, reasonVi: string, summaryVi: string[], proposalEn: string|null, hours: number|null, bid: ReturnType<typeof suggestBid>, milestones: ReturnType<typeof splitMilestones>, priceVnd: number|null }} Scored
+ * @typedef {{ key: string, score: number, reasonVi: string, summaryVi: string[], todoVi: string[], proposalEn: string|null, hours: number|null, bid: ReturnType<typeof suggestBid>, milestones: ReturnType<typeof splitMilestones>, priceVnd: number|null }} Scored
  */
 
 export class ClaudeOutputError extends Error {}
@@ -125,7 +125,7 @@ function parseScores(output, jobs, bidOpts) {
     const bid = suggestBid(job, hours, bidOpts);
     return {
       priceVnd: priceVnd(job, hours, bidOpts?.vnHourlyVnd, s.budgetVnd),
-      key: job.key, score, reasonVi: String(s.reasonVi ?? ''), summaryVi: summaryLines(s.summaryVi),
+      key: job.key, score, reasonVi: String(s.reasonVi ?? ''), summaryVi: summaryLines(s.summaryVi), todoVi: summaryLines(s.todoVi),
       proposalEn: s.proposalEn ? sanitizeProposal(String(s.proposalEn)) : null,
       hours, bid, milestones: splitMilestones(bid, milestoneNames(s.milestonesEn)),
     };

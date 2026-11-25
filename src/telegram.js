@@ -98,9 +98,11 @@ function riskLines(job) {
 /** Freelancer: who the client is, and red flags with reasons. */
 const clientBlock = (job, now) => (job.source === 'freelancer' && job.client ? clientLines(job.client, now).join('\n') : null);
 
-const summaryBlock = (scored) => (scored?.summaryVi?.length
-  ? ['📋 Khách cần:', ...scored.summaryVi.map((l) => `• ${l}`)].join('\n')
-  : null);
+const bullets = (title, lines) => (lines?.length ? [title, ...lines.map((l) => `• ${l}`)] : []);
+const summaryBlock = (scored) => {
+  const lines = [...bullets('📋 Khách cần:', scored?.summaryVi), ...bullets('🛠 Đại ca cần làm:', scored?.todoVi)];
+  return lines.length ? lines.join('\n') : null;
+};
 
 // The desk puts its own header above an alert; leave room for it.
 const HEADER_ROOM = 700;
@@ -167,7 +169,7 @@ export function formatAlertHtml(job, scored, warning, now) {
     warning ? `\n⚠️ ${esc(warning)}` : null,
   ].filter(Boolean).join('\n');
   // Too long would be sent as plain text, losing buttons and the copy block: the summary goes first.
-  if (summary && text.length > LIMIT - HEADER_ROOM) return formatAlertHtml(job, { ...scored, summaryVi: [] }, warning, now);
+  if (summary && text.length > LIMIT - HEADER_ROOM) return formatAlertHtml(job, { ...scored, summaryVi: [], todoVi: [] }, warning, now);
   // One-tap bid: the Worker places exactly this bid, with the proposal from
   // the <pre> block, only when the user taps ✅. Escrow.com projects refuse
   // API bids without a linked Escrow.com account, so they get no ✅.

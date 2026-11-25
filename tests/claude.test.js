@@ -152,6 +152,15 @@ test('summaryVi: at most 3 short clean lines; anything else is empty', async () 
   assert.deepEqual(out[1].summaryVi, []);
 });
 
+test('todoVi: cleaned like summaryVi; missing is empty', async () => {
+  const out = await scoreJobs(jobs, { draftMin: 7 }, reply([
+    { ...good[1], todoVi: ['Sửa theme\nDawn', 'Xem https://evil.example/x', 'a', 'b'] },
+    { ...good[0] },
+  ]));
+  assert.deepEqual(out[0].todoVi, ['Sửa theme Dawn', 'Xem [link bị xóa]', 'a']);
+  assert.deepEqual(out[1].todoVi, []);
+});
+
 test('the scoring prompt asks for summaryVi', async () => {
   let prompt = '';
   await scoreJobs(jobs, { draftMin: 7 }, async (p) => { prompt = p; return JSON.stringify(good); });
