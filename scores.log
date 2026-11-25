@@ -2022,3 +2022,4 @@
 2026-11-25T07:56Z score 1 - freelancer:40834825 | Pre-Employment Vetting Project in Vielha - Spain. | https://www.freelancer.com/projects/background-research/Pre-Employment-Vetting-Project-Vielha
 2026-11-25T07:56Z run poll fresh=6 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: client=2, too many bids=1, block keyword=1, no stack keyword=1
 2026-11-25T08:00Z run poll fresh=56 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=20, location=19, no stack keyword=8, full-time only=7, client=1, risk=1
+2026-11-25T08:15Z run poll fresh=11 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=8, unknown budget=1, too many bids=1, client=1
