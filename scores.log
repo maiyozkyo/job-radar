@@ -2160,3 +2160,5 @@
 2026-11-25T14:58Z score 2 - freelancer:40835431 | Norwegian Document Sourcing for AI Training | https://www.freelancer.com/projects/ai-training-data/Norwegian-Document-Sourcing-for-Training
 2026-11-25T14:58Z run poll fresh=1 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0
 2026-11-25T15:00Z run poll fresh=5 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=3, block keyword=2
+2026-11-25T15:03Z score 2 - freelancer:40835440 | Polish Document Sourcing for AI Training | https://www.freelancer.com/projects/ai-training-data/Polish-Document-Sourcing-for-Training
+2026-11-25T15:03Z run poll fresh=3 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=1, no stack keyword=1
