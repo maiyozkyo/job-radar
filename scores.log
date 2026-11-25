@@ -1975,3 +1975,4 @@
 2026-11-25T04:37Z run poll fresh=8 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=3, block keyword=2, budget below floor=1, too many bids=1
 2026-11-25T04:43Z score 1 - freelancer:40834514 | RFC 2544 Fiber Test Setup | https://www.freelancer.com/projects/telecommunications-engineering/RFC-Fiber-Test-Setup
 2026-11-25T04:43Z run poll fresh=3 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=1, no stack keyword=1
+2026-11-25T04:45Z run poll fresh=20 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=13, location=7
