@@ -2509,3 +2509,4 @@
 2026-11-26T18:56Z score 1 - freelancer:40837525 | LATAM Technical Call Representative | https://www.freelancer.com/projects/customer-service/LATAM-Technical-Call-Representative
 2026-11-26T18:56Z run poll quiet fresh=2 kept=1 night=3 held=0 boards=0 scored=1 unscored=0 alerts=0 sent=0 dropped: budget below floor=1
 2026-11-26T19:00Z run poll quiet fresh=2 kept=0 night=3 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2
+2026-11-26T19:10Z run poll quiet fresh=25 kept=0 night=3 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: location=9, no stack keyword=8, block keyword=6, too many bids=1, budget below floor=1
