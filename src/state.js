@@ -6,15 +6,17 @@ import { join } from 'node:path';
  * `seeded` records which sources have answered at least once: a source's first
  * batch is only recorded, so a source that was down at the start (or is added
  * later) does not flood the user with every open job.
- * `night` holds urgent jobs found in quiet hours, for the morning batch.
+ * `night` holds urgent jobs found in quiet hours that Claude could not score, for the morning batch.
+ * `nightAlerts` holds urgent jobs scored >= the alert score in quiet hours, as { job, score }, sent on
+ * the first poll after. No proposals: this file is on a public branch; the morning batch drafts them.
  * `clientDrops` counts jobs dropped for their client on one day (GMT+7), by reason.
  * `lastFetch` holds the last call time of rate-limited sources (unix seconds).
- * @typedef {{ initialized: boolean, seeded: Record<string, boolean>, seen: Record<string, number>, pending: import('./job.js').Job[], night: import('./job.js').Job[], clientDrops: { day: string|null, reasons: Record<string, number> }, lastFetch: Record<string, number> }} State
+ * @typedef {{ initialized: boolean, seeded: Record<string, boolean>, seen: Record<string, number>, pending: import('./job.js').Job[], night: import('./job.js').Job[], nightAlerts: { job: import('./job.js').Job, score: number }[], clientDrops: { day: string|null, reasons: Record<string, number> }, lastFetch: Record<string, number> }} State
  */
 
 const KEEP_SEEN = 60 * 24 * 3600;
 const file = (dir) => join(dir, 'state.json');
-const empty = () => ({ initialized: false, seeded: {}, seen: {}, pending: [], night: [], clientDrops: { day: null, reasons: {} }, lastFetch: {} });
+const empty = () => ({ initialized: false, seeded: {}, seen: {}, pending: [], night: [], nightAlerts: [], clientDrops: { day: null, reasons: {} }, lastFetch: {} });
 
 /** @returns {State} */
 export function loadState(dir) {
@@ -27,7 +29,7 @@ export function loadState(dir) {
     console.warn('state.json is corrupt, starting over');
     return empty();
   }
-  return { initialized: !!s.initialized, seeded: s.seeded ?? {}, seen: s.seen ?? {}, pending: s.pending ?? [], night: s.night ?? [], clientDrops: s.clientDrops ?? { day: null, reasons: {} }, lastFetch: s.lastFetch ?? {} };
+  return { initialized: !!s.initialized, seeded: s.seeded ?? {}, seen: s.seen ?? {}, pending: s.pending ?? [], night: s.night ?? [], nightAlerts: s.nightAlerts ?? [], clientDrops: s.clientDrops ?? { day: null, reasons: {} }, lastFetch: s.lastFetch ?? {} };
 }
 
 /** Writes to a temp file and renames, so a killed run never leaves half a file. */

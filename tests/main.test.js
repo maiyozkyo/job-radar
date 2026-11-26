@@ -197,7 +197,7 @@ test('poll writes each score and a run summary with drop reasons to scores.log',
   assert.equal(lines.length, 3);
   assert.match(lines[0], /^2026-\d\d-\d\dT\d\d:\d\dZ score 8 - freelancer:1 \| Angular fix \| https:\/\/f\/1$/);
   assert.match(lines[1], /score 6 - freelancer:2/);
-  assert.match(lines[2], /run poll fresh=3 kept=2 night=0 boards=0 scored=2 unscored=0 alerts=1 sent=1 dropped: no stack keyword=1$/);
+  assert.match(lines[2], /run poll fresh=3 kept=2 night=0 held=0 boards=0 scored=2 unscored=0 alerts=1 sent=1 dropped: no stack keyword=1$/);
   assert.doesNotMatch(lines.join('\n'), /Hi/); // no proposals
 });
 
@@ -213,16 +213,29 @@ test('scores.log appends across runs, keeps the newest lines and stays one line 
 const NIGHT = Date.UTC(2026, 10, 19, 17, 30) / 1000;
 const MORNING = Date.UTC(2026, 10, 20, 0, 10) / 1000;
 
-test('quiet hours: urgent jobs wait in state.night, nothing is scored or sent', async () => {
-  const { deps, sent, stateDir } = setup({ jobs: [urgent(1), urgent(2)] });
-  let scoredCount = 0;
+test('quiet hours: urgent jobs are scored without proposals, the good ones held, nothing sent', async () => {
+  const { deps, sent, stateDir } = setup({ jobs: [urgent(1), urgent(2)], scores: { 'freelancer:2': 6 } });
+  const calls = [];
   const score = deps.scoreJobs;
-  deps.scoreJobs = async (list) => { scoredCount += list.length; return score(list); };
+  deps.scoreJobs = async (list, opts) => { calls.push({ n: list.length, draftMin: opts.draftMin, redraftMin: opts.redraftMin }); return score(list, opts); };
   deps.now = NIGHT;
   await run('poll', deps);
   assert.equal(sent.length, 0);
-  assert.equal(scoredCount, 0);
-  assert.deepEqual(loadState(stateDir).night.map((j) => j.key), ['freelancer:1', 'freelancer:2']);
+  assert.deepEqual(calls, [{ n: 2, draftMin: 11, redraftMin: null }], 'one call, no drafts, no Opus');
+  const state = loadState(stateDir);
+  assert.deepEqual(state.nightAlerts.map((h) => [h.job.key, h.score]), [['freelancer:1', 8]]);
+  assert.deepEqual(state.night, []);
+  assert.doesNotMatch(JSON.stringify(state), /"Hi"/, 'no proposal in the public state');
+  assert.match(readFileSync(join(stateDir, 'scores.log'), 'utf8'), /run poll quiet fresh=2 kept=2 night=0 held=1 boards=0 scored=2/);
+});
+
+test('quiet hours: jobs Claude could not score wait in state.night for the morning', async () => {
+  const { deps, sent, stateDir } = setup({ jobs: [urgent(1)], scoreFails: true });
+  deps.now = NIGHT;
+  await run('poll', deps);
+  assert.equal(sent.length, 0);
+  assert.deepEqual(loadState(stateDir).night.map((j) => j.key), ['freelancer:1']);
+  assert.deepEqual(loadState(stateDir).nightAlerts, []);
 });
 
 test('quiet hours: board jobs stay in pending, unscored, for the first polls after quiet hours', async () => {
@@ -242,37 +255,73 @@ test('quiet hours: board jobs stay in pending, unscored, for the first polls aft
   assert.match(sent.at(-1).text, /https:\/\/r\/1/);
 });
 
-test('first poll after quiet hours sends a header and the open night jobs, best first, then clears the queue', async () => {
+test('first poll after quiet hours sends the open held jobs, best first, with proposals, then clears the queue', async () => {
   const { deps, sent, stateDir } = setup({ jobs: [urgent(1), urgent(2), urgent(3), urgent(4)], scores: { 'freelancer:2': 9, 'freelancer:4': 5 } });
   deps.now = NIGHT;
   await run('poll', deps);
+  assert.equal(loadState(stateDir).nightAlerts.length, 3, '1, 2 and 3 held; 4 scored 5');
   deps.now = MORNING;
   deps.fetchAll = async () => ({ jobs: [], errors: [], okSources: ['freelancer'] });
-  // 1 and 2 open; 3 closed; 4 open but scores 5.
+  // 1 and 2 open; 3 closed.
   deps.freelancerStatus = async (ids) => {
-    assert.deepEqual(ids, ['1', '2', '3', '4']);
-    return new Map([['1', { open: true, bidCount: 3 }], ['2', { open: true, bidCount: 2 }], ['3', { open: false, bidCount: 9 }], ['4', { open: true, bidCount: 1 }]]);
+    assert.deepEqual(ids, ['1', '2', '3']);
+    return new Map([['1', { open: true, bidCount: 3 }], ['2', { open: true, bidCount: 2 }], ['3', { open: false, bidCount: 9 }]]);
   };
+  const calls = [];
+  const score = deps.scoreJobs;
+  deps.scoreJobs = async (list, opts) => { calls.push({ keys: list.map((j) => j.key), draftMin: opts.draftMin }); return score(list, opts); };
   await run('poll', deps);
+  assert.deepEqual(calls, [{ keys: ['freelancer:2', 'freelancer:1'], draftMin: 1 }]);
   assert.equal(sent.length, 3);
-  assert.match(sent[0], /🌙 Job đêm qua: 4 job, 3 còn mở, 2 job ≥ 7/);
+  assert.match(sent[0], /🌙 Job đêm qua: 3 job ≥ 7 lúc đăng, 2 còn mở\./);
   assert.match(sent[1].text, /https:\/\/f\/2/);
+  assert.match(sent[1].text, /Hi/, 'proposal drafted in the morning');
   assert.match(sent[2].text, /https:\/\/f\/1/);
-  assert.equal(loadState(stateDir).night.length, 0);
+  assert.match(sent[2].text, /👥 3 bid/, 'bid count now');
+  assert.equal(loadState(stateDir).nightAlerts.length, 0);
   await run('poll', deps);
   assert.equal(sent.length, 3, 'the batch goes out once');
 });
 
-test('morning batch drops night jobs that filled up with bids', async () => {
+test('morning batch keeps held jobs that filled up with bids, since they were within the limit when scored', async () => {
   const { deps, sent } = setup({ jobs: [urgent(1)] });
   deps.now = NIGHT;
   await run('poll', deps);
   deps.now = MORNING;
   deps.fetchAll = async () => ({ jobs: [], errors: [], okSources: ['freelancer'] });
-  deps.freelancerStatus = async () => new Map([['1', { open: true, bidCount: config.maxBidCount + 1 }]]);
+  deps.freelancerStatus = async () => new Map([['1', { open: true, bidCount: config.maxBidCount + 20 }]]);
   await run('poll', deps);
-  assert.equal(sent.length, 1);
-  assert.match(sent[0], /1 job, 0 còn mở, 0 job/);
+  assert.equal(sent.length, 2);
+  assert.match(sent[1].text, new RegExp(`👥 ${config.maxBidCount + 20} bid`));
+});
+
+test('morning batch sends at most 10 held jobs, best first', async () => {
+  const jobs = Array.from({ length: 14 }, (_, i) => urgent(i + 1));
+  const { deps, sent } = setup({ jobs, scores: { 'freelancer:14': 9 } });
+  deps.now = NIGHT;
+  await run('poll', deps);
+  deps.now = MORNING;
+  deps.fetchAll = async () => ({ jobs: [], errors: [], okSources: ['freelancer'] });
+  await run('poll', deps);
+  assert.equal(sent.length, 11);
+  assert.match(sent[0], /14 job ≥ 7 lúc đăng, 14 còn mở \(gửi 10 job tốt nhất\)/);
+  assert.match(sent[1].text, /https:\/\/f\/14/);
+});
+
+test('jobs Claude could not score at night are filtered and scored in the morning, bid limit included', async () => {
+  const { deps, sent } = setup({ jobs: [urgent(1), urgent(2)], scoreFails: true });
+  deps.now = NIGHT;
+  await run('poll', deps);
+  deps.now = MORNING;
+  deps.fetchAll = async () => ({ jobs: [], errors: [], okSources: ['freelancer'] });
+  deps.freelancerStatus = async () => new Map([['1', { open: true, bidCount: 2 }], ['2', { open: true, bidCount: config.maxBidCount + 1 }]]);
+  let scoredKeys = [];
+  deps.scoreJobs = async (list) => { scoredKeys = list.map((j) => j.key); return list.map((j) => ({ key: j.key, score: 8, reasonVi: 'ok', proposalEn: 'Hi' })); };
+  await run('poll', deps);
+  assert.deepEqual(scoredKeys, ['freelancer:1']);
+  assert.equal(sent.length, 2);
+  assert.match(sent[0], /2 job chưa chấm được, 1 còn mở, 1 job ≥ 7/);
+  assert.match(sent[1].text, /https:\/\/f\/1/);
 });
 
 test('morning batch still goes out when the status check fails', async () => {
@@ -295,7 +344,7 @@ test('morning batch is kept when Telegram fails', async () => {
   deps.fetchAll = async () => ({ jobs: [], errors: [], okSources: ['freelancer'] });
   deps.sendMessage = async () => { throw new Error('telegram down'); };
   await assert.rejects(run('poll', deps));
-  assert.equal(loadState(stateDir).night.length, 1);
+  assert.equal(loadState(stateDir).nightAlerts.length, 1);
 });
 
 test('jobs dropped for their client are counted and reported once, on the next morning', async () => {
@@ -332,13 +381,14 @@ test('Vietnamese boards alert from vnAlertScore (6); other sources still need al
   assert.match(sent[0].text, /vlance\.vn/);
 });
 
-test('a client with unverified payment is scored one lower, so only an 8 alerts (as 7)', async () => {
+test('a client with unverified payment keeps its score and alerts from 7, with the 🚩 line', async () => {
   const client = { paymentVerified: false, depositMade: true, registeredAt: NOW - 400 * 86400, reviews: 3, rating: 4.9, completed: 3 };
   const unverified = (id) => ({ ...urgent(id), client });
   const { deps, sent } = setup({ jobs: [unverified(1), unverified(2)], scores: { 'freelancer:1': 8, 'freelancer:2': 7 } });
   await run('poll', deps);
-  assert.equal(sent.length, 1);
-  assert.match(sent[0].text, /https:\/\/f\/1/);
-  assert.match(sent[0].text, /7\/10/);
-  assert.match(sent[0].text, /Chưa xác minh thanh toán/);
+  assert.equal(sent.length, 2);
+  assert.match(sent[0].text, /8\/10/);
+  assert.match(sent[1].text, /https:\/\/f\/2/);
+  assert.match(sent[1].text, /7\/10/);
+  assert.match(sent[1].text, /🚩 Chưa xác minh thanh toán/);
 });

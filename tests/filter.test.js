@@ -164,4 +164,15 @@ test('no-code builders and pure design jobs are blocked', () => {
     'Elementor landing page', 'Logo design for startup', 'Graphic designer for landing page', 'UX designer, Figma redesign']) {
     assert.equal(keep(fl({ title })), false, title);
   }
+  assert.equal(keep(fl({ title: 'Logo design for bakery', tags: ['Logo Design', 'Graphic Design'] })), false);
+});
+
+test('design words in Freelancer tags do not block a coded web job', () => {
+  // Real titles and tags from 26/11 (the last one also gets Illustrator and Logo Design tags).
+  const jobs = [
+    { title: 'Modernize Web Portal UI/UX', tags: ['PHP', 'JavaScript', 'Website Design', 'Graphic Design', 'CSS', 'HTML', 'UX / User Experience', 'UI / User Interface', 'Figma', 'Web Design'] },
+    { title: 'Website UI/UX Redesign for an Existing Dating Platform', tags: ['PHP', 'Website Design', 'Graphic Design', 'User Interface / IA', 'UX / User Experience', 'UI / User Interface', 'Web Development', 'Web Design'] },
+    { title: 'Corporate Website Full Modern Redesign', tags: ['Website Design', 'Graphic Design', 'User Interface / IA', 'HTML', 'UX / User Experience', 'UI / User Interface', 'Web Design', 'Illustrator', 'Logo Design'] },
+  ];
+  for (const j of jobs) assert.deepEqual(filterJob(fl(j), config).keep, true, j.title);
 });
