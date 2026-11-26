@@ -2500,3 +2500,4 @@
 2026-11-26T18:10Z run poll quiet fresh=51 kept=1 night=3 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: location=23, block keyword=16, no stack keyword=7, risk=3, unknown budget=1
 2026-11-26T18:17Z score 1 - freelancer:40837489 |  Passive Income Advisor | https://www.freelancer.com/projects/financial-consulting/Passive-Income-Advisor
 2026-11-26T18:17Z run poll quiet fresh=4 kept=1 night=3 held=0 boards=0 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1, block keyword=1, hourly below floor=1
+2026-11-26T18:20Z run poll quiet fresh=1 kept=0 night=3 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: unknown budget=1
