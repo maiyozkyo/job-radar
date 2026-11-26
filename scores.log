@@ -2403,3 +2403,5 @@
 2026-11-26T09:16Z run poll fresh=2 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: client=1, block keyword=1
 2026-11-26T09:21Z score 5 - freelancer:40836758 | Draft VCF Feature RFC | https://www.freelancer.com/projects/architecture/Draft-VCF-Feature-RFC
 2026-11-26T09:21Z run poll fresh=4 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=2, no stack keyword=1
+2026-11-26T09:25Z score 3 - freelancer:40836763 | Power Apps Form-to-Word Automation | https://www.freelancer.com/projects/power-automate/Power-Apps-Form-Word-Automation
+2026-11-26T09:25Z run poll fresh=1 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0
