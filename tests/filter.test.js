@@ -150,3 +150,18 @@ test('QA, website audit and product upload jobs pass the keyword gate', () => {
   // whole words only: "qa" does not hit "Qatar"
   assert.equal(keep(fl({ title: 'Logo for a Qatar bakery' })), false);
 });
+
+test('code-based web design jobs pass the gate', () => {
+  assert.equal(keep(fl({ title: 'Landing page for my SaaS' })), true);
+  assert.equal(keep(fl({ title: 'Convert Figma to HTML', description: 'pixel perfect' })), true);
+  assert.equal(keep(fl({ title: 'Website redesign', description: 'restyle our portal' })), true);
+  assert.equal(keep(fl({ title: 'Fix mobile layout', description: 'responsive design issues with CSS' })), true);
+  assert.equal(keep(fl({ title: 'Shopify theme tweaks' })), true);
+});
+
+test('no-code builders and pure design jobs are blocked', () => {
+  for (const title of ['Framer website', 'Webflow landing page', 'Wix site redesign', 'Squarespace website design',
+    'Elementor landing page', 'Logo design for startup', 'Graphic designer for landing page', 'UX designer, Figma redesign']) {
+    assert.equal(keep(fl({ title })), false, title);
+  }
+});
