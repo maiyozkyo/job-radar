@@ -2398,3 +2398,5 @@
 2026-11-26T09:00Z run poll fresh=12 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=4, no stack keyword=3, too many bids=2, location=2, unknown budget=1
 2026-11-26T09:09Z score 1 - freelancer:40836734 | Digital Marketing Agency for AI SaaS Product – Hiring Genie | https://www.freelancer.com/projects/digital-marketing/Digital-Marketing-Agency-for-SaaS
 2026-11-26T09:09Z run poll fresh=7 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=6
+2026-11-26T09:15Z score 1 - freelancer:40836753 | Craft Investor Package for Travel Company seeking funding | https://www.freelancer.com/projects/financial-analysis/Craft-Investor-Package-for-Travel
+2026-11-26T09:15Z run poll fresh=8 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=4, client=2, no stack keyword=1
