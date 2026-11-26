@@ -137,7 +137,7 @@ test('scores are logged with key and title, proposals are not', async () => {
 });
 
 test('poll writes each score and a run summary with drop reasons to scores.log', async () => {
-  const offStack = makeJob({ source: 'freelancer', id: 9, title: 'Logo design', url: 'https://f/9', budgetType: 'fixed', budgetMaxUsd: 50, bidCount: 1 });
+  const offStack = makeJob({ source: 'freelancer', id: 9, title: 'Cooking recipes', url: 'https://f/9', budgetType: 'fixed', budgetMaxUsd: 50, bidCount: 1 });
   const { deps, stateDir } = setup({ jobs: [urgent(1), urgent(2), offStack], scores: { 'freelancer:2': 6 } });
   await run('poll', deps);
   const lines = readFileSync(join(stateDir, 'scores.log'), 'utf8').trim().split('\n');
