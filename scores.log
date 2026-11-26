@@ -2464,3 +2464,4 @@
 2026-11-26T14:48Z run poll fresh=5 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=5
 2026-11-26T14:49Z score 2 - freelancer:40837221 | Flexible Virtual Assistant Support | https://www.freelancer.com/projects/administrative-support/Flexible-Virtual-Assistant-Support-40837221
 2026-11-26T14:49Z run poll fresh=1 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0
+2026-11-26T15:00Z run poll fresh=41 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=17, location=15, no stack keyword=7, client=1, budget below floor=1
