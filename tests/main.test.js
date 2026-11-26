@@ -68,11 +68,64 @@ test('digest keeps pending when Claude fails', async () => {
   assert.match(sent[0], /Claude lỗi/);
 });
 
-test('board jobs are queued, not alerted', async () => {
-  const { deps, sent, stateDir } = setup({ jobs: [board(1)] });
+test('board job scored 8 is alerted at poll time, without bid buttons, and not again in the digest', async () => {
+  const { deps, sent, stateDir } = setup({ jobs: [board(1), board(2)], scores: { 'remoteok:2': 6 } });
   await run('poll', deps);
-  assert.equal(sent.length, 0);
-  assert.deepEqual(loadState(stateDir).pending.map((j) => j.key), ['remoteok:1']);
+  assert.equal(sent.length, 1);
+  assert.equal(sent[0].html, true);
+  assert.match(sent[0].text, /https:\/\/r\/1/);
+  assert.match(sent[0].text, /\[remoteok\]/);
+  assert.deepEqual(sent[0].buttons, []);
+  // Scored 6: dropped, as the digest would not show it either.
+  assert.equal(loadState(stateDir).pending.length, 0);
+  await run('digest', deps);
+  assert.equal(sent.length, 1);
+});
+
+test('urgent and board jobs are scored in one Claude call', async () => {
+  const { deps, sent } = setup({ jobs: [urgent(1), board(1)] });
+  const calls = [];
+  const score = deps.scoreJobs;
+  deps.scoreJobs = async (list, opts) => { calls.push({ keys: list.map((j) => j.key), draftMin: opts.draftMin }); return score(list); };
+  await run('poll', deps);
+  assert.deepEqual(calls, [{ keys: ['freelancer:1', 'remoteok:1'], draftMin: config.alertScore }]);
+  assert.equal(sent.length, 2);
+});
+
+test('poll scores at most 15 board jobs, newest first; the rest wait in pending', async () => {
+  const jobs = Array.from({ length: 20 }, (_, i) => ({ ...board(i + 1), postedAt: NOW - (20 - i) * 60 }));
+  const { deps, stateDir } = setup({ jobs, scores: Object.fromEntries(jobs.map((j) => [j.key, 3])) });
+  const scored = [];
+  const score = deps.scoreJobs;
+  deps.scoreJobs = async (list) => { scored.push(...list.map((j) => j.key)); return score(list); };
+  await run('poll', deps);
+  assert.equal(scored.length, 15);
+  assert.ok(scored.includes('remoteok:20') && !scored.includes('remoteok:5'));
+  assert.deepEqual(loadState(stateDir).pending.map((j) => j.key).sort(), ['remoteok:1', 'remoteok:2', 'remoteok:3', 'remoteok:4', 'remoteok:5']);
+  scored.length = 0;
+  deps.fetchAll = async () => ({ jobs: [], errors: [], okSources: [] });
+  await run('poll', deps);
+  assert.equal(scored.length, 5);
+  assert.equal(loadState(stateDir).pending.length, 0);
+});
+
+test('board jobs Claude could not score go to the digest, and later polls do not retry them', async () => {
+  const { deps, sent, stateDir } = setup({ jobs: [urgent(1), board(1)], scoreFails: true });
+  await run('poll', deps);
+  assert.equal(sent.length, 1);
+  assert.match(sent[0], /https:\/\/f\/1/);
+  assert.doesNotMatch(sent[0], /https:\/\/r\/1/);
+  assert.deepEqual(loadState(stateDir).pending.map((j) => [j.key, j.polled]), [['remoteok:1', true]]);
+
+  let calls = 0;
+  deps.scoreJobs = async (list) => { calls += 1; return list.map((j) => ({ key: j.key, score: 9, reasonVi: 'ok', proposalEn: 'Hi' })); };
+  deps.fetchAll = async () => ({ jobs: [], errors: [], okSources: [] });
+  await run('poll', deps);
+  assert.equal(calls, 0);
+  await run('digest', deps);
+  assert.equal(calls, 1);
+  assert.match(sent.at(-1), /https:\/\/r\/1/);
+  assert.equal(loadState(stateDir).pending.length, 0);
 });
 
 test('the same job is not alerted twice across runs', async () => {
@@ -144,7 +197,7 @@ test('poll writes each score and a run summary with drop reasons to scores.log',
   assert.equal(lines.length, 3);
   assert.match(lines[0], /^2026-\d\d-\d\dT\d\d:\d\dZ score 8 - freelancer:1 \| Angular fix \| https:\/\/f\/1$/);
   assert.match(lines[1], /score 6 - freelancer:2/);
-  assert.match(lines[2], /run poll fresh=3 kept=2 night=0 scored=2 unscored=0 alerts=1 sent=1 dropped: no stack keyword=1$/);
+  assert.match(lines[2], /run poll fresh=3 kept=2 night=0 boards=0 scored=2 unscored=0 alerts=1 sent=1 dropped: no stack keyword=1$/);
   assert.doesNotMatch(lines.join('\n'), /Hi/); // no proposals
 });
 
@@ -170,6 +223,23 @@ test('quiet hours: urgent jobs wait in state.night, nothing is scored or sent', 
   assert.equal(sent.length, 0);
   assert.equal(scoredCount, 0);
   assert.deepEqual(loadState(stateDir).night.map((j) => j.key), ['freelancer:1', 'freelancer:2']);
+});
+
+test('quiet hours: board jobs stay in pending, unscored, for the first polls after quiet hours', async () => {
+  const { deps, sent, stateDir } = setup({ jobs: [board(1)] });
+  let scoredCount = 0;
+  const score = deps.scoreJobs;
+  deps.scoreJobs = async (list) => { scoredCount += list.length; return score(list); };
+  deps.now = NIGHT;
+  await run('poll', deps);
+  assert.equal(sent.length, 0);
+  assert.equal(scoredCount, 0);
+  assert.deepEqual(loadState(stateDir).pending.map((j) => j.key), ['remoteok:1']);
+  deps.now = MORNING;
+  deps.fetchAll = async () => ({ jobs: [], errors: [], okSources: [] });
+  await run('poll', deps);
+  assert.equal(scoredCount, 1);
+  assert.match(sent.at(-1).text, /https:\/\/r\/1/);
 });
 
 test('first poll after quiet hours sends a header and the open night jobs, best first, then clears the queue', async () => {

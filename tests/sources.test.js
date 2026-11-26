@@ -119,6 +119,17 @@ test('fetchAll: Remotive and Jobicy are rate-limited per their API terms', async
   assert.equal(lastFetch.jobicy, NOW);
 });
 
+test('fetchAll: Jobicy waits a little over an hour between calls', async () => {
+  const ask = async (ago) => {
+    const calls = [];
+    const fetchFn = async (url) => { calls.push(url); return allFetch()(url); };
+    await fetchAll({ freelancerQueries: ['angular'] }, fetchFn, NOW, { remotive: NOW, jobicy: NOW - ago });
+    return calls.some((u) => u.includes('jobicy.com'));
+  };
+  assert.equal(await ask(3600), false, 'exactly one hour is too soon: keep a margin');
+  assert.equal(await ask(62 * 60), true);
+});
+
 test('fetchAll: a failed rate-limited source still waits before the next try', async () => {
   const down = { ok: false, status: 500, json: async () => ({}), text: async () => '' };
   const lastFetch = {};

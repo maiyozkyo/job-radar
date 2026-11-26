@@ -6,14 +6,14 @@ Finds freelance and remote jobs that fit my stack, has Claude score them and dra
 
 ## How it works
 
-On each run (every 15 minutes from cron-job.org, and within about a minute of a new matching Freelancer project via the [Worker](#one-tap-bid)), GitHub Actions:
+On each run (every 10 minutes from cron-job.org, and within about a minute of a new matching Freelancer project via the [Worker](#one-tap-bid)), GitHub Actions:
 
-1. Reads public job sources: Freelancer.com API, the HN "Freelancer? Seeking freelancer?" thread, We Work Remotely RSS, [RemoteOK](https://remoteok.com) API, Himalayas API, [Remotive](https://remotive.com) API (at most every 6 hours, per its terms) and [Jobicy](https://jobicy.com) API (at most every 2 hours; its terms say no more than hourly), and the public job RSS of two Vietnamese boards, [FreelancerViet](https://freelancerviet.vn) and [vLance](https://www.vlance.vn). Vietnamese-board jobs skip the keyword filter (a few a day, so Claude scores each one), alert from `vnAlertScore` (6), get a Vietnamese proposal and a price in VND (`vnHourlyVnd` × hours). Alerts name the source and link to its listing, as Remotive and Jobicy require. Reddit `[Hiring]` posts in r/forhire, r/freelance_forhire and r/jobbit are read through the official API with app-only OAuth, only when the Reddit secrets are set; Reddit blocks anonymous requests from GitHub's runners. No logged-in access to any platform.
+1. Reads public job sources: Freelancer.com API, the HN "Freelancer? Seeking freelancer?" thread, We Work Remotely RSS, [RemoteOK](https://remoteok.com) API, Himalayas API, [Remotive](https://remotive.com) API (at most every 6 hours, per its terms) and [Jobicy](https://jobicy.com) API (at most every 62 minutes; its terms say no more than hourly), and the public job RSS of two Vietnamese boards, [FreelancerViet](https://freelancerviet.vn) and [vLance](https://www.vlance.vn). Vietnamese-board jobs skip the keyword filter (a few a day, so Claude scores each one), alert from `vnAlertScore` (6), get a Vietnamese proposal and a price in VND (`vnHourlyVnd` × hours). Alerts name the source and link to its listing, as Remotive and Jobicy require. Reddit `[Hiring]` posts in r/forhire, r/freelance_forhire and r/jobbit are read through the official API with app-only OAuth, only when the Reddit secrets are set; Reddit blocks anonymous requests from GitHub's runners. No logged-in access to any platform.
    Beyond the code stack, it also looks for work an AI assistant can do with the freelancer reviewing it: English ↔ Vietnamese translation, Excel/Google Sheets, data cleaning and extraction, web scraping, technical writing (see `profile.md` "Other work").
    Each alert for a Freelancer job also suggests a bid: Claude estimates the hours, the bot multiplies by `hourlyRateUsd` (config), keeps it inside the client's range, shows the net after fees and the delivery days at `hoursPerDay` evening hours, and warns when the budget is below what the work is worth. Until the first reviews, `firstJobDiscount` (0.75) bids 25% below the rate and the alert shows the full price; set it to 1 after 3–5 reviews. Freelancer alerts also show the bid count and the post's age, flagging fresh posts with ≤ 5 bids (bid early) and posts with > 15 bids (save the bid). Every scored job is logged as `score <n> <hours> <key> | <title> | <url>` in the Actions log (no proposals) to tune thresholds. The same lines, plus one summary per run (fresh, kept, scored, alerts, sent, and why jobs were dropped), are appended to `scores.log` on the `state` branch (newest 20,000 lines), so a week of scores is one small file: `git fetch origin state && git show FETCH_HEAD:scores.log`.
 2. Drops jobs already seen and filters by stack, budget (Freelancer: ≥ $30 fixed, ≥ $15/h), bid count and location (`config.json`).
 3. **Freelancer.com and HN** (clients decide within hours): Claude scores each kept job from 1 to 10 and drafts a proposal; jobs scoring ≥ 7 are sent at once.
-4. **Remote job boards**: queued and sent as a digest at 08:15 and 19:15 (GMT+7).
+4. **Remote job boards** (WWR, RemoteOK, Himalayas, Remotive, Jobicy): queued, then scored on the next poll in the same Claude call as the jobs above (newest 15 per poll, to cap Claude usage; the rest wait for the next poll). Jobs scoring ≥ 7 are sent at once, with no bid button; lower scores are dropped. In quiet hours they wait in the queue for the first polls after. The digest at 08:15 and 19:15 (GMT+7) is now a fallback: it scores only board jobs a poll could not score (Claude error or skipped), so no job is sent twice.
 
 The first run only records the current jobs and sends one start message.
 
@@ -58,7 +58,7 @@ Tests: `npm test`.
 
 `worker/` is a Cloudflare Worker (free plan) that does two things:
 
-1. **Every minute** it checks Freelancer (10 newest per search term, short descriptions) and, when a new project passes the filters, starts `radar.yml` at once. New Freelancer jobs reach Telegram in about 1–1.5 minutes instead of up to 15.
+1. **Every minute** it checks Freelancer (10 newest per search term, short descriptions) and, when a new project passes the filters, starts `radar.yml` at once. New Freelancer jobs reach Telegram in about 1–1.5 minutes instead of up to 10.
 2. **Telegram webhook.** A Freelancer alert with a drafted proposal and a bid suggestion gets two more buttons above the copy buttons: **✅ Bid** and **❌ Bỏ**. Tapping ✅ places exactly the suggested bid (amount in the project's currency, delivery days, first milestone as the upfront %) through the official Freelancer API, with the proposal from the message. The buttons are swapped out before the bid goes out, so a double tap cannot bid twice. Tapping ❌ deletes the alert (after 48 h Telegram no longer lets a bot delete it, so only the buttons go). Only taps from `TELEGRAM_CHAT_ID` count. To change the price or text, open the job and bid by hand.
 
 Setup, once: run `node worker/setup.mjs` from the repo root. It logs in to Cloudflare, creates the KV namespace, asks for each secret (hidden input, nothing saved to disk), deploys, sets the Telegram webhook and gets the Freelancer token through OAuth (app redirect URI: `https://localhost/callback`; scopes: manage bids, view profile). After the Freelancer app is approved, `node worker/setup.mjs freelancer` redoes only the token.
@@ -103,7 +103,7 @@ GitHub's `schedule` can be delayed for hours or skipped, especially on new repos
 
 | Job | Schedule (Asia/Ho_Chi_Minh) | Body |
 |---|---|---|
-| radar poll | every 30 minutes | `{"ref":"main","inputs":{"mode":"poll"}}` |
+| radar poll | every 10 minutes | `{"ref":"main","inputs":{"mode":"poll"}}` |
 | radar digest | 08:15 and 19:15 | `{"ref":"main","inputs":{"mode":"digest"}}` |
 
 Both jobs:

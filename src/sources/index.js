@@ -9,11 +9,13 @@ import { fetchFreelancerViet, fetchVlance } from './vnboards.js';
 import { fetchReddit, hasRedditKeys } from './reddit.js';
 
 /**
- * Minimum seconds between calls, from each API's terms. Polls run every 30
- * minutes, so these sources are skipped on most runs.
- * Remotive: "max. 4 times a day". Jobicy: "must not exceed once per hour".
+ * Minimum seconds between calls, from each API's terms. Polls run every 10
+ * minutes (plus Worker-started runs), so these sources are skipped on most runs.
+ * Remotive: "max. 4 times a day". Jobicy: "must not exceed once per hour";
+ * 62 minutes, since `now` is taken at the start of a run and the call itself
+ * can come a little later in one run than in the next.
  */
-export const RATE_LIMITS = { remotive: 6 * 3600, jobicy: 2 * 3600 };
+export const RATE_LIMITS = { remotive: 6 * 3600, jobicy: 62 * 60 };
 
 /**
  * Runs every source that is due; a failing source is reported in `errors`,

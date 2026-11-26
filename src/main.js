@@ -14,6 +14,8 @@ const MAX_DIGEST_SCORING = 40;
 const MAX_PENDING = 200;
 const MAX_NIGHT = 150;
 const MAX_MORNING = 8;
+// Cost guard: board jobs scored per poll (newest first); the rest wait for the next poll.
+const MAX_BOARD_SCORING = 15;
 
 const claudeWarning = (err) => `Claude lỗi: ${err.message.slice(0, 120)}, chưa chấm điểm`;
 const newestFirst = (a, b) => b.postedAt - a.postedAt;
@@ -50,7 +52,7 @@ function dropSummary(results) {
   return Object.entries(counts).sort((a, b) => b[1] - a[1]).map(([k, n]) => `${k}=${n}`).join(', ');
 }
 
-/** Scores urgent jobs: alerts at >= alertScore, and the ones Claude skipped or could not score. */
+/** Scores urgent and remote-board jobs: alerts at >= alertScore, and the ones Claude skipped or could not score. */
 async function scoreUrgent(jobs, deps, log) {
   const { config, now } = deps;
   const alerts = [];
@@ -128,6 +130,20 @@ function countClientDrops(state, results, now, quiet) {
   return report;
 }
 
+/**
+ * Takes the newest remote-board jobs (at most MAX_BOARD_SCORING) out of
+ * state.pending to be scored in this poll. A job alerted now is gone from the
+ * queue, so the digest never sends it again; one scored below alertScore is
+ * dropped, since the digest would not show it either. Jobs a poll already
+ * tried (`polled`) are left for the digest.
+ */
+function takeBoardBatch(state) {
+  const picks = state.pending.filter((j) => !j.polled).sort(newestFirst).slice(0, MAX_BOARD_SCORING);
+  const taken = new Set(picks.map((j) => j.key));
+  state.pending = state.pending.filter((j) => !taken.has(j.key));
+  return picks;
+}
+
 async function poll(state, deps, log) {
   const { config, now } = deps;
   state.lastFetch ??= {};
@@ -143,12 +159,20 @@ async function poll(state, deps, log) {
   const urgent = kept.filter(isUrgent);
   state.pending = [...state.pending, ...kept.filter((j) => !isUrgent(j))].sort(newestFirst).slice(0, MAX_PENDING);
 
-  // Quiet hours: keep urgent jobs for the morning batch instead of alerting.
+  // Quiet hours: keep urgent jobs for the morning batch instead of alerting;
+  // board jobs stay in state.pending for the first polls after quiet hours.
   const quiet = isQuiet(config, now);
   const report = countClientDrops(state, results, now, quiet);
   if (quiet) state.night = [...state.night, ...urgent].slice(-MAX_NIGHT);
   const morning = !quiet && state.night.length ? await morningBatch(state, deps, log) : [];
-  const { alerts, unscored, warning: unscoredWarning } = await scoreUrgent(quiet ? [] : urgent, deps, log);
+  const boards = quiet ? [] : takeBoardBatch(state);
+  // One Claude call for both: board jobs alert at the same score as urgent ones.
+  const scoredRun = await scoreUrgent(quiet ? [] : [...urgent, ...boards], deps, log);
+  const { alerts, warning: unscoredWarning } = scoredRun;
+  const unscored = scoredRun.unscored.filter(isUrgent);
+  // A board job Claude skipped or could not score goes back to the digest, marked so the polls do not retry it.
+  const retry = scoredRun.unscored.filter((j) => !isUrgent(j)).map((j) => ({ ...j, polled: true }));
+  state.pending = [...state.pending, ...retry].sort(newestFirst).slice(0, MAX_PENDING);
 
   const messages = [
     ...(report ? [report] : []),
@@ -158,7 +182,7 @@ async function poll(state, deps, log) {
   ];
   if (messages.length && errors.length) messages[0] += `\n\n⚠️ Nguồn lỗi: ${errors.join('; ')}`;
   for (const text of messages) await deps.sendMessage(text);
-  log.push(`${stamp(now)} run poll${quiet ? ' quiet' : ''} fresh=${fresh.length} kept=${kept.length} night=${state.night.length} scored=${quiet ? 0 : urgent.length - unscored.length} unscored=${unscored.length} alerts=${alerts.length} sent=${messages.length}`
+  log.push(`${stamp(now)} run poll${quiet ? ' quiet' : ''} fresh=${fresh.length} kept=${kept.length} night=${state.night.length} boards=${boards.length} scored=${quiet ? 0 : urgent.length + boards.length - scoredRun.unscored.length} unscored=${scoredRun.unscored.length} alerts=${alerts.length} sent=${messages.length}`
     + `${errors.length ? ` errors=${errors.join('; ')}` : ''}${results.length > kept.length ? ` dropped: ${dropSummary(results)}` : ''}`);
   return messages.length;
 }
