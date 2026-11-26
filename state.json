@@ -12460,24 +12460,7 @@
   "himalayas:https://himalayas.app/companies/forbes/jobs/financial-services-operations-associate": 1795654678,
   "freelancer:40836118": 1795654840
  },
- "pending": [
-  {
-   "url": "https://himalayas.app/companies/micro1/jobs/radiation-oncologist?utm_source=api",
-   "title": "micro1: Radiation Oncologist",
-   "description": "Role Title: Radiation OncologistRole Type: ContractorLocation: Remote\nmicro1 is engaging Radiation Oncologists to participate in a project supporting a healthcare technology customer. In this role, you'll apply your expertise to help train next-generation AI systems. Your work will shape how models learn, reason, and perform through high-quality, real-world input. No prior experience in AI is required — your domain knowledge is what matters. This opportunity focuses on reviewing and providing expert feedback on AI-generated data related to radiation oncology, ensuring outputs reflect clinical accuracy and current best practices. Clear, effective written and verbal communication is essential for success.\nScope of Work\nReview AI-generated datasets pertaining to radiation oncology and assess their clinical validity.\nProvide constructive, detailed feedback on data accuracy, treatment protocols, and relevance to real-world practice.\nCollaborate asynchronously with project stakeholders to clarify data specifications and standards.\nIdentify potential gaps or inconsistencies in AI-generated information.\nSuggest improvements to enhance clinical accuracy, patient safety, and guideline adherence.\nDocument findings and recommendations in a clear, structured format for technical and non-technical audiences.\nParticipate in occasional written or virtual discussions to refine project deliverables.\nPreferred Qualifications\nBoard-certified Radiation Oncologist with active clinical experience.\nStrong foundation in current radiation oncology protocols, guidelines, and emerging practices.\nDemonstrated ability to communicate technical concepts clearly in both written and verbal forms.\nPrior experience with medical data review, clinical research, or peer-review processes.\nComfort with digital collaboration tools and remote engagement environments.\nKeen attention to detail and meticulous documentation skills.\nInterest in the intersection of artificial intelligence and oncology is a plus.\nOriginally posted on Himalayas",
-   "budgetType": "salary",
-   "budgetMinUsd": 100,
-   "budgetMaxUsd": 150,
-   "bidCount": null,
-   "location": null,
-   "employmentType": "Contractor",
-   "postedAt": 1795643925,
-   "tags": [],
-   "source": "himalayas",
-   "id": "https://himalayas.app/companies/micro1/jobs/radiation-oncologist",
-   "key": "himalayas:https://himalayas.app/companies/micro1/jobs/radiation-oncologist"
-  }
- ],
+ "pending": [],
  "night": [],
  "clientDrops": {
   "day": "2026-11-26",
