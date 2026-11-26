@@ -2557,3 +2557,9 @@
 2026-11-26T21:30Z run poll quiet fresh=0 kept=0 night=3 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0
 2026-11-26T21:31Z score 2 - freelancer:40837666 | Unblock Google Search Ad Campaign | https://www.freelancer.com/projects/google-ads/Unblock-Google-Search-Campaign
 2026-11-26T21:31Z run poll quiet fresh=1 kept=1 night=3 held=0 boards=0 scored=1 unscored=0 alerts=0 sent=0
+2026-11-26T21:38Z score 1 - himalayas:https://himalayas.app/companies/ecomseo/jobs/ai-social-media-manager-remote-latam | EcomSEO: AI Social Media Manager (Remote, LATAM) | https://himalayas.app/companies/ecomseo/jobs/ai-social-media-manager-remote-latam?utm_source=api
+2026-11-26T21:38Z score 1 - himalayas:https://himalayas.app/companies/inv/jobs/japanese-voice-actor-freelance-ai-trainer-project | Invisible Technologies: Japanese Voice Actor - Freelance AI Trainer Project | https://himalayas.app/companies/inv/jobs/japanese-voice-actor-freelance-ai-trainer-project?utm_source=api
+2026-11-26T21:38Z score 1 - himalayas:https://himalayas.app/companies/inv/jobs/registered-nurse-ai-trainer | Invisible Technologies: Registered Nurse - AI Trainer | https://himalayas.app/companies/inv/jobs/registered-nurse-ai-trainer?utm_source=api
+2026-11-26T21:38Z score 1 - himalayas:https://himalayas.app/companies/inv/jobs/slovene-voice-actor-freelance-ai-trainer-project | Invisible Technologies: Slovene Voice Actor - Freelance AI Trainer Project | https://himalayas.app/companies/inv/jobs/slovene-voice-actor-freelance-ai-trainer-project?utm_source=api
+2026-11-26T21:38Z score 1 - jobicy:164416 | Cobalt: Cobalt Core Pentester | https://jobicy.com/jobs/164416-cobalt-core-pentester-2
+2026-11-26T21:38Z run digest pending=5 alerts=0 sent=0
