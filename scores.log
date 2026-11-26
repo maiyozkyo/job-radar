@@ -2452,3 +2452,4 @@
 2026-11-26T13:42Z run poll fresh=12 kept=2 night=0 scored=2 unscored=0 alerts=0 sent=0 dropped: block keyword=6, too many bids=2, client=1, location=1
 2026-11-26T13:42Z run poll fresh=0 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0
 2026-11-26T13:45Z run poll fresh=0 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0
+2026-11-26T14:00Z run poll fresh=11 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=4, no stack keyword=3, hourly below floor=2, too many bids=1, client=1
