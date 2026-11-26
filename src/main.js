@@ -13,7 +13,9 @@ const MAX_DIGEST = 10;
 const MAX_DIGEST_SCORING = 40;
 const MAX_PENDING = 200;
 const MAX_NIGHT = 150;
-const MAX_MORNING = 8;
+const MAX_MORNING = 10;
+// Night scoring writes no proposals (state.json is on a public branch): no score reaches this.
+const NO_DRAFT = 11;
 // Cost guard: board jobs scored per poll (newest first); the rest wait for the next poll.
 const MAX_BOARD_SCORING = 15;
 
@@ -52,60 +54,111 @@ function dropSummary(results) {
   return Object.entries(counts).sort((a, b) => b[1] - a[1]).map(([k, n]) => `${k}=${n}`).join(', ');
 }
 
-/** Scores urgent and remote-board jobs: alerts at >= alertScore, and the ones Claude skipped or could not score. */
-async function scoreUrgent(jobs, deps, log) {
+/**
+ * Scores urgent and remote-board jobs: alerts at >= alertScore, every scored
+ * job by key (`byKey`), and the ones Claude skipped or could not score.
+ * `opts` overrides the scoreJobs options (night: no drafts; morning: drafts for all).
+ */
+async function scoreUrgent(jobs, deps, log, opts = {}) {
   const { config, now } = deps;
   const alerts = [];
+  const byKey = new Map();
   let unscored = [];
   let warning = 'Claude bỏ sót, chưa chấm điểm';
-  if (!jobs.length) return { alerts, unscored, warning };
+  if (!jobs.length) return { alerts, byKey, unscored, warning };
   try {
-    const scored = (await deps.scoreJobs(jobs, { draftMin: config.alertScore, vnDraftMin: config.vnAlertScore ?? config.alertScore, ...bidOpts(config), ...redraftOpts(config) }))
+    const scored = (await deps.scoreJobs(jobs, { draftMin: config.alertScore, vnDraftMin: config.vnAlertScore ?? config.alertScore, ...bidOpts(config), ...redraftOpts(config), ...opts }))
       .map((s, i) => (s ? { ...s, score: clientAdjustedScore(s.score, jobs[i].client) } : s));
     logScores(jobs, scored, log, now);
     jobs.forEach((job, i) => {
-      if (!scored[i]) unscored.push(job);
-      else if (scored[i].score >= alertMin(config, job)) alerts.push({ job, scored: scored[i] });
+      if (!scored[i]) { unscored.push(job); return; }
+      byKey.set(job.key, scored[i]);
+      if (scored[i].score >= alertMin(config, job)) alerts.push({ job, scored: scored[i] });
     });
   } catch (err) {
     unscored = jobs;
     warning = claudeWarning(err);
   }
-  return { alerts, unscored, warning };
+  return { alerts, byKey, unscored, warning };
 }
 
 /**
- * The first poll after quiet hours: drops night jobs that closed or filled up
- * with bids, scores the rest and sends a header plus the best few, each with
- * its ✅ Bid button. Nothing is bid without the user's tap.
+ * Quiet hours: urgent jobs are scored as they arrive, in the same kind of
+ * Claude call as a normal poll but without proposals. Jobs at or above the
+ * alert score wait in state.nightAlerts; jobs Claude could not score wait in
+ * state.night. Nothing is sent. Returns how many were scored.
  */
-async function morningBatch(state, deps, log) {
-  const { config, now } = deps;
-  const found = state.night.length;
-  let jobs = state.night;
-  let note = '';
+async function holdNight(state, urgent, deps, log) {
+  const { alerts, unscored } = await scoreUrgent(urgent, deps, log, { draftMin: NO_DRAFT, vnDraftMin: NO_DRAFT, redraftMin: null });
+  state.nightAlerts = [...state.nightAlerts, ...alerts.map((a) => ({ job: a.job, score: a.scored.score }))].slice(-MAX_NIGHT);
+  state.night = [...state.night, ...unscored].slice(-MAX_NIGHT);
+  return urgent.length - unscored.length;
+}
+
+/**
+ * Asks Freelancer which night jobs are still open, with their bid count now.
+ * Other sources pass. A failed check keeps every job and says so.
+ */
+async function openNow(jobs, deps) {
   const ids = jobs.filter((j) => j.source === 'freelancer').map((j) => j.id);
-  if (ids.length && deps.freelancerStatus) {
-    try {
-      const status = await deps.freelancerStatus(ids);
-      jobs = jobs.flatMap((j) => {
+  if (!ids.length || !deps.freelancerStatus) return { jobs, note: '' };
+  try {
+    const status = await deps.freelancerStatus(ids);
+    return {
+      jobs: jobs.flatMap((j) => {
         if (j.source !== 'freelancer') return [j];
         const st = status.get(String(j.id));
         return st?.open ? [{ ...j, bidCount: st.bidCount ?? j.bidCount, client: st.client ?? j.client }] : [];
-      }).filter((j) => filterJob(j, config, now).keep);
-    } catch {
-      note = '\n⚠️ Không kiểm tra được job nào còn mở.';
-    }
+      }),
+      note: '',
+    };
+  } catch {
+    return { jobs, note: '\n⚠️ Không kiểm tra được job nào còn mở.' };
   }
-  const { alerts, unscored, warning } = await scoreUrgent(jobs, deps, log);
-  alerts.sort((a, b) => b.scored.score - a.scored.score);
-  const top = alerts.slice(0, MAX_MORNING);
-  const more = alerts.length > top.length ? ` (gửi ${top.length} job tốt nhất)` : '';
-  log.push(`${stamp(now)} run morning night=${found} open=${jobs.length} alerts=${alerts.length} sent=${top.length}`);
+}
+
+/**
+ * The first poll after quiet hours sends a header and the night's jobs that
+ * scored >= the alert score when they were found and are still open, best
+ * first (at most MAX_MORNING). They are not filtered on bid count again: they
+ * were within the limit when scored, and the alert shows the bid count now.
+ * One Claude call drafts their proposals. Jobs Claude could not score at night
+ * are filtered and scored as before. Each alert has its ✅ Bid button; nothing
+ * is bid without the user's tap.
+ */
+async function morningBatch(state, deps, log) {
+  const { config, now } = deps;
+  const held = state.nightAlerts;
+  const raw = state.night;
+  const checked = await openNow([...held.map((h) => h.job), ...raw], deps);
+  const note = checked.note;
+  const open = new Map(checked.jobs.map((j) => [j.key, j]));
+  const nightScore = new Map(held.map((h) => [h.job.key, h.score]));
+  const heldOpen = held.filter((h) => open.has(h.job.key)).map((h) => open.get(h.job.key))
+    .sort((a, b) => nightScore.get(b.key) - nightScore.get(a.key) || newestFirst(a, b));
+  const picks = heldOpen.slice(0, MAX_MORNING);
+  const rawOpen = raw.filter((j) => open.has(j.key)).map((j) => open.get(j.key))
+    .filter((j) => (note ? true : filterJob(j, config, now).keep));
+
+  // draftMin 1: these passed at night, so each one gets a proposal now and is
+  // sent whatever the new score; the alert shows the score and bid count now.
+  const drafted = await scoreUrgent(picks, deps, log, { draftMin: 1, vnDraftMin: 1 });
+  const sendable = picks.filter((j) => drafted.byKey.has(j.key));
+  const late = await scoreUrgent(rawOpen, deps, log);
+  late.alerts.sort((a, b) => b.scored.score - a.scored.score);
+  const lateTop = late.alerts.slice(0, Math.max(0, MAX_MORNING - sendable.length));
+
+  const more = heldOpen.length > picks.length ? ` (gửi ${picks.length} job tốt nhất)` : '';
+  const lateLine = raw.length ? ` ${raw.length} job chưa chấm được, ${rawOpen.length} còn mở, ${late.alerts.length} job ≥ ${config.alertScore}.` : '';
+  log.push(`${stamp(now)} run morning held=${held.length} open=${heldOpen.length} night=${raw.length} nightOpen=${rawOpen.length} alerts=${sendable.length + late.alerts.length} sent=${sendable.length + lateTop.length}`);
+  state.nightAlerts = [];
   state.night = [];
+  const unscored = [...drafted.unscored, ...late.unscored];
+  const warning = drafted.unscored.length ? drafted.warning : late.warning;
   return [
-    `🌙 Job đêm qua: ${found} job, ${jobs.length} còn mở, ${alerts.length} job ≥ ${config.alertScore}${more}.${note}`,
-    ...top.map((a) => formatAlertHtml(a.job, a.scored, undefined, now)),
+    `🌙 Job đêm qua: ${held.length} job ≥ ${config.alertScore} lúc đăng, ${heldOpen.length} còn mở${more}.${lateLine}${note}`,
+    ...sendable.map((j) => formatAlertHtml(j, drafted.byKey.get(j.key), undefined, now)),
+    ...lateTop.map((a) => formatAlertHtml(a.job, a.scored, undefined, now)),
     ...(unscored.length ? [formatUnscored(unscored.slice(0, 15), warning)] : []),
   ];
 }
@@ -159,12 +212,13 @@ async function poll(state, deps, log) {
   const urgent = kept.filter(isUrgent);
   state.pending = [...state.pending, ...kept.filter((j) => !isUrgent(j))].sort(newestFirst).slice(0, MAX_PENDING);
 
-  // Quiet hours: keep urgent jobs for the morning batch instead of alerting;
-  // board jobs stay in state.pending for the first polls after quiet hours.
+  // Quiet hours: urgent jobs are scored now and the good ones held for the
+  // morning batch instead of alerting (see holdNight); board jobs stay in
+  // state.pending for the first polls after quiet hours.
   const quiet = isQuiet(config, now);
   const report = countClientDrops(state, results, now, quiet);
-  if (quiet) state.night = [...state.night, ...urgent].slice(-MAX_NIGHT);
-  const morning = !quiet && state.night.length ? await morningBatch(state, deps, log) : [];
+  const nightScored = quiet ? await holdNight(state, urgent, deps, log) : 0;
+  const morning = !quiet && (state.night.length || state.nightAlerts.length) ? await morningBatch(state, deps, log) : [];
   const boards = quiet ? [] : takeBoardBatch(state);
   // One Claude call for both: board jobs alert at the same score as urgent ones.
   const scoredRun = await scoreUrgent(quiet ? [] : [...urgent, ...boards], deps, log);
@@ -182,7 +236,7 @@ async function poll(state, deps, log) {
   ];
   if (messages.length && errors.length) messages[0] += `\n\n⚠️ Nguồn lỗi: ${errors.join('; ')}`;
   for (const text of messages) await deps.sendMessage(text);
-  log.push(`${stamp(now)} run poll${quiet ? ' quiet' : ''} fresh=${fresh.length} kept=${kept.length} night=${state.night.length} boards=${boards.length} scored=${quiet ? 0 : urgent.length + boards.length - scoredRun.unscored.length} unscored=${scoredRun.unscored.length} alerts=${alerts.length} sent=${messages.length}`
+  log.push(`${stamp(now)} run poll${quiet ? ' quiet' : ''} fresh=${fresh.length} kept=${kept.length} night=${state.night.length} held=${state.nightAlerts.length} boards=${boards.length} scored=${quiet ? nightScored : urgent.length + boards.length - scoredRun.unscored.length} unscored=${scoredRun.unscored.length} alerts=${alerts.length} sent=${messages.length}`
     + `${errors.length ? ` errors=${errors.join('; ')}` : ''}${results.length > kept.length ? ` dropped: ${dropSummary(results)}` : ''}`);
   return messages.length;
 }

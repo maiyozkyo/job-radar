@@ -42,8 +42,8 @@ export const clientLines = (c, now) => { const { summary, flags } = clientCheck(
  * Why a job is not worth an alert because of its client, or null. Only the
  * clearest junk signs; a new client with no history is kept, since a freelancer
  * without reviews wins those most often. Unverified payment alone is kept too
- * (Freelancer clients often verify only when they award); it costs a point
- * instead, see UNVERIFIED_PENALTY.
+ * (Freelancer clients often verify only when they award); the alert shows a
+ * 🚩 line for it, see UNVERIFIED_PENALTY.
  * @param {Client} c
  */
 export function clientDrop(c, now = Date.now() / 1000) {
@@ -53,8 +53,13 @@ export function clientDrop(c, now = Date.now() / 1000) {
   return null;
 }
 
-/** Points taken off a job whose client has not verified payment. */
-export const UNVERIFIED_PENALTY = 1;
+/**
+ * Points taken off a job whose client has not verified payment. 0 since 27/11:
+ * about 2/3 of Freelancer clients are unverified (they often verify only when
+ * they award) and they posted most of the jobs worth a bid, so one point off
+ * hid most alerts. The alert's 🚩 line still says it.
+ */
+export const UNVERIFIED_PENALTY = 0;
 
 /** The score after the client penalty; the alert's 🚩 line says why. */
 export function clientAdjustedScore(score, c) {
