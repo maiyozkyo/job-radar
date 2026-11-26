@@ -2381,3 +2381,5 @@
 2026-11-26T07:45Z run poll fresh=4 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=2, no stack keyword=1, client=1
 2026-11-26T07:46Z score 1 - freelancer:40836611 | Build Community Group Buying Marketplace | https://www.freelancer.com/projects/full-stack-development/Build-Community-Group-Buying-Marketplace
 2026-11-26T07:46Z run poll fresh=3 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=1, no stack keyword=1
+2026-11-26T07:57Z score 1 - freelancer:40836626 | Kling AI Cinematic Prompt Specialist | https://www.freelancer.com/projects/3d-animation/Kling-Cinematic-Prompt-Specialist
+2026-11-26T07:57Z run poll fresh=28 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=12, location=10, block keyword=4, client=1
