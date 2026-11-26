@@ -2443,3 +2443,4 @@
 2026-11-26T12:47Z score 1 - freelancer:40837058 | Global EdTech Influencer Outreach Campaign | https://www.freelancer.com/projects/influencer-marketing/Global-EdTech-Influencer-Outreach
 2026-11-26T12:47Z run poll fresh=4 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: hourly below floor=1, client=1, block keyword=1
 2026-11-26T13:00Z run poll fresh=8 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=5, too many bids=1, client=1, location=1
+2026-11-26T13:15Z run poll fresh=29 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: location=11, no stack keyword=10, block keyword=6, too many bids=1, client=1
