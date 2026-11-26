@@ -2497,3 +2497,4 @@
 2026-11-26T17:50Z run poll quiet fresh=8 kept=0 night=2 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=4, client=2, no stack keyword=1, budget below floor=1
 2026-11-26T17:53Z run poll quiet fresh=5 kept=1 night=3 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=1, budget below floor=1, client=1, no stack keyword=1
 2026-11-26T18:00Z run poll quiet fresh=1 kept=0 night=3 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 errors=wwr: The operation was aborted due to timeout dropped: block keyword=1
+2026-11-26T18:10Z run poll quiet fresh=51 kept=1 night=3 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: location=23, block keyword=16, no stack keyword=7, risk=3, unknown budget=1
