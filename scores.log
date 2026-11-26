@@ -2417,3 +2417,5 @@
 2026-11-26T10:00Z run poll fresh=3 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 errors=wwr: The operation was aborted due to timeout dropped: block keyword=2, location=1
 2026-11-26T10:12Z score 1 - freelancer:40836815 | Recover Locked Gmail Account | https://www.freelancer.com/projects/technical-support/Recover-Locked-Gmail-Account
 2026-11-26T10:12Z run poll fresh=9 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=5, no stack keyword=2, client=1
+2026-11-26T10:15Z score 3 - freelancer:40836838 | Daily Tech App Review Blogs | https://www.freelancer.com/projects/blog-writing/Daily-Tech-App-Review-Blogs
+2026-11-26T10:15Z run poll fresh=2 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: budget below floor=1
