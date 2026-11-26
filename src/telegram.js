@@ -185,7 +185,7 @@ export function formatAlertHtml(job, scored, warning, now) {
   return { text, html: true, plain: formatAlert(job, scored, warning, now), buttons };
 }
 
-/** The twice-daily remote-board digest; null when there is nothing to send. */
+/** The twice-daily remote-board digest (board jobs the polls could not score); null when there is nothing to send. */
 export function formatDigest(items, warning) {
   if (!items.length) return null;
   return [
