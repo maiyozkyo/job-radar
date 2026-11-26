@@ -2438,3 +2438,4 @@
 2026-11-26T12:20Z run poll fresh=5 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=2, no stack keyword=1, too many bids=1
 2026-11-26T12:24Z score 3 - freelancer:40837019 | Shopify SEO & Checkout Optimisation | https://www.freelancer.com/projects/google-analytics/Shopify-SEO-Checkout-Optimisation
 2026-11-26T12:24Z run poll fresh=9 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=6, no stack keyword=1, too many bids=1
+2026-11-26T12:30Z run poll fresh=6 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=3, block keyword=2, client=1
