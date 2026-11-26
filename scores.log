@@ -2363,3 +2363,5 @@
 2026-11-26T07:15Z run poll fresh=2 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: hourly below floor=1, block keyword=1
 2026-11-26T07:19Z score 2 - freelancer:40836571 | Aetplacer WooCommerce Frame Config | https://www.freelancer.com/projects/rest-api/Aetplacer-WooCommerce-Frame-Config
 2026-11-26T07:19Z run poll fresh=2 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=1
+2026-11-26T07:23Z score 3 - vlance:94935 | Thuê vẽ lại Flowchart bằng Microsoft Visio (.vsdx) theo mẫu có sẵn | https://www.vlance.vn/viec-freelance/thue-ve-lai-flowchart-bang-microsoft-visio-vsdx-theo-mau-co-san
+2026-11-26T07:23Z run poll fresh=2 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: too many bids=1
