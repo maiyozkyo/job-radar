@@ -2388,3 +2388,5 @@
 2026-11-26T08:00Z run poll fresh=2 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2
 2026-11-26T08:03Z score 1 - freelancer:40836636 | Smart Glove Hub PCB Design | https://www.freelancer.com/projects/bluetooth/Smart-Glove-Hub-PCB-Design
 2026-11-26T08:03Z run poll fresh=3 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: client=1, no stack keyword=1
+2026-11-26T08:13Z score 3 - freelancer:40836632 | Local Small Business Email Research | https://www.freelancer.com/projects/data-annotation/Local-Small-Business-Email-Research
+2026-11-26T08:13Z run poll fresh=9 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: client=3, no stack keyword=3, block keyword=2
