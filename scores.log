@@ -2323,3 +2323,5 @@
 2026-11-26T04:45Z run poll fresh=0 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0
 2026-11-26T05:00Z run poll fresh=9 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=5, client=2, block keyword=1, too many bids=1
 2026-11-26T05:15Z run poll fresh=5 kept=0 night=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=3, client=1, budget below floor=1
+2026-11-26T05:19Z score 3 - freelancer:40836378 | WeWeb + Supabase developer for API connectors and dashboards | https://www.freelancer.com/projects/supabase/WeWeb-Supabase-developer-for-API
+2026-11-26T05:19Z run poll fresh=2 kept=1 night=0 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=1
