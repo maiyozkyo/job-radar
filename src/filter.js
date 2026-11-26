@@ -28,7 +28,8 @@ export function filterJob(job, config, now = Date.now() / 1000) {
 
   // Block words only in the title and tags: a description saying "daily sales
   // report" or "email verification" is a normal job. Some block words only in
-  // the title: Freelancer tags Excel cleanup jobs "Data Entry".
+  // the title (`titleBlockKeywords`): Freelancer tags Excel cleanup jobs "Data
+  // Entry", and coded web redesigns "Graphic Design", "Illustrator" or "Logo Design".
   const title = job.title.normalize('NFC').toLowerCase();
   const blocked = firstMatch(`${title}\n${job.tags.join(' ').toLowerCase()}`, config.blockKeywords)
     ?? firstMatch(title, config.titleBlockKeywords ?? []);

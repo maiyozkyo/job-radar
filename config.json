@@ -206,21 +206,21 @@
     "wix",
     "squarespace",
     "elementor",
+    "ui/ux designer",
+    "ux designer",
+    "ux researcher"
+  ],
+  "titleBlockKeywords": [
+    "data entry",
     "logo design",
     "logo designer",
     "graphic design",
     "graphic designer",
     "illustration",
     "illustrator",
-    "ui/ux designer",
-    "ux designer",
-    "ux researcher",
     "brand identity",
     "motion graphics",
     "packaging design"
-  ],
-  "titleBlockKeywords": [
-    "data entry"
   ],
   "minFixedUsd": 30,
   "minHourlyUsd": 15,
