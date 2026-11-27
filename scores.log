@@ -2619,3 +2619,4 @@
 2026-11-27T02:00Z run poll fresh=3 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=2, client=1
 2026-11-27T02:10Z run poll fresh=1 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: client=1
 2026-11-27T02:20Z run poll fresh=3 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1, hourly below floor=1, block keyword=1
+2026-11-27T02:28Z run poll fresh=5 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: client=2, no stack keyword=2, too many bids=1
