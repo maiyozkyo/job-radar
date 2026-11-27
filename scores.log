@@ -2854,3 +2854,4 @@
 2026-11-27T16:00Z run poll fresh=3 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: client=1, block keyword=1, too many bids=1
 2026-11-27T16:05Z score 2 - freelancer:40838963 | Business Operations Support Specialist – English/Spanish | https://www.freelancer.com/projects/administrative-support/Business-Operations-Support-Specialist
 2026-11-27T16:05Z run poll fresh=31 kept=1 night=0 held=0 boards=0 scored=1 unscored=0 alerts=0 sent=0 dropped: location=16, block keyword=12, no stack keyword=2
+2026-11-27T16:10Z run poll fresh=3 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=3
