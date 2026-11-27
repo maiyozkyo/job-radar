@@ -2792,3 +2792,5 @@
 2026-11-27T11:50Z run poll fresh=5 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: too many bids=2, client=1, block keyword=1, no stack keyword=1
 2026-11-27T11:54Z score 1 - freelancer:40838662 | Bengali 2D Animated Short Creation | https://www.freelancer.com/projects/2d-animation/Bengali-Animated-Short-Creation
 2026-11-27T11:54Z run poll fresh=1 kept=1 night=0 held=0 boards=0 scored=1 unscored=0 alerts=0 sent=0
+2026-11-27T12:00Z score 1 - freelancer:40838676 | Gestión Integral Marketing Shopify | https://www.freelancer.com/projects/facebook-ads/Gesti-Integral-Marketing-Shopify
+2026-11-27T12:00Z run poll fresh=5 kept=1 night=0 held=0 boards=0 scored=1 unscored=0 alerts=0 sent=0 dropped: client=2, no stack keyword=1, location=1
