@@ -2711,3 +2711,4 @@
 2026-11-27T07:33Z run poll fresh=1 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: too many bids=1
 2026-11-27T07:35Z score 1 - freelancer:40838312 | Zero-Rated GST Export Filing | https://www.freelancer.com/projects/tax-compliance/Zero-Rated-GST-Export-Filing
 2026-11-27T07:35Z run poll fresh=2 kept=1 night=0 held=0 boards=0 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1
+2026-11-27T07:40Z run poll fresh=6 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=4, no stack keyword=1, location=1
