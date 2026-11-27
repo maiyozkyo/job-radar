@@ -22,7 +22,7 @@ test('unknown budget or non-Freelancer source has no net', () => {
 
 test('config holds the spec floors and thresholds', () => {
   const c = loadConfig();
-  assert.equal(c.minFixedUsd, 30);
+  assert.equal(c.minFixedUsd, 15);
   assert.equal(c.minHourlyUsd, 15);
   assert.equal(c.maxBidCount, 30);
   assert.equal(c.alertScore, 7);

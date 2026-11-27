@@ -228,7 +228,7 @@
     "motion graphics",
     "packaging design"
   ],
-  "minFixedUsd": 30,
+  "minFixedUsd": 15,
   "minHourlyUsd": 15,
   "maxBidCount": 30,
   "alertScore": 7,
