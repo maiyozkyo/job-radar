@@ -2752,3 +2752,4 @@
 2026-11-27T09:30Z run poll fresh=3 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: client=1, block keyword=1, no stack keyword=1
 2026-11-27T09:36Z score 1 - freelancer:40838474 | Acquire IntelliMaint CMMS Platform | https://www.freelancer.com/projects/android/Acquire-IntelliMaint-CMMS-Platform
 2026-11-27T09:36Z run poll fresh=5 kept=1 night=0 held=0 boards=0 scored=1 unscored=0 alerts=0 sent=0 dropped: too many bids=1, client=1, block keyword=1, no stack keyword=1
+2026-11-27T09:40Z run poll fresh=3 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1, block keyword=1, location=1
