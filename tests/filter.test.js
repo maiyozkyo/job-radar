@@ -13,9 +13,9 @@ const board = (source, over) => makeJob({
 });
 const keep = (job) => filterJob(job, config).keep;
 
-test('fixed budget floor is $30', () => {
-  assert.equal(keep(fl({ budgetMaxUsd: 29.99 })), false);
-  assert.equal(keep(fl({ budgetMaxUsd: 30 })), true);
+test('fixed budget floor is $15', () => {
+  assert.equal(keep(fl({ budgetMaxUsd: 14.99 })), false);
+  assert.equal(keep(fl({ budgetMaxUsd: 15 })), true);
 });
 
 test('hourly floor is $15/h', () => {
