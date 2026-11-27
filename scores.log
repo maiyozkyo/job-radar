@@ -2879,3 +2879,4 @@
 2026-11-27T17:03Z run poll quiet fresh=2 kept=1 night=0 held=0 boards=0 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=1
 2026-11-27T17:07Z score 1 - freelancer:40839028 | Brand Awareness Campaign Setup | https://www.freelancer.com/projects/digital-marketing/Brand-Awareness-Campaign-Setup-40839028
 2026-11-27T17:07Z run poll quiet fresh=2 kept=1 night=0 held=0 boards=0 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1
+2026-11-27T17:09Z run poll quiet fresh=11 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: location=7, block keyword=2, too many bids=1, no stack keyword=1
