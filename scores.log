@@ -2615,3 +2615,4 @@
 2026-11-27T01:46Z run poll fresh=2 kept=1 night=0 held=0 boards=0 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1
 2026-11-27T01:48Z score 7 5h freelancer:40837904 | Google Scrape: Indian Kurti Retailers | https://www.freelancer.com/projects/data-scraping/Google-Scrape-Indian-Kurti-Retailers
 2026-11-27T01:48Z run poll fresh=21 kept=1 night=0 held=0 boards=0 scored=1 unscored=0 alerts=1 sent=1 dropped: location=9, no stack keyword=9, block keyword=2
+2026-11-27T01:50Z run poll fresh=1 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: unknown budget=1
