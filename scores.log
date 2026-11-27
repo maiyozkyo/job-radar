@@ -2646,3 +2646,5 @@
 2026-11-27T03:58Z run poll fresh=1 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1
 2026-11-27T04:00Z run poll fresh=1 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 errors=wwr: The operation was aborted due to timeout dropped: location=1
 2026-11-27T04:10Z run poll fresh=10 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=6, block keyword=3, client=1
+2026-11-27T04:14Z score 1 - freelancer:40838045 | Test subscription payments, renewal & refund - web, Android, iPhone (USA only) | https://www.freelancer.com/projects/mobile-app-testing/Test-subscription-payments-renewal
+2026-11-27T04:14Z run poll fresh=2 kept=1 night=0 held=0 boards=0 scored=1 unscored=0 alerts=0 sent=0 dropped: client=1
