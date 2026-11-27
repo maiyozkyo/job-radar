@@ -36,26 +36,62 @@ async function get(url, token, fetchFn) {
  * Errors never include the token.
  */
 export async function fetchMyBids(token, fetchFn = fetch) {
+  const { bids, projects } = await loadBids(token, fetchFn, SHOW);
+  return bids.map((b) => {
+    const p = projects.get(String(b.project_id));
+    return {
+      title: p?.title ?? `Project #${b.project_id}`,
+      url: projectUrl(p, b.project_id),
+      state: bidState(b, p),
+      price: `${b.amount} ${p?.currency?.code ?? ''}`.trim(),
+      submitted: b.time_submitted ?? null,
+    };
+  });
+}
+
+/** Loads the owner's newest bids (up to `limit`) and their projects. Errors never include the token. */
+async function loadBids(token, fetchFn, limit) {
   if (!token) throw new Error('thiếu FREELANCER_TOKEN');
   const me = (await get(`${API}/users/0.1/self/`, token, fetchFn))?.id;
   if (!me) throw new Error('không đọc được ID tài khoản Freelancer');
   const bids = ((await get(`${API}/projects/0.1/bids/?bidders[]=${me}&limit=50`, token, fetchFn))?.bids ?? [])
     .sort((a, b) => (b.time_submitted ?? 0) - (a.time_submitted ?? 0))
-    .slice(0, SHOW);
-  if (!bids.length) return [];
+    .slice(0, limit);
+  if (!bids.length) return { bids, projects: new Map() };
 
   const ids = [...new Set(bids.map((b) => b.project_id))];
   const raw = (await get(`${API}/projects/0.1/projects/?${ids.map((id) => `projects[]=${id}`).join('&')}&limit=${ids.length}`, token, fetchFn))?.projects ?? [];
   const projects = new Map((Array.isArray(raw) ? raw : Object.values(raw)).map((p) => [String(p.id), p]));
+  return { bids, projects };
+}
 
+const projectUrl = (p, id) => (p?.seo_url ? `https://www.freelancer.com/projects/${p.seo_url}` : `https://www.freelancer.com/projects/${id}`);
+
+/** Dashboard status of one bid: awarded, lost (rejected, retracted, or the job went elsewhere) or sent (still open). */
+export function bidStatus(bid, project) {
+  if (bid.award_status === 'awarded') return 'awarded';
+  if (bid.award_status === 'rejected' || bid.retracted) return 'lost';
+  if (project?.status && project.status !== 'active') return 'lost';
+  const front = project?.frontend_project_status;
+  if (front && front !== 'open') return 'lost';
+  return 'sent';
+}
+
+/** Up to 50 recent bids as plain records for the bid log endpoint. */
+export async function fetchBidRecords(token, fetchFn = fetch) {
+  const { bids, projects } = await loadBids(token, fetchFn, 50);
   return bids.map((b) => {
     const p = projects.get(String(b.project_id));
     return {
+      bidId: b.id ?? null,
+      projectId: b.project_id,
       title: p?.title ?? `Project #${b.project_id}`,
-      url: p?.seo_url ? `https://www.freelancer.com/projects/${p.seo_url}` : `https://www.freelancer.com/projects/${b.project_id}`,
-      state: bidState(b, p),
-      price: `${b.amount} ${p?.currency?.code ?? ''}`.trim(),
-      submitted: b.time_submitted ?? null,
+      url: projectUrl(p, b.project_id),
+      amount: b.amount ?? null,
+      currency: p?.currency?.code ?? null,
+      period: b.period ?? null,
+      placedAt: b.time_submitted ? new Date(b.time_submitted * 1000).toISOString() : null,
+      status: bidStatus(b, p),
     };
   });
 }
