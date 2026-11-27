@@ -16,6 +16,7 @@ import { pickFresh, querySlice } from '../src/fastpoll.js';
 import { extractProposal, parseCallback, placeBid, skipCallback } from '../src/bid.js';
 import { findFreelancerLink, MAX_PASTE } from '../src/paste.js';
 import { fetchMyBids, formatBids, isBidsCommand } from '../src/mybids.js';
+import { bidsJson, logBid } from '../src/bidlog.js';
 
 const nowSec = () => Math.floor(Date.now() / 1000);
 
@@ -119,6 +120,8 @@ export async function onTap(cq, env, fetchFn = fetch) {
   await status('⏳ Đang bid…');
   try {
     const { bidId } = await placeBid({ ...action, description }, env.FREELANCER_TOKEN, fetchFn);
+    // Record it for the owner's dashboard (never throws).
+    await logBid(env.RADAR_KV, { bidId, projectId: action.projectId, title: (msg.text ?? '').split('\n').find((l) => l.trim())?.trim(), url, amount: action.amount, period: action.days });
     await status(`✅ Đã bid${bidId ? ` #${bidId}` : ''} · mở job`);
   } catch (err) {
     // 🔄 sends the same bid again, still only on the owner's tap. Freelancer
@@ -205,6 +208,7 @@ export default {
     const { pathname } = new URL(request.url);
     const paste = pathname.match(/^\/paste\/([0-9a-f-]{36})$/);
     if (request.method === 'GET' && paste) return readPaste(request, env, paste[1]);
+    if (request.method === 'GET' && pathname === '/bids.json') return bidsJson(request, env);
     if (request.method !== 'POST' || pathname !== '/telegram') return new Response('not found', { status: 404 });
     // Telegram sends the secret given to setWebhook; anything else is not Telegram.
     if (!env.TG_WEBHOOK_SECRET || request.headers.get('X-Telegram-Bot-Api-Secret-Token') !== env.TG_WEBHOOK_SECRET) {
