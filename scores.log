@@ -2794,3 +2794,4 @@
 2026-11-27T11:54Z run poll fresh=1 kept=1 night=0 held=0 boards=0 scored=1 unscored=0 alerts=0 sent=0
 2026-11-27T12:00Z score 1 - freelancer:40838676 | Gestión Integral Marketing Shopify | https://www.freelancer.com/projects/facebook-ads/Gesti-Integral-Marketing-Shopify
 2026-11-27T12:00Z run poll fresh=5 kept=1 night=0 held=0 boards=0 scored=1 unscored=0 alerts=0 sent=0 dropped: client=2, no stack keyword=1, location=1
+2026-11-27T12:01Z run poll fresh=2 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2
