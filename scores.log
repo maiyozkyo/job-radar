@@ -2865,3 +2865,4 @@
 2026-11-27T16:32Z run poll quiet fresh=1 kept=1 night=0 held=0 boards=0 scored=1 unscored=0 alerts=0 sent=0
 2026-11-27T16:34Z score 1 - freelancer:40835654 | Unlock Y7P5 H1_7 Tablet | https://www.freelancer.com/projects/android/Unlock-Tablet-40835654
 2026-11-27T16:34Z run poll quiet fresh=1 kept=1 night=0 held=0 boards=0 scored=1 unscored=0 alerts=0 sent=0
+2026-11-27T16:40Z run poll quiet fresh=2 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: hourly below floor=1, block keyword=1
