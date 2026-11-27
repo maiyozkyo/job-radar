@@ -2813,3 +2813,4 @@
 2026-11-27T13:10Z run poll fresh=23 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: location=13, no stack keyword=8, client=1, block keyword=1
 2026-11-27T13:20Z score 3 - freelancer:40838764 | Tailored IT Resume Creation | https://www.freelancer.com/projects/content-writing/Tailored-Resume-Creation
 2026-11-27T13:20Z run poll fresh=7 kept=1 night=0 held=0 boards=0 scored=1 unscored=0 alerts=0 sent=0 dropped: client=3, no stack keyword=2, block keyword=1
+2026-11-27T13:20Z run poll fresh=1 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1
