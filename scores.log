@@ -2785,3 +2785,6 @@
 2026-11-27T11:20Z run poll fresh=3 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=2, no stack keyword=1
 2026-11-27T11:28Z run poll fresh=3 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: too many bids=2, hourly below floor=1
 2026-11-27T11:30Z run poll fresh=2 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=1, no stack keyword=1
+2026-11-27T11:34Z score 2 - freelancer:40838623 | CV Operator Produksi Profesional | https://www.freelancer.com/projects/canva/Operator-Produksi-Profesional
+2026-11-27T11:34Z score 2 - freelancer:40838636 | 3D CAD Modeling Software Testing | https://www.freelancer.com/projects/3d-cad/CAD-Modeling-Software-Testing
+2026-11-27T11:34Z run poll fresh=15 kept=2 night=0 held=0 boards=0 scored=2 unscored=0 alerts=0 sent=0 dropped: location=4, block keyword=4, no stack keyword=2, risk=2, too many bids=1
