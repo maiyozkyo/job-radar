@@ -2945,3 +2945,5 @@
 2026-11-27T21:10Z run poll quiet fresh=4 kept=0 night=0 held=1 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: client=4
 2026-11-27T21:20Z run poll quiet fresh=23 kept=0 night=0 held=1 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: location=11, no stack keyword=8, block keyword=4
 2026-11-27T21:22Z run poll quiet fresh=1 kept=0 night=0 held=1 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: too many bids=1
+2026-11-27T21:23Z score 2 - wwr:https://weworkremotely.com/remote-jobs/oneimaging-cloud-systems-administrator | OneImaging: Cloud Systems Administrator | https://weworkremotely.com/remote-jobs/oneimaging-cloud-systems-administrator
+2026-11-27T21:23Z run digest pending=1 alerts=0 sent=0
