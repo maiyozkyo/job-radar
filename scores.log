@@ -2727,3 +2727,5 @@
 2026-11-27T08:11Z run poll fresh=1 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: too many bids=1
 2026-11-27T08:20Z score 1 - vlance:94940 | Báo cáo thuế cho doanh nghiệp siêu nhỏ | https://www.vlance.vn/viec-freelance/bao-cao-thue-cho-doanh-nghiep-sieu-nho
 2026-11-27T08:20Z run poll fresh=6 kept=1 night=0 held=0 boards=0 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=2, no stack keyword=2, location=1
+2026-11-27T08:29Z score 2 - freelancer:40838391 | SaaS Proposal Slide Refresh | https://www.freelancer.com/projects/corporate-identity/SaaS-Proposal-Slide-Refresh
+2026-11-27T08:29Z run poll fresh=8 kept=1 night=0 held=0 boards=0 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=5, client=1, budget below floor=1
