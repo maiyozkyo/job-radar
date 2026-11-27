@@ -2765,3 +2765,5 @@
 2026-11-27T10:20Z run poll fresh=7 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=4, too many bids=1, block keyword=1, location=1
 2026-11-27T10:30Z run poll fresh=28 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: location=13, no stack keyword=7, block keyword=6, budget below floor=1, too many bids=1
 2026-11-27T10:40Z run poll fresh=4 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2, block keyword=1, location=1
+2026-11-27T10:48Z score 5 3h freelancer:40838569 | Creating Database Romania Companies | https://www.freelancer.com/projects/data-collection/Creating-Database-Romania-Companies
+2026-11-27T10:48Z run poll fresh=8 kept=1 night=0 held=0 boards=0 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=4, block keyword=2, too many bids=1
