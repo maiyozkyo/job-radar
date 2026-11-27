@@ -2775,3 +2775,6 @@
 2026-11-27T11:01Z run poll fresh=1 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: client=1
 2026-11-27T11:06Z score 1 - freelancer:40838594 | Post giornalieri su TikTok, contenuti forniti (residenti in Italia, ~10 min al g | https://www.freelancer.com/projects/social-media-management/Post-giornalieri-TikTok-contenuti
 2026-11-27T11:06Z run poll fresh=5 kept=1 night=0 held=0 boards=0 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2, block keyword=1, hourly below floor=1
+2026-11-27T11:08Z score 1 - freelancer:40838603 | Coordinador de seguridad e infraestructura - SOLO ECUADOR GYE -- 2 | https://www.freelancer.com/projects/itil/Coordinador-seguridad-infraestructura-40838603
+2026-11-27T11:08Z score 1 - freelancer:40838602 | Dagelijks posten op TikTok, kant-en-klare content (woonachtig in Nederland, ~10  | https://www.freelancer.com/projects/tiktok/Dagelijks-posten-TikTok-kant-klare
+2026-11-27T11:08Z run poll fresh=6 kept=2 night=0 held=0 boards=0 scored=2 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2, hourly below floor=1, client=1
