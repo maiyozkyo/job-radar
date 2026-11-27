@@ -2645,3 +2645,4 @@
 2026-11-27T03:57Z run poll fresh=4 kept=2 night=0 held=0 boards=0 scored=2 unscored=0 alerts=0 sent=0 dropped: client=2
 2026-11-27T03:58Z run poll fresh=1 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1
 2026-11-27T04:00Z run poll fresh=1 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 errors=wwr: The operation was aborted due to timeout dropped: location=1
+2026-11-27T04:10Z run poll fresh=10 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=6, block keyword=3, client=1
