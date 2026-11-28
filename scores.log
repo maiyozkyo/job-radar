@@ -3472,3 +3472,8 @@
 2026-11-28T13:50Z drop freelancer:40839765 client: no deposit, new account | Admin Arsip Dokumen Perusahaan
 2026-11-28T13:50Z drop freelancer:40840152 client: no deposit, new account | Content Writers Wanted – Beginners Welcome!
 2026-11-28T13:50Z drop freelancer:40840153 hourly below floor | Consulting Profile & Portfolio Creation
+2026-11-28T14:00Z run poll fresh=4 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: client=1, hourly below floor=1, block keyword=1, too many bids=1 by source: freelancer[client=1, hourly below floor=1, block keyword=1, too many bids=1]
+2026-11-28T14:00Z drop freelancer:40840156 client: no deposit, new account | Build AI Agents for Restaurants
+2026-11-28T14:00Z drop freelancer:40840161 hourly below floor | Tata Office Job Application Support
+2026-11-28T14:00Z drop freelancer:40840155 block keyword: essay | Craft a Compelling Master's SOP
+2026-11-28T14:00Z drop freelancer:40840159 too many bids | Local Service Business Website Build
