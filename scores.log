@@ -3003,3 +3003,5 @@
 2026-11-28T01:20Z run poll fresh=0 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0
 2026-11-28T01:30Z score 1 - freelancer:40795243 | Entry-Level Virtual Event Coordinator | https://www.freelancer.com/projects/event-management/Entry-Level-Virtual-Event-Coordinator
 2026-11-28T01:30Z run poll fresh=5 kept=1 night=0 held=0 boards=0 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=2, too many bids=1, no stack keyword=1
+2026-11-28T01:37Z score 1 - vlance:94928 | Tuyển Video Editor dựng video ngắn (Reels/TikTok/Shorts) từ footage du lịch và s | https://www.vlance.vn/viec-freelance/tuyen-video-editor-dung-video-ngan-reels-tiktok-shorts-tu-footage-du-lich-va-su-kien-lam-online-hop-tac-lau-dai
+2026-11-28T01:37Z run poll fresh=4 kept=1 night=0 held=0 boards=0 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2, too many bids=1
