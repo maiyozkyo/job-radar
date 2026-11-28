@@ -3300,3 +3300,6 @@
 2026-11-28T10:00Z drop freelancer:40839919 block keyword: sales | Club Member Re-Enrollment Calls
 2026-11-28T10:00Z drop freelancer:40839917 block keyword: video editing | Confident Product & Interview Anchor
 2026-11-28T10:00Z drop freelancer:40839926 block keyword: video editing | Condense Strategy/SIM Gameplay
+2026-11-28T10:05Z run poll fresh=2 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: too many bids=1, no stack keyword=1 by source: freelancer[too many bids=1, no stack keyword=1]
+2026-11-28T10:05Z drop freelancer:40839932 too many bids | AI Recommendation SaaS Platform Build
+2026-11-28T10:05Z drop freelancer:40839929 no stack keyword | 1st Birthday Beach Photography
