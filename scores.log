@@ -3369,3 +3369,5 @@
 2026-11-28T11:30Z run poll fresh=2 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2 by source: freelancer[no stack keyword=2]
 2026-11-28T11:30Z drop freelancer:40840013 no stack keyword | Business Letterhead Design in PDF
 2026-11-28T11:30Z drop freelancer:40840012 no stack keyword | Custom Polos and T-Shirts Design
+2026-11-28T11:40Z run poll fresh=1 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=1 by source: freelancer[block keyword=1]
+2026-11-28T11:40Z drop freelancer:40840015 block keyword: sales | Global Software Business Expansion
