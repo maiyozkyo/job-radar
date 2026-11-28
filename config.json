@@ -252,7 +252,17 @@
     "cover letter",
     "blog",
     "article",
-    "cpanel"
+    "cpanel",
+    "three.js",
+    "threejs",
+    "phaser",
+    "pixijs",
+    "pixi.js",
+    "html5 game",
+    "browser game",
+    "webgl",
+    "canvas game",
+    "web game"
   ],
   "blockKeywords": [
     "commission",
@@ -276,7 +286,16 @@
     "elementor",
     "ui/ux designer",
     "ux designer",
-    "ux researcher"
+    "ux researcher",
+    "casino",
+    "gambling",
+    "sweepstakes",
+    "slot machine",
+    "slot game",
+    "betting",
+    "sportsbook",
+    "roblox",
+    "minecraft"
   ],
   "titleBlockKeywords": [
     "data entry",
@@ -288,7 +307,11 @@
     "illustrator",
     "brand identity",
     "motion graphics",
-    "packaging design"
+    "packaging design",
+    "unity",
+    "unreal",
+    "unreal engine",
+    "godot"
   ],
   "minFixedUsd": 15,
   "minHourlyUsd": 15,
