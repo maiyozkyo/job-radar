@@ -329,6 +329,7 @@
   "vnAlertScore": 6,
   "vnHourlyVnd": 200000,
   "hourlyRateUsd": 20,
+  "upworkHourlyUsd": 16,
   "hoursPerDay": 5,
   "firstJobDiscount": 0.75,
   "quietHours": [
