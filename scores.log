@@ -3194,3 +3194,6 @@
 2026-11-28T07:50Z run poll fresh=2 kept=1 night=0 held=0 boards=0 scored=1 unscored=0 alerts=0 sent=0 dropped: block keyword=1 by source: freelancer[block keyword=1]
 2026-11-28T07:50Z drop freelancer:40839780 block keyword: sales | Texas Field Sales for Carfana Launch
 2026-11-28T07:52Z run poll fresh=0 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0
+2026-11-28T07:53Z score 3 - freelancer:40839789 | Polish Career Research & CV Tailoring | https://www.freelancer.com/projects/interview-coaching/Polish-Career-Research-Tailoring
+2026-11-28T07:53Z run poll fresh=22 kept=1 night=0 held=0 boards=0 scored=1 unscored=0 alerts=0 sent=0 dropped: location=11, block keyword=5, no stack keyword=3, hourly below floor=1, risk=1 by source: freelancer[hourly below floor=1] himalayas[location=11, block keyword=5, no stack keyword=3, risk=1]
+2026-11-28T07:53Z drop freelancer:40839788 hourly below floor | Contact Data Spreadsheet Extraction
