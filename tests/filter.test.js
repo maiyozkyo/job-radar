@@ -46,9 +46,9 @@ test('short keywords match whole tokens only', () => {
   assert.equal(keep(fl({ title: 'Salesforce expert' })), false); // no stack match
 });
 
-test('bid count above 30 is dropped', () => {
-  assert.equal(keep(fl({ bidCount: 31 })), false);
-  assert.equal(keep(fl({ bidCount: 30 })), true);
+test('bid count above 45 is dropped', () => {
+  assert.equal(keep(fl({ bidCount: 46 })), false);
+  assert.equal(keep(fl({ bidCount: 45 })), true);
 });
 
 test('remote boards need an open or Asia location', () => {
@@ -175,4 +175,17 @@ test('design words in Freelancer tags do not block a coded web job', () => {
     { title: 'Corporate Website Full Modern Redesign', tags: ['Website Design', 'Graphic Design', 'User Interface / IA', 'HTML', 'UX / User Experience', 'UI / User Interface', 'Web Design', 'Illustrator', 'Logo Design'] },
   ];
   for (const j of jobs) assert.deepEqual(filterJob(fl(j), config).keep, true, j.title);
+});
+
+test('wider scope keywords keep Node, slides and writing jobs', () => {
+  assert.equal(keep(fl({ title: 'Node.js Role-Based Access Control' })), true);
+  assert.equal(keep(fl({ title: 'SaaS Proposal Slide Refresh', description: 'Refresh our PowerPoint deck' })), true);
+  assert.equal(keep(fl({ title: 'Rewrite my CV', description: 'Tailor my resume' })), true);
+  assert.equal(keep(fl({ title: 'Tracking dashboard in Excel' })), true);
+});
+
+test('short keywords match whole words only', () => {
+  assert.equal(keep(fl({ title: 'Need a nodemailer expert', description: 'jsp pages and cvx files' })), false);
+  assert.equal(keep(fl({ title: 'Reactive music app', description: 'node-based audio' })), true); // "node" is a word here
+  assert.equal(keep(fl({ title: 'Reactive music app', description: 'jsonnet cvx' })), false);
 });
