@@ -3406,3 +3406,7 @@
 2026-11-28T12:34Z run poll fresh=3 kept=1 night=0 held=0 boards=0 scored=1 unscored=0 alerts=0 sent=0 dropped: client=2 by source: freelancer[client=2]
 2026-11-28T12:34Z drop freelancer:40840063 client: no deposit, new account | Product Competitor Research Spreadsheet
 2026-11-28T12:34Z drop freelancer:40840048 client: no deposit, new account | AutoCAD Electrical Panel Diagram
+2026-11-28T12:40Z run poll fresh=3 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: client=1, block keyword=1, no stack keyword=1 by source: freelancer[client=1, block keyword=1, no stack keyword=1]
+2026-11-28T12:40Z drop freelancer:40840070 client: no deposit, new account | Estate Longevity Projection Models
+2026-11-28T12:40Z drop freelancer:40840068 block keyword: logo design | Fusion Cultural Logo Design
+2026-11-28T12:40Z drop freelancer:40840072 no stack keyword | Natural Portrait Glare Removal
