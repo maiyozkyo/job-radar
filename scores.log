@@ -3041,3 +3041,4 @@
 2026-11-28T04:10Z run poll fresh=1 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=1
 2026-11-28T04:13Z score 2 - freelancer:40839552 | Boost Chrome Extension Installs | https://www.freelancer.com/projects/copywriting/Boost-Chrome-Extension-Installs
 2026-11-28T04:13Z run poll fresh=7 kept=1 night=0 held=0 boards=0 scored=1 unscored=0 alerts=0 sent=0 dropped: unknown budget=2, block keyword=2, hourly below floor=1, client=1
+2026-11-28T04:20Z run poll fresh=1 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1
