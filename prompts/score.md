@@ -57,7 +57,7 @@ Vietnamese-board jobs also carry `"budgetVnd": 600000` (or `null`).
 - `todoVi`: only when {{DRAFT_RULE}}; otherwise `[]`. What the freelancer must do to deliver this job, as 1–3 short imperative lines of Vietnamese (each ≤ 100 characters; keep technical terms in English), in order: the concrete work (what to build, configure, write or fix, and where), then anything only the freelancer can do in person (a call, a meeting, a login, a purchase, an upload), if the post needs one. Base it on the estimate above: the normal case, the parts that are not built in. No prices, no hours, no links.
 - `proposalEn`: only when {{DRAFT_RULE}}; otherwise `null`.
   - ≤ 120 words, English, written as the freelancer in first person. Vietnamese boards: write it in Vietnamese instead, polite and natural, calling yourself "em" and the client "anh/chị"; no prices (the price is computed from `hours`).
-  - Open with the client's actual problem, not a greeting like "Dear Sir".
+  - The first two lines are all the client sees in the list, so open with proof of fit for this job: a matching project from the profile, a concrete detail checked in their post, or the first step you would take. Never open by restating the post back to the client ("You want…", "You need…", "You're looking for…", "Your store needs…"), never with a greeting like "Dear Sir" or "I am excited", and vary the opening from job to job.
   - Cite at most one or two portfolio projects from the profile that are truly relevant, with a concrete detail. **Never invent experience, clients, numbers or projects that are not in the profile.**
   - Say briefly how you would approach it.
   - End with one concrete question to the client.
