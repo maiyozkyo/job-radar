@@ -3305,3 +3305,6 @@
 2026-11-28T10:05Z drop freelancer:40839929 no stack keyword | 1st Birthday Beach Photography
 2026-11-28T10:10Z run poll fresh=0 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0
 2026-11-28T10:11Z run poll fresh=0 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0
+2026-11-28T10:20Z run poll fresh=2 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: too many bids=1, hourly below floor=1 by source: freelancer[too many bids=1, hourly below floor=1]
+2026-11-28T10:20Z drop freelancer:40839935 too many bids | Mobile Catering Operations Management App
+2026-11-28T10:20Z drop freelancer:40839931 hourly below floor | Customer Support Phone Assistant
