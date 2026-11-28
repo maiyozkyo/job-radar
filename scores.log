@@ -3312,3 +3312,5 @@
 2026-11-28T10:25Z run poll fresh=3 kept=1 night=0 held=0 boards=0 scored=1 unscored=0 alerts=0 sent=0 dropped: too many bids=1, client=1 by source: freelancer[too many bids=1, client=1]
 2026-11-28T10:25Z drop freelancer:40839941 too many bids | Veterinary AI Automation SaaS Development
 2026-11-28T10:25Z drop freelancer:40839937 client: no deposit, new account | Dual-Price Beauty Catalogue Design
+2026-11-28T10:27Z score 3 - freelancer:40839943 | JavaFX Booking App Development Support | https://www.freelancer.com/projects/software-testing/JavaFX-Booking-App-Development-Support
+2026-11-28T10:27Z run poll fresh=1 kept=1 night=0 held=0 boards=0 scored=1 unscored=0 alerts=0 sent=0
