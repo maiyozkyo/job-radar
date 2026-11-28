@@ -189,3 +189,13 @@ test('short keywords match whole words only', () => {
   assert.equal(keep(fl({ title: 'Reactive music app', description: 'node-based audio' })), true); // "node" is a word here
   assert.equal(keep(fl({ title: 'Reactive music app', description: 'jsonnet cvx' })), false);
 });
+
+test('web game scope: Three.js/Phaser kept; gambling and engines blocked', () => {
+  assert.equal(keep(fl({ title: 'Three.js 3D viewer bug fix' })), true);
+  assert.equal(keep(fl({ title: 'Phaser 3 puzzle game', description: 'HTML5 game' })), true);
+  assert.equal(keep(fl({ title: 'Browser game prototype in canvas game style' })), true);
+  assert.equal(keep(fl({ title: 'Slot machine game in Phaser', description: 'casino' })), false);
+  assert.equal(keep(fl({ title: 'Online betting site', description: 'angular' })), false);
+  assert.equal(keep(fl({ title: 'Unity game developer', description: 'angular' })), false);
+  assert.equal(keep(fl({ title: 'Unreal Engine level', description: 'webgl' })), false);
+});
