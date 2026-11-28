@@ -3017,3 +3017,6 @@
 2026-11-28T02:20Z run poll fresh=3 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=3
 2026-11-28T02:30Z run poll fresh=3 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2, location=1
 2026-11-28T02:40Z run poll fresh=3 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: client=1, block keyword=1, no stack keyword=1
+2026-11-28T02:46Z score 1 - freelancer:40839486 | Claude.ai Pro Subscription Assistant -- 2 | https://www.freelancer.com/projects/website-design/Claude-Pro-Subscription-Assistant
+2026-11-28T02:46Z score 1 - remoteok:1138211 | Sardine: Software Engineer - Backend | https://remoteOK.com/remote-jobs/remote-software-engineer-backend-sardine-1138211
+2026-11-28T02:46Z run poll fresh=6 kept=2 night=0 held=0 boards=1 scored=2 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2, block keyword=1, client=1
