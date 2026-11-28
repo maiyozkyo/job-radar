@@ -3364,3 +3364,5 @@
 2026-11-28T11:26Z drop freelancer:40840010 no stack keyword | Personal Device Security Investigation
 2026-11-28T11:26Z drop freelancer:40840001 block keyword: sales | Colombia Chemical Sales Channel Partner
 2026-11-28T11:28Z run poll fresh=0 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0
+2026-11-28T11:29Z score 2 - freelancer:40840011 | EU/UK Import Permit Documentation | https://www.freelancer.com/projects/compliance/Import-Permit-Documentation
+2026-11-28T11:29Z run poll fresh=1 kept=1 night=0 held=0 boards=0 scored=1 unscored=0 alerts=0 sent=0
