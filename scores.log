@@ -3380,3 +3380,9 @@
 2026-11-28T12:00Z run poll fresh=22 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: location=14, block keyword=5, client=1, unknown budget=1, risk=1 by source: freelancer[client=1, unknown budget=1] himalayas[location=14, block keyword=5, risk=1]
 2026-11-28T12:00Z drop freelancer:40840026 client: no deposit, new account | Modern Double-Storey House Design
 2026-11-28T12:00Z drop freelancer:40840030 unknown budget | Handwritten Notes to PDF
+2026-11-28T12:10Z run poll fresh=5 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: client=2, hourly below floor=1, block keyword=1, no stack keyword=1 by source: freelancer[client=2, hourly below floor=1, block keyword=1, no stack keyword=1]
+2026-11-28T12:10Z drop freelancer:40839599 hourly below floor | Comprehensive Student Management Platform
+2026-11-28T12:10Z drop freelancer:40840036 client: no deposit, new account | Ottoman Genealogy Research & Translation
+2026-11-28T12:10Z drop freelancer:40840035 block keyword: video editing | Immediate CapCut Video Enhancement
+2026-11-28T12:10Z drop freelancer:40840038 no stack keyword | Facelift Photo Editing
+2026-11-28T12:10Z drop freelancer:40840025 client: no deposit, new account | Riki Nababan
