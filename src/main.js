@@ -54,6 +54,32 @@ function dropSummary(results) {
   return Object.entries(counts).sort((a, b) => b[1] - a[1]).map(([k, n]) => `${k}=${n}`).join(', ');
 }
 
+/** Per-source drop reasons, e.g. "freelancer[no stack keyword=3, too many bids=2] remoteok[location=4]". */
+export function dropBySource(jobs, results) {
+  const by = {};
+  results.forEach((r, i) => {
+    if (r.keep) return;
+    const src = jobs[i].source;
+    const why = r.reason.split(':')[0];
+    by[src] ??= {};
+    by[src][why] = (by[src][why] ?? 0) + 1;
+  });
+  return Object.entries(by)
+    .map(([src, c]) => `${src}[${Object.entries(c).sort((a, b) => b[1] - a[1]).map(([k, n]) => `${k}=${n}`).join(', ')}]`)
+    .join(' ');
+}
+
+const MAX_DROP_LINES = 30;
+/** Freelancer drops, one line each: `drop freelancer:<id> <reason> | <title>` (max 30 per run). */
+export function freelancerDropLines(jobs, results) {
+  const lines = [];
+  results.forEach((r, i) => {
+    if (r.keep || jobs[i].source !== 'freelancer' || lines.length >= MAX_DROP_LINES) return;
+    lines.push(`drop ${jobs[i].key} ${r.reason} | ${jobs[i].title.slice(0, 80)}`);
+  });
+  return lines;
+}
+
 /**
  * Scores urgent and remote-board jobs: alerts at >= alertScore, every scored
  * job by key (`byKey`), and the ones Claude skipped or could not score.
@@ -237,7 +263,8 @@ async function poll(state, deps, log) {
   if (messages.length && errors.length) messages[0] += `\n\n⚠️ Nguồn lỗi: ${errors.join('; ')}`;
   for (const text of messages) await deps.sendMessage(text);
   log.push(`${stamp(now)} run poll${quiet ? ' quiet' : ''} fresh=${fresh.length} kept=${kept.length} night=${state.night.length} held=${state.nightAlerts.length} boards=${boards.length} scored=${quiet ? nightScored : urgent.length + boards.length - scoredRun.unscored.length} unscored=${scoredRun.unscored.length} alerts=${alerts.length} sent=${messages.length}`
-    + `${errors.length ? ` errors=${errors.join('; ')}` : ''}${results.length > kept.length ? ` dropped: ${dropSummary(results)}` : ''}`);
+    + `${errors.length ? ` errors=${errors.join('; ')}` : ''}${results.length > kept.length ? ` dropped: ${dropSummary(results)} by source: ${dropBySource(fresh, results)}` : ''}`);
+  for (const line of freelancerDropLines(fresh, results)) log.push(`${stamp(now)} ${line}`);
   return messages.length;
 }
 
