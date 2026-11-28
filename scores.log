@@ -3336,3 +3336,7 @@
 2026-11-28T10:54Z drop freelancer:40839972 too many bids | Custom Service Booking Platform Build
 2026-11-28T10:54Z drop freelancer:40839969 hourly below floor | Trust-Building Website Copy
 2026-11-28T10:55Z run poll fresh=0 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0
+2026-11-28T11:00Z run poll fresh=3 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2, block keyword=1 by source: freelancer[no stack keyword=2, block keyword=1]
+2026-11-28T11:00Z drop freelancer:40839977 no stack keyword | Commercialista per 4 SRL
+2026-11-28T11:00Z drop freelancer:40839976 no stack keyword | Weekly Events Story Template
+2026-11-28T11:00Z drop freelancer:40839975 block keyword: data entry | Urgent Data Entry & Writing
