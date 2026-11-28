@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdtempSync, readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { run } from '../src/main.js';
+import { run, dropBySource, freelancerDropLines } from '../src/main.js';
 import { loadConfig, makeJob } from '../src/job.js';
 import { appendLog, loadState, saveState } from '../src/state.js';
 
@@ -194,10 +194,11 @@ test('poll writes each score and a run summary with drop reasons to scores.log',
   const { deps, stateDir } = setup({ jobs: [urgent(1), urgent(2), offStack], scores: { 'freelancer:2': 6 } });
   await run('poll', deps);
   const lines = readFileSync(join(stateDir, 'scores.log'), 'utf8').trim().split('\n');
-  assert.equal(lines.length, 3);
+  assert.equal(lines.length, 4);
   assert.match(lines[0], /^2026-\d\d-\d\dT\d\d:\d\dZ score 8 - freelancer:1 \| Angular fix \| https:\/\/f\/1$/);
   assert.match(lines[1], /score 6 - freelancer:2/);
-  assert.match(lines[2], /run poll fresh=3 kept=2 night=0 held=0 boards=0 scored=2 unscored=0 alerts=1 sent=1 dropped: no stack keyword=1$/);
+  assert.match(lines[2], /run poll fresh=3 kept=2 night=0 held=0 boards=0 scored=2 unscored=0 alerts=1 sent=1 dropped: no stack keyword=1 by source: freelancer\[no stack keyword=1\]$/);
+  assert.match(lines[3], /^2026-\d\d-\d\dT\d\d:\d\dZ drop freelancer:9 no stack keyword.* \| Cooking recipes$/);
   assert.doesNotMatch(lines.join('\n'), /Hi/); // no proposals
 });
 
@@ -391,4 +392,23 @@ test('a client with unverified payment keeps its score and alerts from 7, with t
   assert.match(sent[1].text, /https:\/\/f\/2/);
   assert.match(sent[1].text, /7\/10/);
   assert.match(sent[1].text, /🚩 Chưa xác minh thanh toán/);
+});
+
+test('dropBySource groups drop reasons per source, most common first', () => {
+  const jobs = [urgent(1), urgent(2), urgent(3), board(4), board(5)];
+  const results = [
+    { keep: false, reason: 'too many bids: 40' }, { keep: false, reason: 'no stack keyword' }, { keep: false, reason: 'no stack keyword' },
+    { keep: false, reason: 'location: US only' }, { keep: true, reason: '' },
+  ];
+  assert.equal(dropBySource(jobs, results), 'freelancer[no stack keyword=2, too many bids=1] remoteok[location=1]');
+});
+
+test('freelancerDropLines logs only freelancer drops, titles cut to 80, max 30', () => {
+  const long = makeJob({ source: 'freelancer', id: 7, title: 'x'.repeat(120), url: 'https://f/7' });
+  const jobs = [long, board(8), ...Array.from({ length: 40 }, (_, i) => urgent(100 + i))];
+  const results = jobs.map(() => ({ keep: false, reason: 'no stack keyword' }));
+  const lines = freelancerDropLines(jobs, results);
+  assert.equal(lines.length, 30);
+  assert.equal(lines[0], `drop freelancer:7 no stack keyword | ${'x'.repeat(80)}`);
+  assert.ok(lines.every((l) => l.startsWith('drop freelancer:')));
 });
