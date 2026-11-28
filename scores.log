@@ -3498,3 +3498,7 @@
 2026-11-28T14:17Z score 2 - freelancer:40840186 | Construction Management Reports Package | https://www.freelancer.com/projects/construction-engineering/Construction-Management-Reports-Package
 2026-11-28T14:17Z run poll fresh=1 kept=1 night=0 held=0 boards=0 scored=1 unscored=0 alerts=0 sent=0
 2026-11-28T14:20Z run poll fresh=0 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0
+2026-11-28T14:22Z score 5 14h freelancer:40840191 | Education Consultancy Backend Development | https://www.freelancer.com/projects/backend-development/Education-Consultancy-Backend
+2026-11-28T14:22Z run poll fresh=3 kept=1 night=0 held=0 boards=0 scored=1 unscored=0 alerts=0 sent=0 dropped: no stack keyword=1, block keyword=1 by source: freelancer[no stack keyword=1, block keyword=1]
+2026-11-28T14:22Z drop freelancer:40840189 no stack keyword | Reka Bentuk Pos Media Sosial
+2026-11-28T14:22Z drop freelancer:40840190 block keyword: sales | Kolkata International Appointment Setter Needed
