@@ -3366,3 +3366,6 @@
 2026-11-28T11:28Z run poll fresh=0 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0
 2026-11-28T11:29Z score 2 - freelancer:40840011 | EU/UK Import Permit Documentation | https://www.freelancer.com/projects/compliance/Import-Permit-Documentation
 2026-11-28T11:29Z run poll fresh=1 kept=1 night=0 held=0 boards=0 scored=1 unscored=0 alerts=0 sent=0
+2026-11-28T11:30Z run poll fresh=2 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: no stack keyword=2 by source: freelancer[no stack keyword=2]
+2026-11-28T11:30Z drop freelancer:40840013 no stack keyword | Business Letterhead Design in PDF
+2026-11-28T11:30Z drop freelancer:40840012 no stack keyword | Custom Polos and T-Shirts Design
