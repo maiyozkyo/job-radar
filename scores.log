@@ -3103,3 +3103,6 @@
 2026-11-28T06:09Z drop freelancer:40839657 client: no deposit, new account | Beginner Content Writer Needed for Simple Blog Articles.
 2026-11-28T06:09Z drop freelancer:40839658 block keyword: sales | International Appointment Setter for Global Clients
 2026-11-28T06:10Z run poll fresh=0 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0
+2026-11-28T06:20Z run poll fresh=2 kept=0 night=0 held=0 boards=0 scored=0 unscored=0 alerts=0 sent=0 dropped: block keyword=1, no stack keyword=1 by source: freelancer[block keyword=1, no stack keyword=1]
+2026-11-28T06:20Z drop freelancer:40839665 block keyword: video editing | Realistic AI Product Reels
+2026-11-28T06:20Z drop freelancer:40839662 no stack keyword | Conception d'aménagement et dossier d'autorisation de travaux ERP 5e catégorie –
